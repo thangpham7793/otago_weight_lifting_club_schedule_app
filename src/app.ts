@@ -3,6 +3,8 @@ import bodyParser from "body-parser"
 import cors from "cors"
 import { Controller } from "./main.controller"
 
+//TODO: add other middlewares and write error handlers as well
+
 //TODO: learn from this lady :D https://dev.to/nyagarcia/pokeapi-rest-in-nodejs-with-express-typescript-mongodb-and-docker-part-1-5f8g
 
 class App {

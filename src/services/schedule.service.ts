@@ -5,3 +5,6 @@ export class ScheduleService {
     return res.status(200).send("Welcome!")
   }
 }
+
+//TODO: can process the whole thing here so that
+//the client gets a nice json with all the data laid out (sounds like GraphQL)
