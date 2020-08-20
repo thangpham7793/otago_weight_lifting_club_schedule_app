@@ -3,7 +3,7 @@
     "target": "ES5",
     "noImplicitAny": true,
     "rootDir": "src",
-    "outDir": "dist",
+    "outDir": "dist/backend/",
     "esModuleInterop": true,
     "removeComments": true
   },
