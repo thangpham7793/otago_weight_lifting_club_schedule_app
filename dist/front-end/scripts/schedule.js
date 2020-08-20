@@ -9,36 +9,131 @@ const schedule = (function () {
   //actual values
   //watch out for cases when some or all pbs are unavailable
   const pbs = {
-    //pb1: 67,
-    pb2: 186,
-    pb3: 230,
+    snatch: 67,
+    clean: 186,
+    jerk: 230,
+    cleanAndJerk: 175,
+    backSquat: 165,
+    frontSquat: 112,
+    pushPress: 131,
   }
   //probably need a conversion dictionary
   //will there be exercises that can appear in any scale?
   const pbsToExercises = {
-    pb1: [
+    snatch: [
+      "Snatch",
+      "Power Snatch",
+      "Hang Snatch",
+      "High Hang Snatch",
+      "Hang Snatch Below Knee",
+      "Hang Snatch Just Off the Floor",
+      "Hang Power Snatch",
+      "Block Snatch",
+      "Low Block Snatch",
+      "Block Power Snatch",
+      "Low Block Power Snatch",
+      "Muscle Snatch",
+      "Deficit Snatch",
+      "Snatch Balance",
+      "Overhead Squat",
+      "Snatch Pull",
+      "Snatch Deadlift",
+      "Block Snatch Pull",
+      "Snatch Romanian Deadlift",
+      "Snatch Push Press",
+      "3 Position Snatch",
       "3 position snatch (High Hang, Below Knee, Floor)",
-      "power clean + split jerk",
+      "2 Position Snatch",
+      "Pause Snatch",
+      "Snatch Pull + Snatch",
+      "Snatch + Overhead Squat",
+      "Snatch Push Press + Overhead Squat",
+      "Deficit Snatch Pull",
     ],
-    pb2: ["back squat"],
-    pb3: ["clean pull"],
+    clean: [
+      "Clean",
+      "Power Clean",
+      "Hang Clean",
+      "High Hang Clean",
+      "Hang Snatch Below Knee",
+      "Hang Clean Just Off the Floor",
+      "Hang Power Clean",
+      "Block Clean",
+      "Low Block Clean",
+      "Block Power Clean",
+      "Low Block Power Clean",
+      "Muscle Clean",
+      "Deficit Clean",
+      "Clean Pull",
+      "Clean Deadlift",
+      "Block Clean Pull",
+      "Clean Romanian Deadlift",
+      "3 Position Clean",
+      "2 Position Snatch",
+      "Pause Clean",
+      "Clean Pull + Clean",
+      "Clean + Front Squat",
+      "Deficit Clean Pull",
+    ],
+    jerk: [
+      "Jerk",
+      "Split Jerk",
+      "Power Jerk",
+      "Front Squat + Jerk",
+      "Power Jerk + Split Jerk", //FIXME: how to deal with "+", some exercises are combos, some are not on the standard list. Maybe he should be able to update the list/add remove items from the list
+    ],
+    cleanAndJerk: ["Clean + Jerk", "Clean + Front Squat + Jerk"],
+    backSquat: [
+      "Back Squat",
+      "Pause Back Squat",
+      "Good Morning",
+      "Barbell Back Squat Jumps",
+    ],
+    frontSquat: ["Front Squat", "Pause Front Squat"],
+    pushPress: ["Push Press"],
+    RPEorRIR: [
+      "Pushups",
+      "Pullups",
+      "Back Extension",
+      "Situps",
+      "Cable Row",
+      "Bench Press",
+      "Box Jumps",
+      "Bent Over Barbell Row",
+      "Pendlay Row",
+      "Barbell Bicep Curl",
+      "Dips",
+      "Barbell Strict Press",
+      "Lu Xiaojun Raise",
+      "Bent Over Plate Rear Delt Flye",
+      "Abs (your choice)",
+      "Hanging Knee/Leg Raise",
+      "Calf Raise",
+      "1-Arm Dumbbell Row",
+      "Bulgarian Split Squat",
+      "Seated Barbell Press",
+      "Seated Dumbbell Press",
+    ],
   }
 
   function calculateRealWeight(exercise, scale) {
     if (scale.indexOf("%") > 0) {
-      const rate = parseInt(scale) / 100
+      const rate = Math.round(parseInt(scale) / 100, 2)
       const matchedPb = Object.keys(pbsToExercises).filter((k) => {
         //probably need regex here
         const exerciseRegex = new RegExp(`${exercise}`, "gi")
 
         // 3 options, depending on the actual correspondences
-
+        //console.log(pbsToExercises[k].join(" "))
         //or combine into one long string (depends)
-        return exerciseRegex.test(pbsToExercises[k].join())
+
+        //FIXME: 3 position snatch doesn't match somehow
+        return exerciseRegex.test(pbsToExercises[k].join(""))
 
         //can match by comparing against each string
         // return (
         //   pbsToExercises[k].filter((exercise) => {
+        //     console.log(exercise, exerciseRegex, exerciseRegex.test(exercise))
         //     return exerciseRegex.test(exercise)
         //   }).length > 0
         // )
@@ -46,6 +141,7 @@ const schedule = (function () {
         //return pbsToExercises[k].includes(exercise)
       })[0]
       if (matchedPb) {
+        console.log(matchedPb)
         let pbWeight
         try {
           pbWeight = pbs[matchedPb]
@@ -208,4 +304,4 @@ const schedule = (function () {
 $(document).ready(schedule.setup)
 
 //TODO: embed google feedback form, add add-edit-pbs functionality (probably save to local storage)
-//TODO: can also hook it up to Google Sheet to pull the data vs making a form off the app/ But that also means wrangling with the google sheet data...
+//TODO: make a form to make schedule
