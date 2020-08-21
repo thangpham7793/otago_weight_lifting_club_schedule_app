@@ -1,6 +1,5 @@
 const $ = require("jquery")
-const { pbsForm } = require("./components/pbsForm/pbsForm")
-const { pbs } = require("./data")
+const { getPbs, savePbs, pbsForm } = require("./components/pbsForm/pbs")
 const { fetchData } = require("./utils")
 const { appendContent } = require("./utils")
 const {
@@ -15,12 +14,14 @@ const schedule = (function () {
 
   //global state like Redux or component state like React...
   let scheduleData = ""
-  let formData = {}
+  let formData = getPbs()
 
   //initial render
   function successHandler(data) {
     const { programme, name, schedule } = data
     scheduleData = schedule
+
+    //temp storage for input data
 
     appendContent(makeExerciseHeader(programme, name))
     appendContent(makeDropDownOptions(Object.keys(schedule)))
@@ -32,18 +33,27 @@ const schedule = (function () {
     $("#days").on({ change: onSelectHandler })
 
     function pbsSubmitHandler(e) {
-      e.preventDefault()
+      savePbs(formData)
+      $(".pbs-form").toggle()
+      //e.preventDefault() (no need to do sth complicated, simply reload...rerender) => okay that's why they use virtual DOM
     }
 
+    //update temporary pbs data object
     function onPbsFormInputHandler() {
-      formData[this.getAttribute("id")] = this.value
+      const targetName = this.getAttribute("name")
+      formData.filter((pb) => pb.name === targetName)[0].value = this.value
       $("pre").text(JSON.stringify(formData, null, 2))
     }
 
+    //only render the form and add props when clicked
     function pbsBtnClickHandler() {
-      appendContent(pbsForm(pbs))
-      $(".pbs-form").on({ submit: pbsSubmitHandler })
-      $(".pbs-form > input").on({ input: onPbsFormInputHandler })
+      if ($(".pbs-form").length === 0) {
+        appendContent(pbsForm())
+        $(".pbs-form").on({ submit: pbsSubmitHandler })
+        $(".pbs-form > input").on({ input: onPbsFormInputHandler })
+      } else {
+        $(".pbs-form").toggle()
+      }
     }
 
     //testing

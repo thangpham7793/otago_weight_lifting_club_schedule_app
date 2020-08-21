@@ -1,24 +1,18 @@
 const utils = require("../../utils")
-const { pbs } = require("../../data")
+const { getPbs } = require("./pbsData")
 
-const inputField = (pb) => {
+const inputField = ({ name, value }) => {
   return `
-  <label for='${pb}'>${utils.camelCaseToNormal(pb)}</label>
-  <input type='text' id='${pb}' name='${pb}'>
+  <label for='${name}'>${utils.camelCaseToNormal(name)}</label>
+  <input type='text' id='${name}' name='${name}' value='${value}'>
   `
 }
 
-const pbsForm = (pbsArr) => {
-  let fieldsArr
+const pbsForm = () => {
+  const pbsArr = getPbs()
 
-  if (!pbsArr) {
-    fieldsArr = Object.keys(pbs)
-  } else {
-    fieldsArr = Object.keys(pbsArr)
-  }
-
-  return `<form class="pbs-form" style="display:none">
-  ${fieldsArr.reduce((strAcc, pb) => strAcc + inputField(pb), "")}
+  return `<form class="pbs-form">
+  ${pbsArr.reduce((strAcc, pb) => strAcc + inputField(pb), "")}
   
   <button class="submit">Save</button>
   </form>`

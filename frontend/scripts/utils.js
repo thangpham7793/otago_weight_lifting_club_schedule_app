@@ -1,56 +1,29 @@
-const { pbs, pbsToExercises } = require("./data")
 const $ = require("jquery")
 
-function calculateRealWeight(exercise, scale) {
-  if (scale.indexOf("%") > 0) {
-    const rate = Math.round(parseInt(scale) / 100, 2)
-    const matchedPb = Object.keys(pbsToExercises).filter((k) => {
-      //probably need regex here
-      const exerciseRegex = new RegExp(`${exercise}`, "gi")
-      //FIXME: 3 position snatch doesn't match somehow
-      return exerciseRegex.test(pbsToExercises[k].join(""))
-      //return pbsToExercises[k].includes(exercise)
-    })[0]
-    if (matchedPb) {
-      console.log(matchedPb)
-      let pbWeight
-      try {
-        pbWeight = pbs[matchedPb]
-      } catch (error) {
-        console.log(error)
-      } finally {
-        //if there's an available pbWeight
-        if (pbWeight) {
-          return `${rate * pbWeight}kg (${scale})`
-        } else {
-          //if not available, return the %
-          return scale
-        }
-      }
-    } else {
-      return scale
-    }
-  } else {
-    return scale
-  }
-}
-
 function fetchData(url, successHandler, errorHandler) {
-  if (!errorHandler) {
-    function errorHandler(xhr, err) {
-      console.log(`${xhr.status} Error: ${err}`)
-    }
-  }
-
-  const config = {
+  let config = {
     url: url,
     dataType: "json",
     success: function (data) {
       successHandler(data)
     },
-    error: function (xhr, status, err) {
-      errorHandler(xhr, err)
-    },
+  }
+
+  if (!errorHandler) {
+    config = {
+      ...config,
+      error: function (xhr, status, err) {
+        console.log(`${xhr.status} Error: ${err}`)
+        appendContent("<h2>Error Gettng Schedule Data :(</h2>")
+      },
+    }
+  } else {
+    config = {
+      ...config,
+      error: function (xhr, status, err) {
+        errorHandler(xhr, err)
+      },
+    }
   }
 
   $.ajax(config)
@@ -72,9 +45,13 @@ function camelCaseToNormal(str) {
   }, "")
 }
 
+function getTwoDecimalRate(num) {
+  return Math.round((num + Number.EPSILON) * 100) / 100
+}
+
 module.exports = {
-  calculateRealWeight,
   appendContent,
   fetchData,
   camelCaseToNormal,
+  getTwoDecimalRate,
 }

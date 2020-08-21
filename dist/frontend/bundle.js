@@ -1,4 +1,50 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { pbsToExercises } = require("../../data")
+const { getPbs } = require("../pbsForm/pbsData")
+const { getTwoDecimalRate } = require("../../utils")
+
+const pbs = getPbs().reduce((obj, pb) => {
+  obj[pb.name] = pb.value
+  return obj
+}, {})
+
+function calculateRealWeight(exercise, scale) {
+  if (scale.indexOf("%") > 0) {
+    const rate = parseFloat(scale) / 100
+    const matchedPb = Object.keys(pbsToExercises).filter((k) => {
+      //probably need regex here
+      const exerciseRegex = new RegExp(`${exercise}`, "gi")
+      //FIXME: 3 position snatch doesn't match somehow
+      return exerciseRegex.test(pbsToExercises[k].join(""))
+      //return pbsToExercises[k].includes(exercise)
+    })[0]
+    if (matchedPb) {
+      console.log(matchedPb)
+      let pbWeight
+      try {
+        pbWeight = pbs[matchedPb]
+      } catch (error) {
+        console.log(error)
+      } finally {
+        //if there's an available pbWeight
+        if (pbWeight) {
+          return `${getTwoDecimalRate(rate) * pbWeight}kg (${scale})`
+        } else {
+          //if not available, return the %
+          return scale
+        }
+      }
+    } else {
+      return scale
+    }
+  } else {
+    return scale
+  }
+}
+
+module.exports = { calculateRealWeight }
+
+},{"../../data":11,"../../utils":13,"../pbsForm/pbsData":9}],2:[function(require,module,exports){
 const { makeExerciseHeader } = require("./makeExerciseHeader")
 const { makeDropDownOptions } = require("./makeDropDownOptions")
 const { makeScheduleTable } = require("./makeScheduleTable")
@@ -9,7 +55,7 @@ module.exports = {
   makeScheduleTable,
 }
 
-},{"./makeDropDownOptions":2,"./makeExerciseHeader":3,"./makeScheduleTable":5}],2:[function(require,module,exports){
+},{"./makeDropDownOptions":3,"./makeExerciseHeader":4,"./makeScheduleTable":6}],3:[function(require,module,exports){
 function makeDropDownOptions(options) {
   const htmlOptions = options.reduce((strAcc, opt) => {
     return strAcc + `<option value="${opt}">${opt}</option>`
@@ -22,15 +68,15 @@ function makeDropDownOptions(options) {
 
 module.exports = { makeDropDownOptions }
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 function makeExerciseHeader(programme, name) {
   return `<h2>${programme} ${name}</h2>`
 }
 
 module.exports = { makeExerciseHeader }
 
-},{}],4:[function(require,module,exports){
-const { calculateRealWeight } = require("../../utils")
+},{}],5:[function(require,module,exports){
+const { calculateRealWeight } = require("./calculateRealWeight")
 
 //dynamic rendering based on data
 function makeExerciseRow(exerciseInfo) {
@@ -81,7 +127,7 @@ function makeExerciseRows(exercises) {
 
 module.exports = { makeExerciseRows }
 
-},{"../../utils":10}],5:[function(require,module,exports){
+},{"./calculateRealWeight":1}],6:[function(require,module,exports){
 const { makeTableHeader } = require("./makeTableHeader")
 const { makeExerciseRows } = require("./makeExerciseRows")
 
@@ -95,38 +141,81 @@ function makeScheduleTable(exercises) {
 
 module.exports = { makeScheduleTable }
 
-},{"./makeExerciseRows":4,"./makeTableHeader":6}],6:[function(require,module,exports){
+},{"./makeExerciseRows":5,"./makeTableHeader":7}],7:[function(require,module,exports){
 function makeTableHeader() {
   return `<tr><th>Exercise</th><th>Instruction</th></tr>`
 }
 
 module.exports = { makeTableHeader }
 
-},{}],7:[function(require,module,exports){
-const utils = require("../../utils")
-const { pbs } = require("../../data")
+},{}],8:[function(require,module,exports){
+const { getPbs, savePbs } = require("./pbsData")
+const { pbsForm } = require("./pbsForm")
 
-const inputField = (pb, onPbsFormInputHandler) => {
+module.exports = { getPbs, savePbs, pbsForm }
+
+},{"./pbsData":9,"./pbsForm":10}],9:[function(require,module,exports){
+const defaultPbsArr = [
+  {
+    name: "snatch",
+    value: 0,
+  },
+  {
+    name: "clean",
+    value: 0,
+  },
+  {
+    name: "jerk",
+    value: 0,
+  },
+  {
+    name: "cleanAndJerk",
+    value: 0,
+  },
+  {
+    name: "backSquat",
+    value: 0,
+  },
+  {
+    name: "frontSquat",
+    value: 0,
+  },
+  {
+    name: "pushPress",
+    value: 0,
+  },
+]
+
+const savePbs = (pbsObject) => {
+  localStorage.setItem("pbs", JSON.stringify(pbsObject))
+}
+
+const getPbs = () => {
+  if (!localStorage.getItem("pbs")) {
+    return defaultPbsArr
+  } else {
+    return JSON.parse(localStorage.getItem("pbs"))
+  }
+}
+
+module.exports = { savePbs, getPbs }
+
+},{}],10:[function(require,module,exports){
+const utils = require("../../utils")
+const { getPbs } = require("./pbsData")
+
+const inputField = ({ name, value }) => {
   return `
-  <label for='${pb}'>${utils.camelCaseToNormal(pb)}</label>
-  <input type='text' id='${pb}' name='${pb}'>
+  <label for='${name}'>${utils.camelCaseToNormal(name)}</label>
+  <input type='text' id='${name}' name='${name}' value='${value}'>
   `
 }
 
-const pbsForm = (pbsArr, onPbsFormInputHandler) => {
-  let fieldsArr
-
-  if (!pbsArr) {
-    fieldsArr = Object.keys(pbs)
-  } else {
-    fieldsArr = Object.keys(pbsArr)
-  }
+const pbsForm = () => {
+  const pbsArr = getPbs()
 
   return `<form class="pbs-form">
-  ${fieldsArr.reduce(
-    (strAcc, pb) => strAcc + inputField(pb, onPbsFormInputHandler),
-    ""
-  )}
+  ${pbsArr.reduce((strAcc, pb) => strAcc + inputField(pb), "")}
   
   <button class="submit">Save</button>
   </form>`
@@ -136,7 +225,7 @@ module.exports = { pbsForm }
 
 //TODO: think about where to put it
 
-},{"../../data":8,"../../utils":10}],8:[function(require,module,exports){
+},{"../../utils":13,"./pbsData":9}],11:[function(require,module,exports){
 //actual values
 //watch out for cases when some or all pbs are unavailable
 const pbs = {
@@ -249,10 +338,9 @@ const pbsToExercises = {
 
 module.exports = { pbs, pbsToExercises }
 
-},{}],9:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 const $ = require("jquery")
-const { pbsForm } = require("./components/pbsForm/pbsForm")
-const { pbs } = require("./data")
+const { getPbs, savePbs, pbsForm } = require("./components/pbsForm/pbs")
 const { fetchData } = require("./utils")
 const { appendContent } = require("./utils")
 const {
@@ -267,12 +355,14 @@ const schedule = (function () {
 
   //global state like Redux or component state like React...
   let scheduleData = ""
-  let formData = {}
+  let formData = getPbs()
 
   //initial render
   function successHandler(data) {
     const { programme, name, schedule } = data
     scheduleData = schedule
+
+    //temp storage for input data
 
     appendContent(makeExerciseHeader(programme, name))
     appendContent(makeDropDownOptions(Object.keys(schedule)))
@@ -284,18 +374,27 @@ const schedule = (function () {
     $("#days").on({ change: onSelectHandler })
 
     function pbsSubmitHandler(e) {
-      e.preventDefault()
+      savePbs(formData)
+      $(".pbs-form").toggle()
+      //e.preventDefault()
     }
 
+    //update temporary pbs data object
     function onPbsFormInputHandler() {
-      formData[this.getAttribute("id")] = this.value
+      const targetName = this.getAttribute("name")
+      formData.filter((pb) => pb.name === targetName)[0].value = this.value
       $("pre").text(JSON.stringify(formData, null, 2))
     }
 
+    //only render the form and add props when clicked
     function pbsBtnClickHandler() {
-      appendContent(pbsForm(pbs, "onPbsFormInputHandler"))
-      $(".pbs-form").on({ submit: pbsSubmitHandler })
-      $(".pbs-form > input").on({ input: onPbsFormInputHandler })
+      if ($(".pbs-form").length === 0) {
+        appendContent(pbsForm())
+        $(".pbs-form").on({ submit: pbsSubmitHandler })
+        $(".pbs-form > input").on({ input: onPbsFormInputHandler })
+      } else {
+        $(".pbs-form").toggle()
+      }
     }
 
     //testing
@@ -329,60 +428,33 @@ $(schedule.setup)
 //TODO: embed google feedback form, add add-edit-pbs functionality (probably save to local storage)
 //TODO: make a form to make schedule
 
-},{"./components/exerciseTable/exerciseTable":1,"./components/pbsForm/pbsForm":7,"./data":8,"./utils":10,"jquery":11}],10:[function(require,module,exports){
-const { pbs, pbsToExercises } = require("./data")
+},{"./components/exerciseTable/exerciseTable":2,"./components/pbsForm/pbs":8,"./utils":13,"jquery":14}],13:[function(require,module,exports){
 const $ = require("jquery")
 
-function calculateRealWeight(exercise, scale) {
-  if (scale.indexOf("%") > 0) {
-    const rate = Math.round(parseInt(scale) / 100, 2)
-    const matchedPb = Object.keys(pbsToExercises).filter((k) => {
-      //probably need regex here
-      const exerciseRegex = new RegExp(`${exercise}`, "gi")
-      //FIXME: 3 position snatch doesn't match somehow
-      return exerciseRegex.test(pbsToExercises[k].join(""))
-      //return pbsToExercises[k].includes(exercise)
-    })[0]
-    if (matchedPb) {
-      console.log(matchedPb)
-      let pbWeight
-      try {
-        pbWeight = pbs[matchedPb]
-      } catch (error) {
-        console.log(error)
-      } finally {
-        //if there's an available pbWeight
-        if (pbWeight) {
-          return `${rate * pbWeight}kg (${scale})`
-        } else {
-          //if not available, return the %
-          return scale
-        }
-      }
-    } else {
-      return scale
-    }
-  } else {
-    return scale
-  }
-}
-
 function fetchData(url, successHandler, errorHandler) {
-  if (!errorHandler) {
-    function errorHandler(xhr, err) {
-      console.log(`${xhr.status} Error: ${err}`)
-    }
-  }
-
-  const config = {
+  let config = {
     url: url,
     dataType: "json",
     success: function (data) {
       successHandler(data)
     },
-    error: function (xhr, status, err) {
-      errorHandler(xhr, err)
-    },
+  }
+
+  if (!errorHandler) {
+    config = {
+      ...config,
+      error: function (xhr, status, err) {
+        console.log(`${xhr.status} Error: ${err}`)
+        appendContent("<h2>Error Gettng Schedule Data :(</h2>")
+      },
+    }
+  } else {
+    config = {
+      ...config,
+      error: function (xhr, status, err) {
+        errorHandler(xhr, err)
+      },
+    }
   }
 
   $.ajax(config)
@@ -404,14 +476,18 @@ function camelCaseToNormal(str) {
   }, "")
 }
 
+function getTwoDecimalRate(num) {
+  return Math.round((num + Number.EPSILON) * 100) / 100
+}
+
 module.exports = {
-  calculateRealWeight,
   appendContent,
   fetchData,
   camelCaseToNormal,
+  getTwoDecimalRate,
 }
 
-},{"./data":8,"jquery":11}],11:[function(require,module,exports){
+},{"jquery":14}],14:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.5.1
  * https://jquery.com/
@@ -11285,4 +11361,4 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
-},{}]},{},[9]);
+},{}]},{},[12]);

@@ -1,4 +1,4 @@
-const { calculateRealWeight } = require("../../utils")
+const { calculateRealWeight } = require("./calculateRealWeight")
 
 //dynamic rendering based on data
 function makeExerciseRow(exerciseInfo) {
