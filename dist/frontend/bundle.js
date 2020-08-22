@@ -1,7 +1,7 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const { pbsToExercises } = require("../../data")
 const { getPbs } = require("../pbsForm/pbsData")
-const { getTwoDecimalRate } = require("../../utils")
+const { getTwoDecimalRate, isMatched } = require("../../utils")
 
 const pbs = getPbs().reduce((obj, pb) => {
   obj[pb.name] = pb.value
@@ -12,11 +12,12 @@ function calculateRealWeight(exercise, scale) {
   if (scale.indexOf("%") > 0) {
     const rate = parseFloat(scale) / 100
     const matchedPb = Object.keys(pbsToExercises).filter((k) => {
-      //probably need regex here
-      const exerciseRegex = new RegExp(`${exercise}`, "gi")
-      //FIXME: 3 position snatch doesn't match somehow
-      return exerciseRegex.test(pbsToExercises[k].join(""))
-      //return pbsToExercises[k].includes(exercise)
+      // //probably need regex here
+      // const exerciseRegex = new RegExp(`${exercise}`, "gi")
+      // //FIXME: 3 position snatch doesn't match somehow
+      // return exerciseRegex.test(pbsToExercises[k].join(""))
+      return pbsToExercises[k].includes(exercise)
+      //return isMatched(exercise, pbsToExercises[k].join(" "))
     })[0]
     if (matchedPb) {
       console.log(matchedPb)
@@ -376,7 +377,7 @@ const schedule = (function () {
     function pbsSubmitHandler(e) {
       savePbs(formData)
       $(".pbs-form").toggle()
-      //e.preventDefault()
+      //e.preventDefault() (no need to do sth complicated, simply reload...rerender) => okay that's why they use virtual DOM
     }
 
     //update temporary pbs data object
@@ -476,6 +477,12 @@ function camelCaseToNormal(str) {
   }, "")
 }
 
+function isMatched(pattern, target) {
+  //FIXME: 3 position snatch doesn't match somehow
+  return new RegExp(pattern, "gi").test(target)
+  //return pbsToExercises[k].includes(exercise)
+}
+
 function getTwoDecimalRate(num) {
   return Math.round((num + Number.EPSILON) * 100) / 100
 }
@@ -485,6 +492,7 @@ module.exports = {
   fetchData,
   camelCaseToNormal,
   getTwoDecimalRate,
+  isMatched,
 }
 
 },{"jquery":14}],14:[function(require,module,exports){

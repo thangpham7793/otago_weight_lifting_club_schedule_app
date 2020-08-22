@@ -11,11 +11,7 @@ function calculateRealWeight(exercise, scale) {
   if (scale.indexOf("%") > 0) {
     const rate = parseFloat(scale) / 100
     const matchedPb = Object.keys(pbsToExercises).filter((k) => {
-      //probably need regex here
-      const exerciseRegex = new RegExp(`${exercise}`, "gi")
-      //FIXME: 3 position snatch doesn't match somehow
-      return exerciseRegex.test(pbsToExercises[k].join(""))
-      //return pbsToExercises[k].includes(exercise)
+      return pbsToExercises[k].includes(exercise)
     })[0]
     if (matchedPb) {
       console.log(matchedPb)

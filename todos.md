@@ -13,6 +13,7 @@
 
 [x] What happens when mulitple users access the app?
 [x] Where to store the personal bests? (local storage?) => It's different for each user right?
+[] Learn more about json in POSTGRESQL https://www.postgresql.org/docs/10/datatype-json.html
 
 ### Tickets
 

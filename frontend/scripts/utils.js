@@ -45,6 +45,12 @@ function camelCaseToNormal(str) {
   }, "")
 }
 
+function isMatched(pattern, target) {
+  //FIXME: 3 position snatch doesn't match somehow
+  return new RegExp(pattern, "gi").test(target)
+  //return pbsToExercises[k].includes(exercise)
+}
+
 function getTwoDecimalRate(num) {
   return Math.round((num + Number.EPSILON) * 100) / 100
 }
@@ -54,4 +60,5 @@ module.exports = {
   fetchData,
   camelCaseToNormal,
   getTwoDecimalRate,
+  isMatched,
 }
