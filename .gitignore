@@ -3,3 +3,4 @@ node_modules
 testdata/
 src/
 tsconfig.json
+package-lock.json
