@@ -38,14 +38,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleService = void 0;
 var pg_1 = require("pg");
+var config_1 = require("../utils/config");
+var testQuery = "WITH result AS (\n  SELECT\n    name,\n    programme,\n    -- it seems that this somehow iterates over both objects\n    json_array_elements(timetable -> 'timetable') -> 'week 1' as \"week 1\"\n  FROM\n    schedule\n)\nSELECT\n  *\nFROM\n  result\nWHERE\n  \"week 1\" IS NOT NULL;";
+var pool = new pg_1.Pool(config_1.appConfig.DB_CONFIG);
 var ScheduleService = (function () {
     function ScheduleService() {
-        this.pool = new pg_1.Pool({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false,
-            },
-        });
     }
     ScheduleService.prototype.test = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
@@ -54,14 +51,14 @@ var ScheduleService = (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4, this.pool.connect()];
+                        return [4, pool.connect()];
                     case 1:
                         client = _a.sent();
-                        return [4, client.query("SELECT * FROM test_table")];
+                        return [4, client.query(testQuery)];
                     case 2:
                         result = _a.sent();
                         results = { results: result ? result.rows : null };
-                        res.render("pages/db", results);
+                        res.send(results);
                         client.release();
                         return [3, 4];
                     case 3:
