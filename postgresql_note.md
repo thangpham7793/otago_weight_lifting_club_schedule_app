@@ -1,5 +1,7 @@
 https://www.youtube.com/watch?v=qw--VYLpxG4
 www.mockaroo.com
+planet.postgresql.org
+
 
 ### Study Notes
 
@@ -13,6 +15,7 @@ www.mockaroo.com
 - query nested array https://stackoverflow.com/questions/22736742/query-for-array-elements-inside-json-type
 - https://stackoverflow.com/questions/19568123/query-for-element-of-array-in-json-column/19868697#19868697
 - json_array_elements(...) unest json arr to text
+- A::B (cast A to type B)
 
 ### Command List:
 

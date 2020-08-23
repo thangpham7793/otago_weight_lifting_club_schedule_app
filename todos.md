@@ -17,7 +17,7 @@
 
 ### Tickets
 
-[] Update form should be inside a modal
-[] Fix 3 position snatch (High Hang, Below Knee, Floor) bug
+[x] Update form should be inside a modal
+[x] Fix 3 position snatch (High Hang, Below Knee, Floor) bug
 [] Deploy
 [] Persist Schedule Data

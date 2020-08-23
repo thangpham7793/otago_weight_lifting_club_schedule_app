@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Controller = void 0;
-var schedule_service_1 = require("./services/schedule.service");
+var schedule_service_1 = require("../database/schedule.service");
 var Controller = (function () {
     function Controller(app) {
         this.app = app;
