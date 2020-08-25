@@ -4,7 +4,7 @@
   "description": "A simple progressive web app for lifting instructors to create, update lift schedules and collect learner feedbacks",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx mocha src/frontend/tests/*.test.js",
     "dev": "nodemon",
     "build-fe": "browserify src/frontend/scripts/main.js > src/frontend/bundle.js && cd src/frontend/ && cp -r index.html bundle.js data/ style.css ../backend/public && cp -r index.html bundle.js data/ style.css ../../dist/backend/public/",
     "start": "node dist/backend/server.js"
@@ -27,6 +27,7 @@
     "@types/node": "^14.6.0",
     "@types/pg": "^7.14.4",
     "browserify": "^16.5.2",
+    "mocha": "^8.1.1",
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
