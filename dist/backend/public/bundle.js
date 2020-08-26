@@ -11012,15 +11012,15 @@ const defaultPbs = {
 }
 
 const savePbs = (pbsObject) => {
-  localStorage.setItem("pbs", JSON.stringify(pbsObject))
+  localStorage.setItem("pbs_v2", JSON.stringify(pbsObject))
 }
 
 const getPbs = () => {
-  if (!localStorage.getItem("pbs")) {
+  if (!localStorage.getItem("pbs_v2")) {
     console.log("No saved Data!")
     return defaultPbs
   } else {
-    return JSON.parse(localStorage.getItem("pbs"))
+    return JSON.parse(localStorage.getItem("pbs_v2"))
   }
 }
 
