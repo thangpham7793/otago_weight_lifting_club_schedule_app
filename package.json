@@ -4,7 +4,7 @@
   "description": "A simple progressive web app for lifting instructors to create, update lift schedules and collect learner feedbacks",
   "main": "index.js",
   "scripts": {
-    "test": "npx mocha src/frontend/tests/*.test.js",
+    "test": "jest",
     "dev": "nodemon",
     "build-fe": "browserify src/frontend/scripts/main.js > src/frontend/bundle.js && cd src/frontend/ && cp -r index.html bundle.js data/ style.css ../backend/public && cp -r index.html bundle.js data/ style.css ../../dist/backend/public/",
     "start": "node dist/backend/server.js"
@@ -21,18 +21,26 @@
   },
   "homepage": "https://github.com/thangpham7793/otago_weight_lifting_club_schedule_app#readme",
   "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
     "@types/body-parser": "^1.19.0",
     "@types/cors": "^2.8.7",
     "@types/express": "^4.17.7",
     "@types/node": "^14.6.0",
     "@types/pg": "^7.14.4",
+    "@types/supertest": "^2.0.10",
+    "babel-jest": "^26.3.0",
     "browserify": "^16.5.2",
+    "jest": "^26.4.2",
     "mocha": "^8.1.1",
     "nodemon": "^2.0.4",
+    "supertest": "^4.0.2",
+    "ts-jest": "^26.3.0",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
   "dependencies": {
+    "@babel/preset-typescript": "^7.10.4",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
