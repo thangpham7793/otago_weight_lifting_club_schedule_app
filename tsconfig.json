@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "noImplicitAny": true,
+    "rootDir": "src/backend/",
+    "outDir": "dist/backend/",
+    "esModuleInterop": true,
+    "removeComments": true
+  },
+  "include": ["src/backend/**/*.ts"],
+  "exclude": ["node_modules", "**/.*/"]
+}
