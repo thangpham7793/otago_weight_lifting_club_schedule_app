@@ -3,3 +3,6 @@ node_modules
 testdata/
 src/
 tsconfig.json
+package-lock.json
+todos.md
+docker-compose.yml

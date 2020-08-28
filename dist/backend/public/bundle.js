@@ -10873,50 +10873,36 @@ return jQuery;
 } );
 
 },{}],2:[function(require,module,exports){
-const { pbsToExercises } = require("../../data")
-const { getPbs } = require("../pbsForm/pbsData")
+const parsePercent = (str, pb) => {
+  const elements = str.split("-").filter((str) => str !== "")
+  const result = elements
+    .map((str) => {
+      const percent = Math.abs(parseInt(str))
+      return ((percent * pb) / 100).toFixed() + "kg"
+    })
+    .join("-")
+  return `${result} (${str})`
+}
 
-const pbs = getPbs().reduce((obj, pb) => {
-  obj[pb.name] = pb.value
-  return obj
-}, {})
-
-function calculateRealWeight(exercise, scale) {
-  if (scale.indexOf("%") > 0) {
-    const rate = parseFloat(scale) / 100
-    const matchedPb = Object.keys(pbsToExercises).filter((k) => {
-      //console.log(exercise)
-      return pbsToExercises[k]
-        .map((exercise) => exercise.toLowerCase())
-        .includes(exercise.toLowerCase())
-    })[0]
-    if (matchedPb) {
-      //console.log(matchedPb)
-      let pbWeight
-      try {
-        pbWeight = pbs[matchedPb]
-      } catch (error) {
-        console.log(error)
-      } finally {
-        //if there's an available pbWeight
-        if (pbWeight) {
-          return `${(rate * pbWeight).toFixed(0)}kg (${scale})`
-        } else {
-          //if not available, return the %
-          return scale
-        }
+const calculateRealWeight = (str, pb) => {
+  const result = str
+    .split(" ")
+    .map((part) => {
+      if (part.indexOf("%") > -1) {
+        return parsePercent(part, pb)
+      } else {
+        return part
       }
-    } else {
-      return scale
-    }
-  } else {
-    return scale
-  }
+    })
+    .join(" ")
+
+  console.log(result)
+  return result
 }
 
 module.exports = { calculateRealWeight }
 
-},{"../../data":12,"../pbsForm/pbsData":10}],3:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 const { makeExerciseHeader } = require("./makeExerciseHeader")
 const { makeDropDownOptions } = require("./makeDropDownOptions")
 const { makeScheduleTable } = require("./makeScheduleTable")
@@ -10933,9 +10919,7 @@ function makeDropDownOptions(options) {
     return strAcc + `<option value="${opt}">${opt}</option>`
   }, "")
 
-  return `<label for='days'>Choose a day: </label><select name='days' id='days'>
-    ${htmlOptions}
-    </select>`
+  return `<select name='days' id='days'>${htmlOptions}</select>`
 }
 
 module.exports = { makeDropDownOptions }
@@ -10949,46 +10933,36 @@ module.exports = { makeExerciseHeader }
 
 },{}],6:[function(require,module,exports){
 const { calculateRealWeight } = require("./calculateRealWeight")
+const { pbsToExercises } = require("../../data")
+const { getPbs } = require("../pbsForm/pbsData")
+
+const getMatchedPbValue = (exerciseName) => {
+  const matchedPb = Object.keys(pbsToExercises).filter((k) => {
+    //console.log(exercise)
+    return pbsToExercises[k]
+      .map((exerciseName) => exerciseName.toLowerCase())
+      .includes(exerciseName.toLowerCase())
+  })[0]
+  return getPbs()[matchedPb]
+}
 
 //dynamic rendering based on data
 function makeExerciseRow(exerciseInfo) {
-  const { exerciseName, options } = exerciseInfo
-  let instruction
-  if (options.length === 1) {
-    instruction = options[0]
-    const calculatedScale = calculateRealWeight(exerciseName, instruction.scale)
-    return `<tr>
-              <td>
-              ${exerciseName}
-              </td>
-              <td>
-              ${calculatedScale} ${instruction.repSet}
-              </td>
-            </tr>`
-  } else {
-    const optionsStr = options.reduce((strAcc, instruction, index) => {
-      //last one don't add OR
+  const { exerciseName, instruction } = exerciseInfo
+  const matchedPbValue = getMatchedPbValue(exerciseName)
 
-      const calculatedScale = calculateRealWeight(
-        exerciseName,
-        instruction.scale
-      )
-
-      if (index == options.length - 1) {
-        return strAcc + `${calculatedScale} ${instruction.repSet}`
-      } else {
-        return strAcc + `${calculatedScale} ${instruction.repSet} OR `
-      }
-    }, "")
-    return `<tr>
-              <td>
-              ${exerciseName}
-              </td>
-              <td>
-                ${optionsStr}
-              </td>
-            </tr>`
-  }
+  //convert to % if there's a matched PB, otherwise return the instruction
+  const processedInstruction = matchedPbValue
+    ? calculateRealWeight(instruction, matchedPbValue)
+    : instruction
+  return `<tr>
+  <td>
+  ${exerciseName}
+  </td>
+  <td>
+  ${processedInstruction}
+  </td>
+</tr>`
 }
 
 function makeExerciseRows(exercises) {
@@ -10999,7 +10973,7 @@ function makeExerciseRows(exercises) {
 
 module.exports = { makeExerciseRows }
 
-},{"./calculateRealWeight":2}],7:[function(require,module,exports){
+},{"../../data":12,"../pbsForm/pbsData":10,"./calculateRealWeight":2}],7:[function(require,module,exports){
 const { makeTableHeader } = require("./makeTableHeader")
 const { makeExerciseRows } = require("./makeExerciseRows")
 
@@ -11027,47 +11001,26 @@ const { pbsForm } = require("./pbsForm")
 module.exports = { getPbs, savePbs, pbsForm }
 
 },{"./pbsData":10,"./pbsForm":11}],10:[function(require,module,exports){
-const defaultPbsArr = [
-  {
-    name: "snatch",
-    value: 0,
-  },
-  {
-    name: "clean",
-    value: 0,
-  },
-  {
-    name: "jerk",
-    value: 0,
-  },
-  {
-    name: "cleanAndJerk",
-    value: 0,
-  },
-  {
-    name: "backSquat",
-    value: 0,
-  },
-  {
-    name: "frontSquat",
-    value: 0,
-  },
-  {
-    name: "pushPress",
-    value: 0,
-  },
-]
+const defaultPbs = {
+  snatch: 0,
+  clean: 0,
+  jerk: 0,
+  cleanAndJerk: 0,
+  backSquat: 0,
+  frontSquat: 0,
+  pushPress: 0,
+}
 
 const savePbs = (pbsObject) => {
-  localStorage.setItem("pbs", JSON.stringify(pbsObject))
+  localStorage.setItem("pbs_v2", JSON.stringify(pbsObject))
 }
 
 const getPbs = () => {
-  if (!localStorage.getItem("pbs")) {
+  if (!localStorage.getItem("pbs_v2")) {
     console.log("No saved Data!")
-    return defaultPbsArr
+    return defaultPbs
   } else {
-    return JSON.parse(localStorage.getItem("pbs"))
+    return JSON.parse(localStorage.getItem("pbs_v2"))
   }
 }
 
@@ -11077,20 +11030,23 @@ module.exports = { savePbs, getPbs }
 const utils = require("../../utils")
 const { getPbs } = require("./pbsData")
 
-const inputField = ({ name, value }) => {
+const inputField = ([key, value]) => {
   return `
   <div class='pbs-field'>
-  <label for='${name}'>${utils.camelCaseToNormal(name)}</label>
-  <input type='text' id='${name}' name='${name}' value='${value}'>
+  <label for='${key}'>${utils.camelCaseToNormal(key)}</label>
+  <input type='text' id='${key}' key='${key}' value='${value}'>
   </div>
   `
 }
 
 const pbsForm = () => {
-  const pbsArr = getPbs()
-  console.log(pbsArr)
+  const pbsObj = getPbs()
+  console.log(pbsObj)
   return `<form class="pbs-form">
-  ${pbsArr.reduce((strAcc, pb) => strAcc + inputField(pb), "")}
+  ${Object.entries(pbsObj).reduce(
+    (strAcc, entry) => strAcc + inputField(entry),
+    ""
+  )}
   
   <button class="submit">Save</button>
   </form>`
@@ -11175,7 +11131,11 @@ const pbsToExercises = {
     "Front Squat + Jerk",
     "Power Jerk + Split Jerk", //FIXME: how to deal with "+", some exercises are combos, some are not on the standard list. Maybe he should be able to update the list/add remove items from the list
   ],
-  cleanAndJerk: ["Clean + Jerk", "Clean + Front Squat + Jerk"],
+  cleanAndJerk: [
+    "Clean + Jerk",
+    "Clean + Front Squat + Jerk",
+    "Power Clean + Split Jerk",
+  ],
   backSquat: [
     "Back Squat",
     "Pause Back Squat",
@@ -11240,9 +11200,9 @@ const schedule = (function () {
 
   //update temporary pbs data object
   function onPbsFormInputHandler() {
-    const targetName = this.getAttribute("name")
+    const targetName = this.getAttribute("key")
     //update temp form data just like React's controlled form
-    formData.filter((pb) => pb.name === targetName)[0].value = this.value
+    formData[targetName] = this.value
     $("pre").text(JSON.stringify(formData, null, 2))
   }
 

@@ -1,7 +1,10 @@
 https://www.youtube.com/watch?v=qw--VYLpxG4
 www.mockaroo.com
 planet.postgresql.org
+https://www.digitalocean.com/community/tutorials/how-to-install-postgresql-on-ubuntu-20-04-quickstart
+To connect to heroku postgresql: heroku pg:psql (then it's business as usual)
 
+https://stackoverflow.com/questions/37971961/docker-error-bind-address-already-in-use
 
 ### Study Notes
 
