@@ -1,5 +1,5 @@
 function makeTableHeader() {
-  return `<tr><th>Exercise</th><th>Instruction</th></tr>`
+  return `<tr class="timetable-row"><th class="timetable-cell head">Exercise</th><th class="timetable-cell head">Instruction</th></tr>`
 }
 
 module.exports = { makeTableHeader }

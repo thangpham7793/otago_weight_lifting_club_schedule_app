@@ -19,7 +19,7 @@ const pbsForm = () => {
     ""
   )}
   
-  <button class="submit">Save</button>
+  <button class="modal-submit-btn">Save</button>
   </form>`
 }
 

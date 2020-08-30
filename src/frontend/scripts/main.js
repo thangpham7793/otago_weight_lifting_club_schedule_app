@@ -45,8 +45,8 @@ const schedule = (function () {
     console.log(`The chosen week is week ${week}`)
     scheduleData = schedule[`week ${week}`]
     console.log(scheduleData)
-    appendContent(makeExerciseHeader(programme, name, week))
-    appendContent(makeDropDownOptions(Object.keys(scheduleData)))
+    //appendContent(makeExerciseHeader(programme, name, week))
+    appendContent(makeDropDownOptions(Object.keys(scheduleData), week))
     //need to allow users to pick a week here (or maybe it should be a form right from the beginning)
 
     //similar to useEffect once/ afterwards it's handled by onChangeHandler

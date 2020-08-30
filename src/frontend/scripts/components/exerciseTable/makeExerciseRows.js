@@ -21,11 +21,11 @@ function makeExerciseRow(exerciseInfo) {
   const processedInstruction = matchedPbValue
     ? calculateRealWeight(instruction, matchedPbValue)
     : instruction
-  return `<tr>
-  <td>
+  return `<tr class="timetable-row">
+  <td class="timetable-cell">
   ${exerciseName}
   </td>
-  <td>
+  <td class="timetable-cell">
   ${processedInstruction}
   </td>
 </tr>`

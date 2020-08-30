@@ -1,32 +1,243 @@
 /* spacing */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
+/* https://coolors.co/05668d-028090-00a896-02c39a-f0f3bd */
+:root {
+  --ff: 'Montserrat', sans-serif;
+  --bg-cl: #05668D;
+  --txt-cl: #f0f3bd;
+  --primary-cl: #028090;
+  --secondary-cl: #02c39a;
+  --fs-sm: 1rem;
+  --fs-md: 2rem;
+  --fs-lg: 4rem;
+  --pd-sm: 1rem;
+  --pd-md: 2rem;
+  --pd-lg: 4rem;
+  --mg-sm: 1rem;
+  --mg-md: 2rem;
+  --mg-lg: 4rem;
+  --fw-sm: 400;
+  --fw-md: 600;
+  --fw-lg: 800;
+  --bsd-sm: 0 0 1px 2px rgba(0, 0, 0, 0.2);
+  --bsd-md: 0 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-table {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;  
+}
+
+body {
+  color: var(--txt-cl);
+  font-family: var(--ff);
+  background: var(--bg-cl);
+  font-size: var(--sm);
+  line-height: 1.5rem;
+}
+
+
+h1 {
+  font-weight: var(--fw-md);
+  font-size: calc(var(--fs-md) * 0.75);
+}
+
+h2, h3 {
+  font-weight: calc(var(--fw-md));
+}
+
+button {
+  margin-top: var(--mg-sm);
+  padding: var(--pd-sm);
+  margin-bottom: 1rem;
+  box-shadow: var(--bsd-md);
+  border-radius: 2%;
+  letter-spacing: 0.05rem;
+  border: none;
+  width: 50vw;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+}
+
+button:hover, button:focus, a:hover, a:focus {
+  background: var(--secondary-cl);
+  font-weight: var(--fw-md);
+  transition-duration: 0.2s;
+  transform-origin: center;
+}
+
+a:hover, a:focus {
+  padding: calc(var(--pd-sm) / 4);
+}
+
+select {
+  background: var(--bg-cl);
+  color: var(--txt-cl);
+  font-size: var(--fs-sm)
+  font-family: var(--ff);
+  text-align: center;
+  width: 10vw;
+  border: 0.05rem solid var(--secondary-cl);
+  box-shadow: var(--bsd-sm); 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+/*   text-overflow: ''; */
+}
+
+a {
+  text-decoration: none;
+  color: var(--txt-cl);
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+.main-content-wrapper {
+  margin: 0 auto;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-areas: 
+    "header"
+    "main"
+    "footer";
+  grid-template-columns: 1fr;
+  grid-template-rows: 3rem 1fr 1.5rem;
+  text-align: center;
+}
+
+.header {
+  grid-area: header;
+  padding: var(--pd-sm) 0;
+}
+
+.main {
+ grid-area: main; 
+ background-image: linear-gradient(#00a896, #f0f3bd);
+}
+
+.footer {
+  grid-area: footer;
+  font-size: calc(var(--fs-sm) * 0.5);
+}
+
+.header, .footer {
+  background: var(--primary-cl);
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.search-form-label {
+  font-weight: var(--fw-md);
+  color: var(--primary-cl);
+  margin-right: var(--mg-sm);
+}
+
+/* INDEX PAGE */
+#week {
+  width: 15vw;
+  font-weight: var(--fw-md);
+}
+
+.main.index {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.search-form-wrapper {
+  margin-bottom: var(--mg-sm);
+  padding: 0 var(--pd-sm);
+}
+
+.main__programme-title {
+  font-size: calc(var(--fs-sm) * 1.5);
+  padding-top: var(--pd-sm);
+}
+
+a.logo {
+  display: block;
+  justify-content: center;
+}
+
+.logo {
+  margin: calc(var(--mg-sm) /2) auto;
+  width: 200px;
+  height: 100px;
+  margin-bottom: 1.5rem;
+}
+
+/* TIMETABLE PAGE */
+
+.search-form-wrapper.timetable {
+  margin-top: var(--mg-sm);
+}
+
+.search-form-label.timetable {
+  color: var(--txt-cl);
+  margin: 0 var(--mg-sm);
+}
+
+#days {
+  width: 25vw;
+}
+
+.schedule-table {
+  margin-top: var(--mg-sm);
   table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
-  border: 3px solid purple;
 }
 
-thead th:nth-child(1) {
-  width: 30%;
+.timetable-cell {
+  background: #333;
+  text-align: center;
+  border: 1px solid var(--secondary-cl);
+  padding: var(--pd-sm);
 }
 
-thead th:nth-child(2) {
-  width: 20%;
+.timetable-cell.head {
+  font-weight: var(--fw-lg);
 }
 
-thead th:nth-child(3) {
-  width: 15%;
+.pbs-btn-container {
+  display: flex;
+  /* nice flex helps responsive */
+  justify-content: space-evenly;  
 }
 
-thead th:nth-child(4) {
-  width: 35%;
+.pbs-btn, .pbs-btn-home, .pbs-btn-feedback {
+  font-size: calc(var(--fs-sm) * 0.75);
+  padding: calc(var(--pd-sm) / 2) 0;
+  width: 30vw;
 }
 
-th,
-td {
-  padding: 20px;
+.pbs-btn-feedback, .pbs-btn-home {
+  flex-basis: 20vw;
 }
+
+.pbs-btn.edit {
+  flex-grow: 0.5;
+}
+
+.home-link, .feedback-link {
+  color: #333;
+  font-size: var(--sm);
+}
+
+.home-link:hover, .home-link:focus,
+.feedback-link:hover, .feedback-link:focus { 
+  padding: 0;
+}
+
+
+/* Modal Content */
 
 .pbs-modal {
   display: none;
@@ -42,26 +253,92 @@ td {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-/* Modal Content */
+.modal-content__title {
+  margin-bottom: var(--mg-sm);
+}
+
+.pbs-form {
+  margin-bottom: -1rem;
+}
+
+.pbs-field {
+  background: var(--secondary-cl);
+  display: flex;
+  font-weight: var(--fw-md);
+  justify-content: space-around;
+  padding: calc(var(--mg-sm) / 2);
+}
+
+.pbs-field > label {
+  font-size: calc(var(--fs-sm) * 0.75);
+/*   text-align: center; */
+  width: 20vw;
+}
+
+.pbs-field > input {
+  width: 20vw;
+  text-align: center;
+/*   margin-right: var(--mg-md); */
+}
+
 .modal-content {
-  background-color: #fefefe;
+  background-color: var(--bg-cl);
   margin: 10% auto 0;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 80vw;
+  /* so that the close btn stays inside */
+  position: relative;
 }
 
-/* Close Button */
 .close {
-  color: #aaa;
+  display: inline-block;
+  color: var(--txt-cl);
   float: right;
-  font-size: 1.5em;
-  font-weight: bold;
+  font-size: calc(var(--fs-md) * 1.5);
+  font-weight: var(--fw-lg);
+  position: absolute;
+  right: 2vw;
+  top: 2vh;
 }
 
 .close:hover,
 .close:focus {
-  color: black;
+  color: var(--secondary-cl);
   text-decoration: none;
   cursor: ponter;
+}
+
+.modal-submit-btn {
+}
+
+/* MEDIA QUERIES */
+@media only screen and (min-width: 768px) {
+  #days {
+    width: 10vw;
+  }
+  
+  #week {
+    width: 5vw;
+  }
+  
+  .modal-content {
+    width: 60vw;
+    margin-top: 2vh;
+  }
+  
+  .pbs-field > input {
+/*     width: 10vw; */
+/*     margin-right: 15vw;     */
+  }
+
+  button, .pbs-btn {
+    width: 20vw;
+  }
+  
+  .schedule-table {
+    width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }

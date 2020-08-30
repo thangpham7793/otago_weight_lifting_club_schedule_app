@@ -3,33 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link rel="stylesheet" href="resetBrowserStyle.css" /> -->
+    <link rel="stylesheet" href="resetBrowserStyle.css" />
     <link rel="stylesheet" href="style.css" />
     <title>Weekly Timetable</title>
   </head>
   <body>
     <div class="main-content-wrapper">
-      <header>
+      <header class="header timetable">
         <nav class="nav-bar">
           <ul class="nav-list">
             <li class="nav-item"><a href="./index.html">Back to Home</a></li>
           </ul>
         </nav>
       </header>
-      <main>
+      <main class="main timetable">
         <!-- The Modal -->
         <div class="pbs-modal">
           <!-- Modal Content -->
           <div class="modal-content">
             <span class="close">&times;</span>
-            <h3>Enter Your Personal Bests</h3>
+            <h3 class="modal-content__title">Enter Your Personal Bests</h3>
           </div>
         </div>
         <div class="schedule-table-container"></div>
-        <div><button class="pbs-btn">Add/Edit Personal Bests</button></div>
-        <pre></pre>
+        <div class="pbs-btn-container">
+          <button class="pbs-btn-home">
+            <a href="./index.html" class="home-link">Back to Home</a>
+          </button>
+          <button class="pbs-btn edit">Add/Edit<br />Personal Bests</button>
+          <button class="pbs-btn-feedback">
+            <a
+              href="https://forms.gle/GaK2d6tAX9PqvGRK8"
+              class="feedback-link"
+              target="_blank"
+              >Add Feedback
+            </a>
+          </button>
+        </div>
+        <pre display="none"></pre>
       </main>
-      <footer>Otago Lifting Club. All Rights Reserved</footer>
+      <footer class="footer timetable">
+        <div class="footer-text-wrapper">
+          Dunedin Lifting Club 2020. All Rights Reserved
+        </div>
+      </footer>
     </div>
     <script src="./bundle.js"></script>
   </body>
