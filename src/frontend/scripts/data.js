@@ -81,6 +81,7 @@ const pbsToExercises = {
     "Clean + Front Squat + Jerk",
     "Power Clean + Split Jerk",
     "Power Clean + Power Jerk",
+    "Clean and Jerk",
   ],
   backSquat: [
     "Back Squat",
