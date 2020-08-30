@@ -10,7 +10,7 @@ const {
 
 //similar to App.js
 const schedule = (function () {
-  const dataURL = "data/schedule.json"
+  const dataURL = "database/september.json"
 
   //global state like Redux or component state like React...
   let scheduleData = ""
@@ -39,11 +39,15 @@ const schedule = (function () {
 
   //initial render
   function successHandler(data) {
+    console.log(data)
     const { programme, name, schedule } = data
-    scheduleData = schedule
-
-    appendContent(makeExerciseHeader(programme, name))
-    appendContent(makeDropDownOptions(Object.keys(schedule)))
+    const week = sessionStorage.getItem("week")
+    console.log(`The chosen week is week ${week}`)
+    scheduleData = schedule[`week ${week}`]
+    console.log(scheduleData)
+    appendContent(makeExerciseHeader(programme, name, week))
+    appendContent(makeDropDownOptions(Object.keys(scheduleData)))
+    //need to allow users to pick a week here (or maybe it should be a form right from the beginning)
 
     //similar to useEffect once/ afterwards it's handled by onChangeHandler
     if (scheduleData) {

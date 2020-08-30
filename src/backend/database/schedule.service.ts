@@ -1,39 +1,40 @@
 import { Request, Response } from "express"
-import { Pool, PoolClient, ClientConfig, Client } from "pg"
-import { appConfig } from "../utils/config"
-
-const testQuery = `WITH result AS (
-  SELECT
-    name,
-    programme,
-    -- it seems that this somehow iterates over both objects
-    json_array_elements(timetable -> 'timetable') -> 'week 1' as "week 1"
-  FROM
-    schedule
-)
-SELECT
-  *
-FROM
-  result
-WHERE
-  "week 1" IS NOT NULL;`
-
-const pool: Pool = new Pool(appConfig.DB_CONFIG)
+import { PoolClient } from "pg"
+import pool from "./pool"
 
 export class ScheduleService {
-  async test(req: Request, res: Response) {
+  async getWeeklySchedule(req: Request, res: Response) {
+    const { programmeId, scheduleId, week } = req.params
+    console.log(programmeId, scheduleId, week)
+    const params = [programmeId, scheduleId, week].map((ele) => parseInt(ele))
+    let statement = `
+    SELECT 
+      p.programme_name as programme,
+      s.schedule_name as schedule,
+      w.timetable as week_${week}
+    FROM
+      weekly_timetable w
+      INNER JOIN schedule s ON w.schedule_id = s.schedule_id
+      INNER JOIN programme p ON w.programme_id = p.programme_id
+    WHERE
+      w.programme_id = $1 AND w.schedule_id = $2 AND w.week = $3;`
+
+    let client: PoolClient
+
     try {
-      //const client = new Client(localConfig)
-      //const pool = new Pool(localConfig)
-      const client: PoolClient = await pool.connect()
-      const result = await client.query(testQuery)
-      const results = { results: result ? result.rows : null }
-      res.send(results)
-      //client.end()
-      client.release()
+      client = await pool.connect()
+      const result = await client.query(statement, params)
+      res.status(200).json(result.rows[0])
+      console.log(result.rows[0])
     } catch (err) {
-      console.error(err)
+      console.log(err)
       res.send("Error" + err)
+    } finally {
+      client.release()
     }
+  }
+
+  async endPool() {
+    await pool.end()
   }
 }

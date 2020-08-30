@@ -5,20 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- <link rel="stylesheet" href="resetBrowserStyle.css" /> -->
     <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <title>Otago Lifiting Schedule</title>
   </head>
   <body>
-    <!-- The Modal -->
-    <div class="pbs-modal">
-      <!-- Modal Content -->
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3>Enter Your Personal Bests</h3>
-      </div>
+    <div class="main-content-wrapper">
+      <header>
+        <h2 class="main-title">Youth and Junior - September 2020 Strength</h2>
+      </header>
+      <main>
+        <div class="search-form-wrapper">
+          <form>
+            <div class="field-container week">
+              <label for="week">Week</label>
+              <select name="week" id="week" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div class="submit-btn-container">
+              <button type="submit" class="submit-btn">Submit</button>
+            </div>
+          </form>
+        </div>
+      </main>
+      <footer>Otago Lifting Club. All Rights Reserved</footer>
     </div>
-    <div class="schedule-table-container"></div>
-    <div><button class="pbs-btn">Add/Edit Personal Bests</button></div>
-    <pre></pre>
+    <script src="./searchForm.js"></script>
     <script src="./bundle.js"></script>
   </body>
 </html>

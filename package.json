@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "dev": "nodemon",
-    "build-fe": "browserify src/frontend/scripts/main.js > src/frontend/bundle.js && cd src/frontend/ && cp -r index.html bundle.js data/ style.css ../backend/public && cp -r index.html bundle.js data/ style.css ../../dist/backend/public/",
+    "build-fe": "browserify src/frontend/scripts/main.js > src/frontend/bundle.js && cd src/frontend/ && cp -r *.html *.js database/ *.css ../backend/public && cp -r *.html *.js database/ *.css ../../dist/backend/public/",
     "start": "node dist/backend/server.js"
   },
   "repository": {

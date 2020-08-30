@@ -9,8 +9,8 @@ services:
     volumes:
       # bind container's folder onto a host's folder
       - type: bind
-        source: ./testdata
-        target: /tmp/testdata
+        source: ./db_scripts
+        target: /tmp/db_scripts
       - db-data:/var/lib/postgresql/data/ #persist data inside the container
     ports:
       - "5432:5432"
