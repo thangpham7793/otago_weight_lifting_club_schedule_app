@@ -17,9 +17,10 @@ CREATE TABLE schedule (
 
 CREATE TABLE weekly_timetable (
   weekly_timetable_id SERIAL PRIMARY KEY,
-  week VARCHAR(5) NOT NULL,
+  week INT NOT NULL,
   timetable JSON,
-  schedule_id INT REFERENCES schedule(schedule_id) ON DELETE CASCADE 
+  schedule_id INT REFERENCES schedule(schedule_id) ON DELETE CASCADE,
+  programme_id INT REFERENCES programme(programme_id) ON DELETE CASCADE 
 );
 
 CREATE TABLE student (

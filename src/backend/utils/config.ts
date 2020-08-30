@@ -7,7 +7,7 @@ const localConfig: ClientConfig = {
   host: "0.0.0.0",
   user: "test_user",
   port: 5432,
-  database: "test",
+  database: "lifting",
   password: "6500826",
 }
 

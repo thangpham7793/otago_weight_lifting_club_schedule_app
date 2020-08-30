@@ -39,58 +39,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScheduleService = void 0;
-var pool_1 = __importDefault(require("./pool"));
-var ScheduleService = (function () {
-    function ScheduleService() {
-    }
-    ScheduleService.prototype.getWeeklySchedule = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, programmeId, scheduleId, week, params, statement, client, result, err_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = req.params, programmeId = _a.programmeId, scheduleId = _a.scheduleId, week = _a.week;
-                        console.log(programmeId, scheduleId, week);
-                        params = [programmeId, scheduleId, week].map(function (ele) { return parseInt(ele); });
-                        statement = "\n    SELECT \n      p.programme_name as programme,\n      s.schedule_name as schedule,\n      w.timetable as week_" + week + "\n    FROM\n      weekly_timetable w\n      INNER JOIN schedule s ON w.schedule_id = s.schedule_id\n      INNER JOIN programme p ON w.programme_id = p.programme_id\n    WHERE\n      w.programme_id = $1 AND w.schedule_id = $2 AND w.week = $3;";
-                        _b.label = 1;
-                    case 1:
-                        _b.trys.push([1, 4, 5, 6]);
-                        return [4, pool_1.default.connect()];
-                    case 2:
-                        client = _b.sent();
-                        return [4, client.query(statement, params)];
-                    case 3:
-                        result = _b.sent();
-                        res.status(200).json(result.rows[0]);
-                        console.log(result.rows[0]);
-                        return [3, 6];
-                    case 4:
-                        err_1 = _b.sent();
-                        console.log(err_1);
-                        res.send("Error" + err_1);
-                        return [3, 6];
-                    case 5:
-                        client.release();
-                        return [7];
-                    case 6: return [2];
-                }
-            });
+var app_1 = __importDefault(require("../app"));
+var supertest_1 = __importDefault(require("supertest"));
+var pool_1 = __importDefault(require("../database/pool"));
+describe("GET / a simple home route", function () {
+    it("should return a Hello World message", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4, supertest_1.default(app_1.default).get("/")];
+                case 1:
+                    result = _a.sent();
+                    expect(result.text).toEqual("Hello World!");
+                    expect(result.status).toEqual(200);
+                    return [2];
+            }
         });
-    };
-    ScheduleService.prototype.endPool = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, pool_1.default.end()];
-                    case 1:
-                        _a.sent();
-                        return [2];
-                }
-            });
+    }); });
+});
+describe.only("GET /programme/:programmeId/schedule/:scheduleId/week/:week", function () {
+    it("should return an object with the name, programme, and schedule for the specified week", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, programme, schedule, week_1, expectedDays;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4, supertest_1.default(app_1.default).get("/programme/1/schedule/1/week/1")];
+                case 1:
+                    result = _b.sent();
+                    expect(result.status).toEqual(200);
+                    _a = result.body, programme = _a.programme, schedule = _a.schedule, week_1 = _a.week_1;
+                    expect(programme).toEqual("Youth and Junior");
+                    expect(schedule).toEqual("September 2020 Strength");
+                    expectedDays = ["day 1", "day 2", "day 2.5", "day 3", "day 3.5"];
+                    expectedDays.forEach(function (day) {
+                        expect(Object.keys(week_1)).toContain(day);
+                    });
+                    return [2];
+            }
         });
-    };
-    return ScheduleService;
-}());
-exports.ScheduleService = ScheduleService;
+    }); });
+    afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4, pool_1.default.end()];
+                case 1:
+                    _a.sent();
+                    return [2];
+            }
+        });
+    }); });
+});

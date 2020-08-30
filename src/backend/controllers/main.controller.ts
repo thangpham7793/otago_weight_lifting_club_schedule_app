@@ -9,11 +9,13 @@ export class Controller {
   }
 
   routes() {
-    this.app.route("/db").get(this.scheduleService.test)
     this.app
       .route("/")
       .get(function welcomeMessage(req: Request, res: Response) {
         res.status(200).send("Hello World!")
       })
+    this.app
+      .route("/programme/:programmeId/schedule/:scheduleId/week/:week")
+      .get(this.scheduleService.getWeeklySchedule)
   }
 }

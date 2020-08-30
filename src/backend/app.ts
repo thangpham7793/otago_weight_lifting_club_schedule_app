@@ -32,7 +32,7 @@ class App {
   }
 
   private useStatic() {
-    this.app.use("/static", express.static(path.join(__dirname, "public")))
+    this.app.use(express.static(path.join(__dirname, "public")))
   }
 }
 

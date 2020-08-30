@@ -18,6 +18,7 @@ const pbsToExercises = {
     "Hang Snatch",
     "High Hang Snatch",
     "Hang Snatch Below Knee",
+    "Hang Power Snatch Below Knee",
     "Hang Snatch Just Off the Floor",
     "Hang Power Snatch",
     "Block Snatch",
@@ -50,6 +51,7 @@ const pbsToExercises = {
     "Hang Snatch Below Knee",
     "Hang Clean Just Off the Floor",
     "Hang Power Clean",
+    "Hang Power Clean Below Knee",
     "Block Clean",
     "Low Block Clean",
     "Block Power Clean",
@@ -78,6 +80,7 @@ const pbsToExercises = {
     "Clean + Jerk",
     "Clean + Front Squat + Jerk",
     "Power Clean + Split Jerk",
+    "Power Clean + Power Jerk",
   ],
   backSquat: [
     "Back Squat",

@@ -9,7 +9,14 @@ var Controller = (function () {
         this.routes();
     }
     Controller.prototype.routes = function () {
-        this.app.route("/db").get(this.scheduleService.test);
+        this.app
+            .route("/")
+            .get(function welcomeMessage(req, res) {
+            res.status(200).send("Hello World!");
+        });
+        this.app
+            .route("/programme/:programmeId/schedule/:scheduleId/week/:week")
+            .get(this.scheduleService.getWeeklySchedule);
     };
     return Controller;
 }());

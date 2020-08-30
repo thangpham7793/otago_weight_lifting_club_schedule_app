@@ -10925,8 +10925,8 @@ function makeDropDownOptions(options) {
 module.exports = { makeDropDownOptions }
 
 },{}],5:[function(require,module,exports){
-function makeExerciseHeader(programme, name) {
-  return `<h2>${programme} ${name}</h2>`
+function makeExerciseHeader(programme, name, week) {
+  return `<h2>${programme} ${name} Week ${week}</h2>`
 }
 
 module.exports = { makeExerciseHeader }
@@ -11075,6 +11075,7 @@ const pbsToExercises = {
     "Hang Snatch",
     "High Hang Snatch",
     "Hang Snatch Below Knee",
+    "Hang Power Snatch Below Knee",
     "Hang Snatch Just Off the Floor",
     "Hang Power Snatch",
     "Block Snatch",
@@ -11107,6 +11108,7 @@ const pbsToExercises = {
     "Hang Snatch Below Knee",
     "Hang Clean Just Off the Floor",
     "Hang Power Clean",
+    "Hang Power Clean Below Knee",
     "Block Clean",
     "Low Block Clean",
     "Block Power Clean",
@@ -11135,6 +11137,7 @@ const pbsToExercises = {
     "Clean + Jerk",
     "Clean + Front Squat + Jerk",
     "Power Clean + Split Jerk",
+    "Power Clean + Power Jerk",
   ],
   backSquat: [
     "Back Squat",
@@ -11184,7 +11187,7 @@ const {
 
 //similar to App.js
 const schedule = (function () {
-  const dataURL = "data/schedule.json"
+  const dataURL = "database/september.json"
 
   //global state like Redux or component state like React...
   let scheduleData = ""
@@ -11213,11 +11216,15 @@ const schedule = (function () {
 
   //initial render
   function successHandler(data) {
+    console.log(data)
     const { programme, name, schedule } = data
-    scheduleData = schedule
-
-    appendContent(makeExerciseHeader(programme, name))
-    appendContent(makeDropDownOptions(Object.keys(schedule)))
+    const week = sessionStorage.getItem("week")
+    console.log(`The chosen week is week ${week}`)
+    scheduleData = schedule[`week ${week}`]
+    console.log(scheduleData)
+    appendContent(makeExerciseHeader(programme, name, week))
+    appendContent(makeDropDownOptions(Object.keys(scheduleData)))
+    //need to allow users to pick a week here (or maybe it should be a form right from the beginning)
 
     //similar to useEffect once/ afterwards it's handled by onChangeHandler
     if (scheduleData) {
