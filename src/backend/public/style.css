@@ -78,6 +78,8 @@ select {
   font-size: var(--fs-sm)
   font-family: var(--ff);
   text-align: center;
+  text-align-last: center;
+  -moz-text-align-last: center;
   width: 10vw;
   border: 0.05rem solid var(--secondary-cl);
   box-shadow: var(--bsd-sm); 
@@ -140,6 +142,10 @@ a.disabled {
 }
 
 /* INDEX PAGE */
+.main-title {
+  font-weight: var(--fw-lg);
+}
+
 #week {
   width: 15vw;
   font-weight: var(--fw-md);
@@ -169,7 +175,7 @@ a.logo {
 .logo {
   margin: calc(var(--mg-sm) /2) auto;
   width: 200px;
-  height: 100px;
+  height: 150px;
   margin-bottom: 1.5rem;
 }
 
