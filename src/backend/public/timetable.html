@@ -17,27 +17,42 @@
         </nav>
       </header>
       <main class="main timetable">
-        <!-- The Modal -->
-        <div class="pbs-modal">
+        <!-- The Pbs Modal -->
+        <div class="modal pbs-modal">
           <!-- Modal Content -->
-          <div class="modal-content">
-            <span class="close">&times;</span>
+          <div class="modal-content pbs-content">
+            <span class="close pbs-close">&times;</span>
             <h3 class="modal-content__title">Enter Your Personal Bests</h3>
           </div>
         </div>
+
+        <!-- The Feedback Modal -->
+        <div class="modal fb-modal">
+          <!-- Modal Content -->
+          <div class="modal-content fb-content">
+            <span class="fb-close close">&times;</span>
+            <iframe
+              class="ggl-fb-form"
+              src="https://docs.google.com/forms/d/e/1FAIpQLSeBrxdCbRf1M0YvZVHp2n3taph7-pAS9mkbN99m2ZPeBrf0yQ/viewform?embedded=true"
+              >Loading…
+            </iframe>
+          </div>
+        </div>
+
         <div class="schedule-table-container"></div>
         <div class="pbs-btn-container">
           <button class="pbs-btn-home">
             <a href="./index.html" class="home-link">Back to Home</a>
           </button>
           <button class="pbs-btn edit">Add/Edit<br />Personal Bests</button>
-          <button class="pbs-btn-feedback">
-            <a
+          <button class="fb-btn">
+            <!-- <a
               href="https://forms.gle/GaK2d6tAX9PqvGRK8"
               class="feedback-link"
               target="_blank"
               >Add Feedback
-            </a>
+            </a> -->
+            Add Feedback
           </button>
         </div>
         <pre display="none"></pre>

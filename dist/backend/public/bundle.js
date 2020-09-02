@@ -11215,7 +11215,12 @@ const schedule = (function () {
 
   //only render the form and add props when clicked
   function toggleModal() {
+    console.log("Show pbs!")
     $(".pbs-modal").toggle()
+  }
+
+  function toggleFeedbackModal() {
+    $(".fb-modal").toggle()
   }
 
   //initial render
@@ -11236,16 +11241,27 @@ const schedule = (function () {
     }
     $("#days").on({ change: onSelectHandler })
 
-    //MODAL
-    $(".modal-content").append(pbsForm())
+    //PBS MODAL
+    $(".pbs-content").append(pbsForm())
     $(".pbs-form").on({ submit: pbsSubmitHandler })
     $(".pbs-form > div > input").on({ input: onPbsFormInputHandler })
     $(".pbs-btn").on({ click: toggleModal })
-    $(".close").on({
+    $(".pbs-close").on({
       click: toggleModal,
     })
+
+    //FB MODAL
+    $(".fb-btn").on({ click: toggleFeedbackModal })
+    $(".fb-close").on({
+      click: toggleFeedbackModal,
+    })
+
     window.onclick = function (e) {
-      if (e.target.classList.contains("pbs-modal")) toggleModal()
+      if (e.target.classList.contains("pbs-modal")) {
+        toggleModal()
+      } else if (e.target.classList.contains("fb-modal")) {
+        toggleFeedbackModal()
+      }
     }
   }
 
@@ -11275,6 +11291,12 @@ $(schedule.setup)
 
 //TODO: embed google feedback form, add add-edit-pbs functionality (probably save to local storage)
 //TODO: make a form to make schedule
+
+// width="640"
+//               height="768"
+//               frameborder="0"
+//               marginheight="0"
+//               marginwidth="0"
 
 },{"./components/exerciseTable/exerciseTable":3,"./components/pbsForm/pbs":9,"./utils":14,"jquery":1}],14:[function(require,module,exports){
 const $ = require("jquery")

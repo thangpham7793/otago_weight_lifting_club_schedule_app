@@ -218,13 +218,13 @@ a.logo {
   justify-content: space-evenly;  
 }
 
-.pbs-btn, .pbs-btn-home, .pbs-btn-feedback {
+.pbs-btn, .pbs-btn-home, .fb-btn {
   font-size: calc(var(--fs-sm) * 0.75);
   padding: calc(var(--pd-sm) / 2) 0;
   width: 30vw;
 }
 
-.pbs-btn-feedback, .pbs-btn-home {
+.fb-btn, .pbs-btn-home {
   flex-basis: 20vw;
 }
 
@@ -232,20 +232,19 @@ a.logo {
   flex-grow: 0.5;
 }
 
-.home-link, .feedback-link {
+.home-link {
   color: #333;
   font-size: var(--sm);
 }
 
-.home-link:hover, .home-link:focus,
-.feedback-link:hover, .feedback-link:focus { 
+.home-link:hover, .home-link:focus { 
   padding: 0;
 }
 
 
-/* Modal Content */
+/* MODAL */
 
-.pbs-modal {
+.modal {
   display: none;
   position: fixed;
   z-index: 9999;
@@ -257,6 +256,37 @@ a.logo {
   overflow: auto;
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  padding: 20px;
+  /* so that the close btn stays inside */
+  position: relative;
+}
+
+.close {
+  display: inline-block;
+  color: var(--txt-cl);
+  float: right;
+  font-size: calc(var(--fs-md) * 1.5);
+  font-weight: var(--fw-lg);
+  position: absolute;
+}
+
+.close:hover,
+.close:focus {
+  color: var(--secondary-cl);
+  text-decoration: none;
+  cursor: ponter;
+}
+
+/* PBS MODAL */
+
+.pbs-content {
+  margin: 10% auto 0;
+  background-color: var(--bg-cl);
+  border: 1px solid #888;
+/*   width: 80vw; */
 }
 
 .modal-content__title {
@@ -287,35 +317,40 @@ a.logo {
 /*   margin-right: var(--mg-md); */
 }
 
-.modal-content {
-  background-color: var(--bg-cl);
-  margin: 10% auto 0;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80vw;
-  /* so that the close btn stays inside */
-  position: relative;
-}
-
-.close {
-  display: inline-block;
-  color: var(--txt-cl);
-  float: right;
-  font-size: calc(var(--fs-md) * 1.5);
-  font-weight: var(--fw-lg);
-  position: absolute;
+.pbs-close {
   right: 2vw;
   top: 2vh;
 }
 
-.close:hover,
-.close:focus {
-  color: var(--secondary-cl);
-  text-decoration: none;
-  cursor: ponter;
+/* FEEDBACK MODAL */
+
+.fb-content {
+  margin: 10% auto;
+  display: flex;
+  width: 100vw;
+  background: var(--secondary-cl);
+  padding: 0;
 }
 
-.modal-submit-btn {
+.ggl-fb-form {
+  margin: 11% auto var(--mg-sm);
+  width: 100vw;
+  height: 100vh;
+}
+
+.fb-close {
+  right: 3%;
+  top: 1%;
+}
+
+.fb-close:hover, 
+.fb-close:focus {
+  color: var(--bg-cl);
+}
+
+.fb-btn {
+  color: #333;
+  font-size: calc(var(--fs-sm) * 0.75);
 }
 
 /* MEDIA QUERIES */
@@ -346,5 +381,18 @@ a.logo {
     width: 90vw;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .fb-close {
+    right: 1%;
+    top: 1%;
+  }
+
+  .ggl-fb-form {
+    margin-top: 5%;
+  }
+
+  .fb-content {
+    width: 50vw;
   }
 }
