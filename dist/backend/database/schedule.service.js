@@ -41,19 +41,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleService = void 0;
 var pool_1 = __importDefault(require("./pool"));
+var auth_1 = require("../utils/auth");
 var ScheduleService = (function () {
     function ScheduleService() {
     }
-    ScheduleService.prototype.getWeeklySchedule = function (req, res) {
+    ScheduleService.prototype.checkCredentialsAndGetSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, programmeId, scheduleId, week, params, statement, client, result, err_1;
+            var _a, username, password, params, statement, client, result, hashed_password, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = req.params, programmeId = _a.programmeId, scheduleId = _a.scheduleId, week = _a.week;
-                        console.log(programmeId, scheduleId, week);
-                        params = [programmeId, scheduleId, week].map(function (ele) { return parseInt(ele); });
-                        statement = "\n    SELECT \n      p.programme_name as programme,\n      s.schedule_name as schedule,\n      w.timetable as week_" + week + "\n    FROM\n      weekly_timetable w\n      INNER JOIN schedule s ON w.schedule_id = s.schedule_id\n      INNER JOIN programme p ON w.programme_id = p.programme_id\n    WHERE\n      w.programme_id = $1 AND w.schedule_id = $2 AND w.week = $3;";
+                        _a = req.body, username = _a.username, password = _a.password;
+                        params = [username];
+                        statement = "\n    SELECT username, hashed_password, schedule_name, week_count, schedule_id, programme_name   \n    FROM student st\n    JOIN schedule sc\n    ON (st.programme_id = sc.programme_id)\n    JOIN programme p\n    ON (st.programme_id = p.programme_id)\n    WHERE username = $1;";
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 4, 5, 6]);
@@ -63,13 +63,94 @@ var ScheduleService = (function () {
                         return [4, client.query(statement, params)];
                     case 3:
                         result = _b.sent();
-                        res.status(200).json(result.rows[0]);
-                        console.log(result.rows[0]);
+                        if (!result.rows) {
+                            throw new Error("unknown username");
+                        }
+                        hashed_password = result.rows[0].hashed_password;
+                        if (auth_1.checkPassword(password, hashed_password)) {
+                            result.rows.forEach(function (row) {
+                                delete row.username;
+                                delete row.hashed_password;
+                            });
+                            res.status(200).json(result.rows);
+                        }
+                        else {
+                            throw new Error("wrong password");
+                        }
                         return [3, 6];
                     case 4:
                         err_1 = _b.sent();
                         console.log(err_1);
                         res.send("Error" + err_1);
+                        return [3, 6];
+                    case 5:
+                        client.release();
+                        return [7];
+                    case 6: return [2];
+                }
+            });
+        });
+    };
+    ScheduleService.prototype.getAllSchedules = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var programmeId, params, statement, client, result, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        programmeId = req.params.programmeId;
+                        params = [parseInt(programmeId)];
+                        statement = "\n    SELECT \n      schedule_name, \n      week_count, \n      schedule_id \n    FROM programme p \n    INNER JOIN schedule s \n    ON (schedule_id = schedule_id)\n    WHERE schedule_id = ?;";
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 4, 5, 6]);
+                        return [4, pool_1.default.connect()];
+                    case 2:
+                        client = _a.sent();
+                        return [4, client.query(statement, params)];
+                    case 3:
+                        result = _a.sent();
+                        res.status(200).json(result.rows);
+                        return [3, 6];
+                    case 4:
+                        err_2 = _a.sent();
+                        console.log(err_2);
+                        res.send("Error" + err_2);
+                        return [3, 6];
+                    case 5:
+                        client.release();
+                        return [7];
+                    case 6: return [2];
+                }
+            });
+        });
+    };
+    ScheduleService.prototype.getWeeklySchedule = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, scheduleId, week, params, statement, client, result, err_3;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.params, scheduleId = _a.scheduleId, week = _a.week;
+                        params = [scheduleId, week].map(function (ele) { return parseInt(ele); });
+                        statement = "\n    SELECT timetable as week_" + week + "\n    FROM weekly_timetable w \n    JOIN schedule s\n    ON (w.schedule_id = s.schedule_id)\n    WHERE s.schedule_id = $1 AND week = $2;";
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 4, 5, 6]);
+                        return [4, pool_1.default.connect()];
+                    case 2:
+                        client = _b.sent();
+                        return [4, client.query(statement, params)];
+                    case 3:
+                        result = _b.sent();
+                        if (!result.rows) {
+                            throw new Error("no availale weekly schedule found");
+                        }
+                        res.status(200).json(result.rows[0]);
+                        return [3, 6];
+                    case 4:
+                        err_3 = _b.sent();
+                        console.log(err_3);
+                        res.send("Error" + err_3);
                         return [3, 6];
                     case 5:
                         client.release();

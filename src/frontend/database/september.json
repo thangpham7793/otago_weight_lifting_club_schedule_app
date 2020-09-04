@@ -14,7 +14,7 @@
         },
         {
           "exerciseName": "Front Squat",
-          "instruction": "77% 2r3s"
+          "instruction": "77% 3r3s"
         },
         {
           "exerciseName": "Snatch Pull",
@@ -22,7 +22,7 @@
         },
         {
           "exerciseName": "Snatch Grip Back Extension + Row",
-          "instruction": "8r3s"
+          "instruction": "RPE6 8r3s"
         }
       ],
       "day 2.5": [
@@ -118,7 +118,7 @@
         },
         {
           "exerciseName": "Snatch Grip Back Extension + Row",
-          "instruction": "RPE6 8r2s"
+          "instruction": "RPE7 8r3s"
         }
       ],
       "day 2.5": [
@@ -214,7 +214,7 @@
         },
         {
           "exerciseName": "Snatch Grip Back Extension + Row",
-          "instruction": "RPE7 8r3s"
+          "instruction": "RPE8 8r4s"
         }
       ],
       "day 2.5": [
@@ -310,7 +310,7 @@
         },
         {
           "exerciseName": "Snatch Grip Back Extension + Row",
-          "instruction": "RPE8 8r3s"
+          "instruction": "RPE9 8r4s"
         }
       ],
       "day 2.5": [

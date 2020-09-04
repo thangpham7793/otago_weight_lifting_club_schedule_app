@@ -3,33 +3,65 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link rel="stylesheet" href="resetBrowserStyle.css" /> -->
+    <link rel="stylesheet" href="resetBrowserStyle.css" />
     <link rel="stylesheet" href="style.css" />
     <title>Weekly Timetable</title>
   </head>
   <body>
     <div class="main-content-wrapper">
-      <header>
+      <header class="header timetable">
         <nav class="nav-bar">
           <ul class="nav-list">
             <li class="nav-item"><a href="./index.html">Back to Home</a></li>
           </ul>
         </nav>
       </header>
-      <main>
-        <!-- The Modal -->
-        <div class="pbs-modal">
+      <main class="main timetable">
+        <!-- The Pbs Modal -->
+        <div class="modal pbs-modal">
           <!-- Modal Content -->
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Enter Your Personal Bests</h3>
+          <div class="modal-content pbs-content">
+            <span class="close pbs-close">&times;</span>
+            <h3 class="modal-content__title">Enter Your Personal Bests</h3>
           </div>
         </div>
+
+        <!-- The Feedback Modal -->
+        <div class="modal fb-modal">
+          <!-- Modal Content -->
+          <div class="modal-content fb-content">
+            <span class="fb-close close">&times;</span>
+            <iframe
+              class="ggl-fb-form"
+              src="https://docs.google.com/forms/d/e/1FAIpQLSeBrxdCbRf1M0YvZVHp2n3taph7-pAS9mkbN99m2ZPeBrf0yQ/viewform?embedded=true"
+              >Loading…
+            </iframe>
+          </div>
+        </div>
+
         <div class="schedule-table-container"></div>
-        <div><button class="pbs-btn">Add/Edit Personal Bests</button></div>
-        <pre></pre>
+        <div class="pbs-btn-container">
+          <button class="pbs-btn-home">
+            <a href="./index.html" class="home-link">Back to Home</a>
+          </button>
+          <button class="pbs-btn edit">Add/Edit<br />Personal Bests</button>
+          <button class="fb-btn">
+            <!-- <a
+              href="https://forms.gle/GaK2d6tAX9PqvGRK8"
+              class="feedback-link"
+              target="_blank"
+              >Add Feedback
+            </a> -->
+            Add Feedback
+          </button>
+        </div>
+        <pre display="none"></pre>
       </main>
-      <footer>Otago Lifting Club. All Rights Reserved</footer>
+      <footer class="footer timetable">
+        <div class="footer-text-wrapper">
+          Otago Weightlifting 2020. All Rights Reserved
+        </div>
+      </footer>
     </div>
     <script src="./bundle.js"></script>
   </body>

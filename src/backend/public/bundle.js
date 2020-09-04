@@ -10914,19 +10914,22 @@ module.exports = {
 }
 
 },{"./makeDropDownOptions":4,"./makeExerciseHeader":5,"./makeScheduleTable":7}],4:[function(require,module,exports){
-function makeDropDownOptions(options) {
+function makeDropDownOptions(options, week) {
   const htmlOptions = options.reduce((strAcc, opt) => {
     return strAcc + `<option value="${opt}">${opt}</option>`
   }, "")
 
-  return `<select name='days' id='days'>${htmlOptions}</select>`
+  return `<div class='search-form-wrapper timetable'>
+  <label for="days" class='search-form-label timetable'>Week ${week}</label>
+  <select name='days' id='days'>${htmlOptions}</select>
+  </div>`
 }
 
 module.exports = { makeDropDownOptions }
 
 },{}],5:[function(require,module,exports){
 function makeExerciseHeader(programme, name, week) {
-  return `<h2>${programme} ${name} Week ${week}</h2>`
+  return `<h2>Week ${week}</h2>`
 }
 
 module.exports = { makeExerciseHeader }
@@ -10955,11 +10958,11 @@ function makeExerciseRow(exerciseInfo) {
   const processedInstruction = matchedPbValue
     ? calculateRealWeight(instruction, matchedPbValue)
     : instruction
-  return `<tr>
-  <td>
+  return `<tr class="timetable-row">
+  <td class="timetable-cell">
   ${exerciseName}
   </td>
-  <td>
+  <td class="timetable-cell">
   ${processedInstruction}
   </td>
 </tr>`
@@ -10989,7 +10992,7 @@ module.exports = { makeScheduleTable }
 
 },{"./makeExerciseRows":6,"./makeTableHeader":8}],8:[function(require,module,exports){
 function makeTableHeader() {
-  return `<tr><th>Exercise</th><th>Instruction</th></tr>`
+  return `<tr class="timetable-row"><th class="timetable-cell head">Exercise</th><th class="timetable-cell head">Instruction</th></tr>`
 }
 
 module.exports = { makeTableHeader }
@@ -11048,7 +11051,7 @@ const pbsForm = () => {
     ""
   )}
   
-  <button class="submit">Save</button>
+  <button class="modal-submit-btn">Save</button>
   </form>`
 }
 
@@ -11212,7 +11215,12 @@ const schedule = (function () {
 
   //only render the form and add props when clicked
   function toggleModal() {
+    console.log("Show pbs!")
     $(".pbs-modal").toggle()
+  }
+
+  function toggleFeedbackModal() {
+    $(".fb-modal").toggle()
   }
 
   //initial render
@@ -11223,8 +11231,8 @@ const schedule = (function () {
     console.log(`The chosen week is week ${week}`)
     scheduleData = schedule[`week ${week}`]
     console.log(scheduleData)
-    appendContent(makeExerciseHeader(programme, name, week))
-    appendContent(makeDropDownOptions(Object.keys(scheduleData)))
+    //appendContent(makeExerciseHeader(programme, name, week))
+    appendContent(makeDropDownOptions(Object.keys(scheduleData), week))
     //need to allow users to pick a week here (or maybe it should be a form right from the beginning)
 
     //similar to useEffect once/ afterwards it's handled by onChangeHandler
@@ -11233,16 +11241,27 @@ const schedule = (function () {
     }
     $("#days").on({ change: onSelectHandler })
 
-    //MODAL
-    $(".modal-content").append(pbsForm())
+    //PBS MODAL
+    $(".pbs-content").append(pbsForm())
     $(".pbs-form").on({ submit: pbsSubmitHandler })
     $(".pbs-form > div > input").on({ input: onPbsFormInputHandler })
     $(".pbs-btn").on({ click: toggleModal })
-    $(".close").on({
+    $(".pbs-close").on({
       click: toggleModal,
     })
+
+    //FB MODAL
+    $(".fb-btn").on({ click: toggleFeedbackModal })
+    $(".fb-close").on({
+      click: toggleFeedbackModal,
+    })
+
     window.onclick = function (e) {
-      if (e.target.classList.contains("pbs-modal")) toggleModal()
+      if (e.target.classList.contains("pbs-modal")) {
+        toggleModal()
+      } else if (e.target.classList.contains("fb-modal")) {
+        toggleFeedbackModal()
+      }
     }
   }
 
@@ -11269,9 +11288,6 @@ const schedule = (function () {
 })()
 
 $(schedule.setup)
-
-//TODO: embed google feedback form, add add-edit-pbs functionality (probably save to local storage)
-//TODO: make a form to make schedule
 
 },{"./components/exerciseTable/exerciseTable":3,"./components/pbsForm/pbs":9,"./utils":14,"jquery":1}],14:[function(require,module,exports){
 const $ = require("jquery")

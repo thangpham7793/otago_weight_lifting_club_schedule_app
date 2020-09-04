@@ -25,16 +25,16 @@ CREATE TABLE weekly_timetable (
 
 CREATE TABLE student (
   student_id SERIAL PRIMARY KEY,
-  first_name VARCHAR(50),
-  last_name VARCHAR(50),
-  username VARCHAR(50),
-  password VARCHAR(50),
-  snatch INT DEFAULT 0,
-  clean INT DEFAULT 0,
-  jerk INT DEFAULT 0,
-  cleanAndJerk INT DEFAULT 0,
-  backSquat INT DEFAULT 0,
-  frontSquat INT DEFAULT 0,
-  pushPress INT DEFAULT 0,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  username VARCHAR(50) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  snatch NUMERIC(5,2) DEFAULT 0,
+  clean NUMERIC(5,2) DEFAULT 0,
+  jerk NUMERIC(5,2) DEFAULT 0,
+  cleanAndJerk NUMERIC(5,2) DEFAULT 0,
+  backSquat NUMERIC(5,2) DEFAULT 0,
+  frontSquat NUMERIC(5,2) DEFAULT 0,
+  pushPress NUMERIC(5,2) DEFAULT 0,
   programme_id INT REFERENCES programme(programme_id) ON DELETE SET NULL
 );

@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.appConfig = void 0;
 var dotenv_1 = require("dotenv");
 dotenv_1.config();
+var host = process.env.DOCKER ? "pgsql_db" : "0.0.0.0";
 var localConfig = {
-    host: "0.0.0.0",
+    host: host,
     user: "test_user",
     port: 5432,
     database: "lifting",
