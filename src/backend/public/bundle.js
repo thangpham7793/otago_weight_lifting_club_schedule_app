@@ -11289,15 +11289,6 @@ const schedule = (function () {
 
 $(schedule.setup)
 
-//TODO: embed google feedback form, add add-edit-pbs functionality (probably save to local storage)
-//TODO: make a form to make schedule
-
-// width="640"
-//               height="768"
-//               frameborder="0"
-//               marginheight="0"
-//               marginwidth="0"
-
 },{"./components/exerciseTable/exerciseTable":3,"./components/pbsForm/pbs":9,"./utils":14,"jquery":1}],14:[function(require,module,exports){
 const $ = require("jquery")
 

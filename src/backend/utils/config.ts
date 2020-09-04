@@ -3,8 +3,10 @@ import { ClientConfig } from "pg"
 
 config()
 
+const host = process.env.DOCKER ? "pgsql_db" : "0.0.0.0"
+
 const localConfig: ClientConfig = {
-  host: "0.0.0.0",
+  host,
   user: "test_user",
   port: 5432,
   database: "lifting",

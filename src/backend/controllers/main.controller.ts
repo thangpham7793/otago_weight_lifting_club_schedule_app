@@ -14,8 +14,23 @@ export class Controller {
       .get(function welcomeMessage(req: Request, res: Response) {
         res.status(200).send("Hello World!")
       })
+
     this.app
-      .route("/programme/:programmeId/schedule/:scheduleId/week/:week")
+      .route("/instructor/login")
+      .post(function instructorLogin(req: Request, res: Response) {
+        res.status(200).send("Under development!")
+      })
+
+    this.app
+      .route("/learner/login")
+      .post(this.scheduleService.checkCredentialsAndGetSchedules)
+
+    this.app
+      .route("/programmes/:programmeId/schedules")
+      .get(this.scheduleService.getAllSchedules)
+
+    this.app
+      .route("/schedules/:scheduleId/weeks/:week")
       .get(this.scheduleService.getWeeklySchedule)
   }
 }

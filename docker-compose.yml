@@ -4,6 +4,7 @@ version: "3.2"
 services:
   db:
     image: postgres
+    container_name: pgsql_db
     env_file:
       - db.env
     volumes:
@@ -14,6 +15,18 @@ services:
       - db-data:/var/lib/postgresql/data/ #persist data inside the container
     ports:
       - "5432:5432"
+
+  backend:
+    container_name: backend
+    build: .
+    volumes:
+      - type: bind
+        source: ./src/backend
+        target: /app/src/backend
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
 
 volumes:
   db-data:

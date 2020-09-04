@@ -2,6 +2,7 @@ import express, { Application } from "express"
 import bodyParser from "body-parser"
 import cors from "cors"
 import path from "path"
+import errorHandlers from "./utils/errorHandlers"
 import { Controller } from "./controllers/main.controller"
 
 //TODO: add other middlewares and write error handlers as well
@@ -29,6 +30,10 @@ class App {
 
     //Enables cors
     this.app.use(cors())
+  }
+
+  private initialiseErrorHandlers() {
+    this.app.use(errorHandlers.httpErrorHandlers)
   }
 
   private useStatic() {

@@ -107,12 +107,3 @@ const schedule = (function () {
 })()
 
 $(schedule.setup)
-
-//TODO: embed google feedback form, add add-edit-pbs functionality (probably save to local storage)
-//TODO: make a form to make schedule
-
-// width="640"
-//               height="768"
-//               frameborder="0"
-//               marginheight="0"
-//               marginwidth="0"

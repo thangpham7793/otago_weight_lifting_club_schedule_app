@@ -42,41 +42,77 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var app_1 = __importDefault(require("../app"));
 var supertest_1 = __importDefault(require("supertest"));
 var pool_1 = __importDefault(require("../database/pool"));
-describe("GET / a simple home route", function () {
-    it("should return a Hello World message", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4, supertest_1.default(app_1.default).get("/")];
-                case 1:
-                    result = _a.sent();
-                    expect(result.text).toEqual("Hello World!");
-                    expect(result.status).toEqual(200);
-                    return [2];
-            }
-        });
-    }); });
-});
-describe.only("GET /programme/:programmeId/schedule/:scheduleId/week/:week", function () {
-    it("should return an object with the name, programme, and schedule for the specified week", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result, _a, programme, schedule, week_1, expectedDays;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4, supertest_1.default(app_1.default).get("/programme/1/schedule/1/week/1")];
-                case 1:
-                    result = _b.sent();
-                    expect(result.status).toEqual(200);
-                    _a = result.body, programme = _a.programme, schedule = _a.schedule, week_1 = _a.week_1;
-                    expect(programme).toEqual("Youth and Junior");
-                    expect(schedule).toEqual("September 2020 Strength");
-                    expectedDays = ["day 1", "day 2", "day 2.5", "day 3", "day 3.5"];
-                    expectedDays.forEach(function (day) {
-                        expect(Object.keys(week_1)).toContain(day);
-                    });
-                    return [2];
-            }
-        });
-    }); });
+describe("API Integration Tests", function () {
+    describe("POST /learner/login", function () {
+        it("should return all schedule_names, schedule_ids, and their week_counts if credentials are correct", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result, expected;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, supertest_1.default(app_1.default)
+                            .post("/learner/login")
+                            .send({ username: "username", password: "password" })];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.status).toEqual(200);
+                        expected = [
+                            {
+                                programme_name: "Youth and Junior",
+                                schedule_name: "September 2020 Strength",
+                                week_count: 5,
+                                schedule_id: 1,
+                            },
+                            {
+                                programme_name: "Youth and Junior",
+                                schedule_name: "October 2020 Youth and Junior",
+                                week_count: 4,
+                                schedule_id: 3,
+                            },
+                            {
+                                programme_name: "Youth and Junior",
+                                schedule_name: "November 2020 Youth and Junior",
+                                week_count: 6,
+                                schedule_id: 4,
+                            },
+                        ];
+                        expect(result.body).toEqual(expected);
+                        return [2];
+                }
+            });
+        }); });
+    });
+    describe.skip("GET /programmes/:programmeId/schedules", function () {
+        it("should return all schedule_names, schedule_ids, and their week_counts", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, supertest_1.default(app_1.default).get("/programme/1/schedule")];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.status).toEqual(200);
+                        return [2];
+                }
+            });
+        }); });
+    });
+    describe.only("GET /schedules/:scheduleId/weeks/:week", function () {
+        it("should return an object with the name, programme, and schedule for the specified week", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result, week_2, expectedDays;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, supertest_1.default(app_1.default).get("/schedules/1/weeks/2")];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.status).toEqual(200);
+                        week_2 = result.body.week_2;
+                        expectedDays = ["day 1", "day 2", "day 2.5", "day 3", "day 3.5"];
+                        expectedDays.forEach(function (day) {
+                            expect(Object.keys(week_2)).toContain(day);
+                        });
+                        return [2];
+                }
+            });
+        }); });
+    });
     afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
