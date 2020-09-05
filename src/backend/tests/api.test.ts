@@ -7,7 +7,7 @@ describe("API Integration Tests", () => {
     it("should return all schedule_names, schedule_ids, and their week_counts if credentials are correct", async () => {
       const result = await request(app)
         .post("/learner/login")
-        .send({ username: "username", password: "password" })
+        .send({ email: "thangnus@gmail.com", password: "password" })
       expect(result.status).toEqual(200)
       const expected = [
         {
@@ -41,7 +41,7 @@ describe("API Integration Tests", () => {
   })
 
   // programme/1/schedule/1/week/1
-  describe.only("GET /schedules/:scheduleId/weeks/:week", () => {
+  describe("GET /schedules/:scheduleId/weeks/:week", () => {
     it("should return an object with the name, programme, and schedule for the specified week", async () => {
       const result = await request(app).get("/schedules/1/weeks/2")
 

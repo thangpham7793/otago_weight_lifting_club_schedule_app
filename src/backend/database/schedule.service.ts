@@ -5,18 +5,18 @@ import { checkPassword } from "../utils/auth"
 
 export class ScheduleService {
   async checkCredentialsAndGetSchedules(req: Request, res: Response) {
-    const { username, password } = req.body
-
-    const params = [username]
+    const { email, password } = req.body
+    console.log(email, password)
+    const params = [email]
 
     const statement = `
-    SELECT username, hashed_password, schedule_name, week_count, schedule_id, programme_name   
+    SELECT email, hashed_password, schedule_name, week_count, schedule_id, programme_name   
     FROM student st
     JOIN schedule sc
     ON (st.programme_id = sc.programme_id)
     JOIN programme p
     ON (st.programme_id = p.programme_id)
-    WHERE username = $1;`
+    WHERE email = $1;`
 
     let client: PoolClient
 
@@ -28,15 +28,15 @@ export class ScheduleService {
 
       if (!result.rows) {
         // need to throw error here!
-        throw new Error("unknown username")
+        throw new Error("unknown email")
       }
 
       const { hashed_password } = result.rows[0]
 
       if (checkPassword(password, hashed_password)) {
-        //remove username and password from result
+        //remove email and password from result
         result.rows.forEach((row) => {
-          delete row.username
+          delete row.email
           delete row.hashed_password
         })
         //return array of schedule object

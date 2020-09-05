@@ -50,7 +50,7 @@ describe("API Integration Tests", function () {
                 switch (_a.label) {
                     case 0: return [4, supertest_1.default(app_1.default)
                             .post("/learner/login")
-                            .send({ username: "username", password: "password" })];
+                            .send({ email: "thangnus@gmail.com", password: "password" })];
                     case 1:
                         result = _a.sent();
                         expect(result.status).toEqual(200);
@@ -94,7 +94,7 @@ describe("API Integration Tests", function () {
             });
         }); });
     });
-    describe.only("GET /schedules/:scheduleId/weeks/:week", function () {
+    describe("GET /schedules/:scheduleId/weeks/:week", function () {
         it("should return an object with the name, programme, and schedule for the specified week", function () { return __awaiter(void 0, void 0, void 0, function () {
             var result, week_2, expectedDays;
             return __generator(this, function (_a) {

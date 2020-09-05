@@ -23,12 +23,12 @@ CREATE TABLE weekly_timetable (
   programme_id INT REFERENCES programme(programme_id) ON DELETE CASCADE 
 );
 
-CREATE TABLE student (
+CREATE TABLE IF NOT EXISTS student (
   student_id SERIAL PRIMARY KEY,
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
-  username VARCHAR(50) NOT NULL,
-  password VARCHAR(100) NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  hashed_password VARCHAR(100) NOT NULL,
   snatch NUMERIC(5,2) DEFAULT 0,
   clean NUMERIC(5,2) DEFAULT 0,
   jerk NUMERIC(5,2) DEFAULT 0,
@@ -38,3 +38,5 @@ CREATE TABLE student (
   pushPress NUMERIC(5,2) DEFAULT 0,
   programme_id INT REFERENCES programme(programme_id) ON DELETE SET NULL
 );
+
+INSERT INTO student (first_name, last_name, email, hashed_password, programme_id) VALUES ('Thang', 'Pham', 'thangnus@gmail.com', 'password', 1);

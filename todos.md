@@ -15,14 +15,18 @@
 ### Tickets
 
 [] Adjust frontend to the APIs using fetch
+[] Add logout button
 [] Implement Schedule Search Form by Schedule Name, and Week
 [] Implement basic signup, login, and authentication
+[] Implement cookie/session so that the browser remembers
 [] Is there a way to connect the vscode pgsql plugin with Heroku?
 [] Set up database on heroku PostgreSQL and populate them
 [] Auto-suggest when making new schedules
 [] Test Queries for Client Access Patterns
 [] Can't inject Pool/Client into Schedule Service?
 
+[x] Fix CSS styling to make login form mobile-responsive
+[x] Add basic credentials validation and error message notification
 [x] How to make container talk to each other
 [x] Persist Schedule Data
 [x] Set up routes for frontend to call after user logs in successfuly

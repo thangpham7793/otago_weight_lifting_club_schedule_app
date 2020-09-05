@@ -139,6 +139,11 @@ a.disabled {
   font-weight: var(--fw-md);
   color: var(--primary-cl);
   margin-right: var(--mg-sm);
+  text-transform: capitalize;
+}
+
+.error-message {
+  color: red;
 }
 
 /* INDEX PAGE */
@@ -146,25 +151,15 @@ a.disabled {
   font-weight: var(--fw-lg);
 }
 
-#week {
-  width: 15vw;
-  font-weight: var(--fw-md);
+.search-form-wrapper {
+  margin-bottom: var(--mg-sm);
+  padding: 0 var(--pd-sm);
 }
 
 .main.index {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-}
-
-.search-form-wrapper {
-  margin-bottom: var(--mg-sm);
-  padding: 0 var(--pd-sm);
-}
-
-.main__programme-title {
-  font-size: calc(var(--fs-sm) * 1.5);
-  padding-top: var(--pd-sm);
 }
 
 a.logo {
@@ -177,6 +172,95 @@ a.logo {
   width: 200px;
   height: 150px;
   margin-bottom: 1.5rem;
+}
+
+/* INDEX SCHEDULE LOGIN FORM */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--pd-md);
+  justify-content: space-evenly;
+  height: 30vh;
+}
+
+.field-container.email,
+.field-container.password {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--mg-sm);
+}
+
+.search-form-label.email,
+.search-form-label.password {
+  text-align: left;
+  display: inline-block;
+  width: 30vw;
+}
+
+#email, #password {
+  width: 50vw;
+}
+
+.submit-btn.login {
+  margin: 0;
+}
+
+
+@media only screen and (min-width: 450px) {
+  .search-form-label.email,
+  .search-form-label.password {
+    width: 20vw;
+  }
+  
+  .login-form {
+    margin-top: var(--mg-md);
+  }
+  
+  #email, #password {
+    width: 35vw
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .search-form-label.email,
+  .search-form-label.password {
+    width: 15vw;
+  }
+  
+  #email, #password {
+    width: 30vw
+  }
+  
+}
+
+@media only screen and (min-width: 900px) {
+  .search-form-label.email,
+  .search-form-label.password {
+    width: 10vw;
+  }
+  
+  #email, #password {
+    width: 20vw
+  }
+  
+}
+
+/* INDEX SCHEDULE SEARCH FORM */
+
+.main__programme-title {
+  font-size: calc(var(--fs-sm) * 1.5);
+  padding-top: var(--pd-sm);
+}
+
+#schedule {
+  margin-bottom: var(--mg-sm);
+}
+
+#week, #schedule {
+  width: 20vw;
+  font-weight: var(--fw-md);
 }
 
 /* TIMETABLE PAGE */
@@ -361,6 +445,10 @@ a.logo {
   
   #week {
     width: 5vw;
+  }
+  
+  #email, #password {
+/*     width: 10vw; */
   }
   
   .modal-content {

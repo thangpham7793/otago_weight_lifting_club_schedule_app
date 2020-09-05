@@ -47,13 +47,14 @@ var ScheduleService = (function () {
     }
     ScheduleService.prototype.checkCredentialsAndGetSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, username, password, params, statement, client, result, hashed_password, err_1;
+            var _a, email, password, params, statement, client, result, hashed_password, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = req.body, username = _a.username, password = _a.password;
-                        params = [username];
-                        statement = "\n    SELECT username, hashed_password, schedule_name, week_count, schedule_id, programme_name   \n    FROM student st\n    JOIN schedule sc\n    ON (st.programme_id = sc.programme_id)\n    JOIN programme p\n    ON (st.programme_id = p.programme_id)\n    WHERE username = $1;";
+                        _a = req.body, email = _a.email, password = _a.password;
+                        console.log(email, password);
+                        params = [email];
+                        statement = "\n    SELECT email, hashed_password, schedule_name, week_count, schedule_id, programme_name   \n    FROM student st\n    JOIN schedule sc\n    ON (st.programme_id = sc.programme_id)\n    JOIN programme p\n    ON (st.programme_id = p.programme_id)\n    WHERE email = $1;";
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 4, 5, 6]);
@@ -64,12 +65,12 @@ var ScheduleService = (function () {
                     case 3:
                         result = _b.sent();
                         if (!result.rows) {
-                            throw new Error("unknown username");
+                            throw new Error("unknown email");
                         }
                         hashed_password = result.rows[0].hashed_password;
                         if (auth_1.checkPassword(password, hashed_password)) {
                             result.rows.forEach(function (row) {
-                                delete row.username;
+                                delete row.email;
                                 delete row.hashed_password;
                             });
                             res.status(200).json(result.rows);
