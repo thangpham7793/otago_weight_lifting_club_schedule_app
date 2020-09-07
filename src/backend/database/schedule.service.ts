@@ -4,6 +4,46 @@ import pool from "./pool"
 import { checkPassword } from "../utils/auth"
 
 export class ScheduleService {
+  async getAllProgrammes(req: Request, res: Response) {
+    const { email, password } = req.body
+    console.log(email, password)
+    const params = [email]
+
+    const statement = `
+    SELECT email, hashed_password  
+    FROM gym_user
+    WHERE email = $1;`
+
+    const client: PoolClient = await pool.connect()
+    const result = await client.query(statement, params)
+    //  console.log(result.rows)
+    //TODO: check password here using jwt and bcrypt
+
+    if (!result.rows) {
+      // need to throw error here!
+      throw new Error("unknown email")
+    }
+
+    const { hashed_password } = result.rows[0]
+
+    if (checkPassword(password, hashed_password)) {
+      const result2 = await client.query(
+        `SELECT programme_name AS "programmeName", programme_id AS "programmeId" FROM programme;`
+      )
+      if (!result2) {
+        res.status(404).json({ message: "no programme found" })
+      } else {
+        //return array of schedule object
+        console.log(result2.rows)
+        res.status(200).json(result2.rows)
+      }
+    } else {
+      throw new Error("wrong password")
+    }
+
+    await client.release()
+  }
+
   async checkCredentialsAndGetSchedules(req: Request, res: Response) {
     const { email, password } = req.body
     console.log(email, password)
@@ -11,7 +51,7 @@ export class ScheduleService {
 
     const statement = `
     SELECT email, hashed_password, schedule_name, week_count, schedule_id, programme_name   
-    FROM student st
+    FROM gym_user st
     JOIN schedule sc
     ON (st.programme_id = sc.programme_id)
     JOIN programme p
@@ -40,6 +80,7 @@ export class ScheduleService {
           delete row.hashed_password
         })
         //return array of schedule object
+        console.log(result.rows)
         res.status(200).json(result.rows)
       } else {
         throw new Error("wrong password")
@@ -56,32 +97,24 @@ export class ScheduleService {
 
   async getAllSchedules(req: Request, res: Response) {
     const { programmeId } = req.params
-
+    console.log(programmeId)
     const params = [parseInt(programmeId)]
-
     const statement = `
     SELECT 
-      schedule_name, 
-      week_count, 
-      schedule_id 
-    FROM programme p 
-    INNER JOIN schedule s 
-    ON (schedule_id = schedule_id)
-    WHERE schedule_id = ?;`
+      schedule_id AS "scheduleId", 
+      schedule_name AS "scheduleName", 
+      week_count AS "weekCount" 
+    FROM schedule s
+    JOIN programme p
+    ON (s.programme_id = p.programme_id)
+    WHERE p.programme_id = $1;`
 
-    let client: PoolClient
+    const client: PoolClient = await pool.connect()
+    const result = await client.query(statement, params)
+    console.log(result.rows)
+    res.status(200).json(result.rows)
 
-    try {
-      client = await pool.connect()
-      const result = await client.query(statement, params)
-      res.status(200).json(result.rows)
-      //console.log(result.rows[0])
-    } catch (err) {
-      console.log(err)
-      res.send("Error" + err)
-    } finally {
-      client.release()
-    }
+    await client.release()
   }
 
   async getWeeklySchedule(req: Request, res: Response) {

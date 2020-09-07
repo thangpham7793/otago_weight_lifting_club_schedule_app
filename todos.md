@@ -14,6 +14,10 @@
 
 ### Tickets
 
+[] Refactor routes and db scripts
+[] Set up login so that students can saved their db
+[] Create store procedures for each service
+[] Figure out Callan's use pattern
 [] Adjust frontend to the APIs using fetch
 [] Add logout button
 [] Implement Schedule Search Form by Schedule Name, and Week
@@ -24,6 +28,8 @@
 [] Auto-suggest when making new schedules
 [] Test Queries for Client Access Patterns
 [] Can't inject Pool/Client into Schedule Service?
+[] How to restrict access to certain routes beyond jwt
+[] Refactor schedule services to instructor/learner routes
 
 [x] Fix CSS styling to make login form mobile-responsive
 [x] Add basic credentials validation and error message notification

@@ -2,26 +2,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Controller = void 0;
 var schedule_service_1 = require("../database/schedule.service");
+var learner_service_1 = require("../database/learner.service");
 var Controller = (function () {
     function Controller(app) {
         this.app = app;
         this.scheduleService = new schedule_service_1.ScheduleService();
+        this.learnerService = new learner_service_1.LearnerService();
         this.routes();
     }
     Controller.prototype.routes = function () {
         this.app
-            .route("/")
-            .get(function welcomeMessage(req, res) {
-            res.status(200).send("Hello World!");
-        });
-        this.app
             .route("/instructor/login")
-            .post(function instructorLogin(req, res) {
-            res.status(200).send("Under development!");
-        });
+            .post(this.scheduleService.getAllProgrammes);
         this.app
-            .route("/learner/login")
+            .route("/learners/login")
             .post(this.scheduleService.checkCredentialsAndGetSchedules);
+        this.app
+            .route("/learners/:learnerId/pbs")
+            .put(this.learnerService.updatePbs);
         this.app
             .route("/programmes/:programmeId/schedules")
             .get(this.scheduleService.getAllSchedules);

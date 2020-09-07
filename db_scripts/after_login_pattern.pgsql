@@ -1,26 +1,30 @@
--- INSERT INTO student (first_name, programme_id) VALUES ('Marry', 1) RETURNING student_id, first_name, programme_id;
 
---there are lots of data though
 
---so basically 2 calls
---sign up
-INSERT INTO student (first_name, last_name, username, hashed_password, programme_id) VALUES ('Thang', 'Pham', 'username', 'password', 1) RETURNING *;
+--SIGN UP/LOGIN PAGE
+--Get available programmes
+SELECT "programmeId", "programmeName" FROM programme;
 
--- should retrieve programme name as well ?
+--when they sign up they won't know the password
+INSERT INTO student (first_name, last_name, username, programme_id) VALUES ('Thang', 'Pham', 'username', 'password', 1) RETURNING *;
+
+--REDIRECT TO LOGIN PAGE 
 
 -- check login first/may do the join here?
--- if login is correct, send the schedules information public to the client-side
-SELECT username, hashed_password, schedule_name, week_count, schedule_id, programme_name   
-FROM student st
-JOIN schedule sc
-ON (st.programme_id = sc.programme_id)
-JOIN programme p
-ON (st.programme_id = p.programme_id)
-WHERE username = 'username';
+-- return programmeId if correct
+SELECT p."hashedPassword", p."programmeId", l."learnerId"
+FROM learner l
+JOIN programme p 
+USING ("programmeId")
+WHERE email = 'thangnus@gmail.com';
 
--- retrieve the week they want
-SELECT timetable 
-FROM weekly_timetable w 
-JOIN schedule s
-ON (w.schedule_id = s.schedule_id)
-WHERE week = 1 AND s.schedule_id = 1;
+-- if not, stay on page?
+
+-- if login is correct, send the schedules information public to the client-side (maybe server-side rendering here actually)
+SELECT "scheduleId", "weekCount", "scheduleName" FROM schedule WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = 1));
+
+-- retrieve the week they want using array index
+SELECT timetable[3] FROM schedule WHERE "scheduleId" = 6;
+
+-- update pbs (just the email?/or userId)
+
+

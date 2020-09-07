@@ -117,7 +117,10 @@ const searchForm = (function () {
   function submitWeekHandler(e) {
     e.preventDefault()
     const week = document.getElementById("week").value
+    //TODO: need to use fetched data here as well
+    //need to save the week + schedule_id
     saveChosenWeek(week)
+    //another network call here ...
     location.href = "./timetable.html"
   }
 
@@ -211,10 +214,13 @@ const searchForm = (function () {
       }
       fetch(url, fetchOptions)
         .then((res) => {
-          res.json().then((schedules) => {
-            console.log(schedules)
-            loginSuccessHandler(schedules)
-          })
+          res
+            .json()
+            .then((schedules) => {
+              console.log(schedules)
+              loginSuccessHandler(schedules)
+            })
+            .catch((err) => console.log(`Error parsing JSON: ${err}`))
         })
         .catch((err) => console.log(`Error fetching data: ${err}`))
     } else {

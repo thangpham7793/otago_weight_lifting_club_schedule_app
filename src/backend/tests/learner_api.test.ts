@@ -2,8 +2,24 @@ import app from "../app"
 import request from "supertest"
 import pool from "../database/pool"
 
-describe("API Integration Tests", () => {
-  describe("POST /learner/login", () => {
+describe("API Integration Tests - Learner Service", () => {
+  describe.only("PUT /learners/:learnerId/pbs", () => {
+    it("should update the personal bests of a learner", async () => {
+      const newPbs = {
+        snatch: 0,
+        clean: 0,
+        jerk: 0,
+        cleanAndJerk: 0,
+        backSquat: 0,
+        frontSquat: 0,
+        pushPress: 0,
+      }
+      const result = await request(app).put("/learners/1/pbs").send(newPbs)
+      expect(result.status).toEqual(204)
+    })
+  })
+
+  describe("POST /learners/login", () => {
     it("should return all schedule_names, schedule_ids, and their week_counts if credentials are correct", async () => {
       const result = await request(app)
         .post("/learner/login")
@@ -11,32 +27,26 @@ describe("API Integration Tests", () => {
       expect(result.status).toEqual(200)
       const expected = [
         {
-          programme_name: "Youth and Junior",
-          schedule_name: "September 2020 Strength",
-          week_count: 5,
-          schedule_id: 1,
-        },
-        {
-          programme_name: "Youth and Junior",
           schedule_name: "October 2020 Youth and Junior",
           week_count: 4,
           schedule_id: 3,
+          programme_name: "Youth and Junior",
         },
         {
-          programme_name: "Youth and Junior",
           schedule_name: "November 2020 Youth and Junior",
           week_count: 6,
           schedule_id: 4,
+          programme_name: "Youth and Junior",
+        },
+        {
+          schedule_name: "September 2020 Strength",
+          week_count: 5,
+          schedule_id: 1,
+          programme_name: "Youth and Junior",
         },
       ]
-      expect(result.body).toEqual(expected)
-    })
-  })
 
-  describe.skip("GET /programmes/:programmeId/schedules", () => {
-    it("should return all schedule_names, schedule_ids, and their week_counts", async () => {
-      const result = await request(app).get("/programme/1/schedule")
-      expect(result.status).toEqual(200)
+      expect(result.body).toEqual(expected)
     })
   })
 
