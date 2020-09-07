@@ -2,4 +2,4 @@
 
 [Heroku Link](https://lifting-schedule.herokuapp.com/)
 
-A simple progressive web app for lifting instructors to create, update lift schedules and collect learner feedbacks
+A simple web app for lifting instructors to create, update lift schedules and collect learner feedbacks
