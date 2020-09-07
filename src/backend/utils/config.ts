@@ -1,7 +1,9 @@
 import { config } from "dotenv"
 import { ClientConfig } from "pg"
+import path from "path"
 
-config()
+//https://stackoverflow.com/questions/42335016/dotenv-file-is-not-loading-environment-variables
+config({ path: path.resolve(__dirname, "../.env") })
 
 const host = process.env.DOCKER ? "pgsql_db" : "0.0.0.0"
 
@@ -24,7 +26,7 @@ const DB_CONFIG =
   process.env.NODE_ENV === "production" ? herokuConfig : localConfig
 
 const PORT = process.env.PORT || 3000
-
+console.log(process.env.NODE_ENV)
 export const appConfig = {
   PORT,
   DB_CONFIG,
