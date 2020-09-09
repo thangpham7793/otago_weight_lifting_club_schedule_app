@@ -13,6 +13,8 @@ export class Controller {
   }
 
   routes() {
+    this.app.route("/learners/signup").post(this.learnerService.createLearner)
+
     this.app
       .route("/instructor/login")
       .post(this.scheduleService.getAllProgrammes)

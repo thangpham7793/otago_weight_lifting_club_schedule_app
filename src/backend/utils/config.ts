@@ -14,7 +14,7 @@ const localConfig: ClientConfig = {
   database: "lifting",
   password: "6500826",
 }
-
+//https://stackoverflow.com/questions/47297212/heroku-postgres-add-on-connection-string-for-nodejs-app
 const herokuConfig: ClientConfig = {
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -22,11 +22,13 @@ const herokuConfig: ClientConfig = {
   },
 }
 
-const DB_CONFIG =
-  process.env.NODE_ENV === "production" ? herokuConfig : localConfig
+//DATABASE_URL=$(heroku config:get DATABASE_URL -a your-app) your_process (probably need to use this in a procfile)
+
+const DB_CONFIG = herokuConfig
+// process.env.NODE_ENV === "production" ? herokuConfig : localConfig
 
 const PORT = process.env.PORT || 3000
-console.log(process.env.NODE_ENV)
+//console.log(herokuConfig.connectionString)
 export const appConfig = {
   PORT,
   DB_CONFIG,

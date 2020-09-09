@@ -1,9 +1,23 @@
-import app from "../app"
-import request from "supertest"
 import pool from "../database/pool"
+import { api } from "./testHelper"
 
 describe("API Integration Tests - Learner Service", () => {
-  describe.only("PUT /learners/:learnerId/pbs", () => {
+  describe.only("POST /learners/signup", () => {
+    it("should create a new user in the database and initialise their personal bests", async () => {
+      const newLearnerInfo = {
+        firstName: "test",
+        lastName: "test",
+        email: "test@domain.com",
+        programmeId: 1,
+      }
+
+      const result = await api.post("/learners/signup").send(newLearnerInfo)
+      expect(result.status).toEqual(201)
+      expect(result.body).toEqual(newLearnerInfo)
+    })
+  })
+
+  describe("PUT /learners/:learnerId/pbs", () => {
     it("should update the personal bests of a learner", async () => {
       const newPbs = {
         snatch: 0,
@@ -14,14 +28,14 @@ describe("API Integration Tests - Learner Service", () => {
         frontSquat: 0,
         pushPress: 0,
       }
-      const result = await request(app).put("/learners/1/pbs").send(newPbs)
+      const result = await api.put("/learners/1/pbs").send(newPbs)
       expect(result.status).toEqual(204)
     })
   })
 
   describe("POST /learners/login", () => {
     it("should return all schedule_names, schedule_ids, and their week_counts if credentials are correct", async () => {
-      const result = await request(app)
+      const result = await api
         .post("/learner/login")
         .send({ email: "thangnus@gmail.com", password: "password" })
       expect(result.status).toEqual(200)
@@ -53,7 +67,7 @@ describe("API Integration Tests - Learner Service", () => {
   // programme/1/schedule/1/week/1
   describe("GET /schedules/:scheduleId/weeks/:week", () => {
     it("should return an object with the name, programme, and schedule for the specified week", async () => {
-      const result = await request(app).get("/schedules/1/weeks/2")
+      const result = await api.get("/schedules/1/weeks/2")
 
       expect(result.status).toEqual(200)
 

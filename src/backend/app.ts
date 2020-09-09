@@ -17,7 +17,7 @@ class App {
     this.app = express()
     this.setConfig()
     this.useStatic()
-
+    this.initialiseErrorHandlers()
     this.controller = new Controller(this.app)
   }
 
