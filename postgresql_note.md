@@ -19,6 +19,7 @@ https://stackoverflow.com/questions/37971961/docker-error-bind-address-already-i
 - https://stackoverflow.com/questions/19568123/query-for-element-of-array-in-json-column/19868697#19868697
 - json_array_elements(...) unest json arr to text
 - A::B (cast A to type B)
+- need to surround alias in single quotes to have camelCase
 
 ### Command List:
 

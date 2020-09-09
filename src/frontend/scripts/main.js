@@ -7,6 +7,7 @@ const {
   makeDropDownOptions,
   makeScheduleTable,
 } = require("./components/exerciseTable/exerciseTable")
+require("dotenv").config()
 
 //similar to App.js
 const schedule = (function () {

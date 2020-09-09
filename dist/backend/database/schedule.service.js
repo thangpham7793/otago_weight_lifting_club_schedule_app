@@ -45,15 +45,57 @@ var auth_1 = require("../utils/auth");
 var ScheduleService = (function () {
     function ScheduleService() {
     }
-    ScheduleService.prototype.checkCredentialsAndGetSchedules = function (req, res) {
+    ScheduleService.prototype.getAllProgrammes = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, username, password, params, statement, client, result, hashed_password, err_1;
+            var _a, email, password, params, statement, client, result, hashed_password, result2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = req.body, username = _a.username, password = _a.password;
-                        params = [username];
-                        statement = "\n    SELECT username, hashed_password, schedule_name, week_count, schedule_id, programme_name   \n    FROM student st\n    JOIN schedule sc\n    ON (st.programme_id = sc.programme_id)\n    JOIN programme p\n    ON (st.programme_id = p.programme_id)\n    WHERE username = $1;";
+                        _a = req.body, email = _a.email, password = _a.password;
+                        console.log(email, password);
+                        params = [email];
+                        statement = "\n    SELECT email, hashed_password  \n    FROM gym_user\n    WHERE email = $1;";
+                        return [4, pool_1.default.connect()];
+                    case 1:
+                        client = _b.sent();
+                        return [4, client.query(statement, params)];
+                    case 2:
+                        result = _b.sent();
+                        if (!result.rows) {
+                            throw new Error("unknown email");
+                        }
+                        hashed_password = result.rows[0].hashed_password;
+                        if (!auth_1.checkPassword(password, hashed_password)) return [3, 4];
+                        return [4, client.query("SELECT programme_name AS \"programmeName\", programme_id AS \"programmeId\" FROM programme;")];
+                    case 3:
+                        result2 = _b.sent();
+                        if (!result2) {
+                            res.status(404).json({ message: "no programme found" });
+                        }
+                        else {
+                            console.log(result2.rows);
+                            res.status(200).json(result2.rows);
+                        }
+                        return [3, 5];
+                    case 4: throw new Error("wrong password");
+                    case 5: return [4, client.release()];
+                    case 6:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    ScheduleService.prototype.checkCredentialsAndGetSchedules = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, email, password, params, statement, client, result, hashed_password, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, email = _a.email, password = _a.password;
+                        console.log(email, password);
+                        params = [email];
+                        statement = "\n    SELECT email, hashed_password, schedule_name, week_count, schedule_id, programme_name   \n    FROM gym_user st\n    JOIN schedule sc\n    ON (st.programme_id = sc.programme_id)\n    JOIN programme p\n    ON (st.programme_id = p.programme_id)\n    WHERE email = $1;";
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 4, 5, 6]);
@@ -64,14 +106,15 @@ var ScheduleService = (function () {
                     case 3:
                         result = _b.sent();
                         if (!result.rows) {
-                            throw new Error("unknown username");
+                            throw new Error("unknown email");
                         }
                         hashed_password = result.rows[0].hashed_password;
                         if (auth_1.checkPassword(password, hashed_password)) {
                             result.rows.forEach(function (row) {
-                                delete row.username;
+                                delete row.email;
                                 delete row.hashed_password;
                             });
+                            console.log(result.rows);
                             res.status(200).json(result.rows);
                         }
                         else {
@@ -93,40 +136,33 @@ var ScheduleService = (function () {
     };
     ScheduleService.prototype.getAllSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var programmeId, params, statement, client, result, err_2;
+            var programmeId, params, statement, client, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         programmeId = req.params.programmeId;
+                        console.log(programmeId);
                         params = [parseInt(programmeId)];
-                        statement = "\n    SELECT \n      schedule_name, \n      week_count, \n      schedule_id \n    FROM programme p \n    INNER JOIN schedule s \n    ON (schedule_id = schedule_id)\n    WHERE schedule_id = ?;";
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 4, 5, 6]);
+                        statement = "\n    SELECT \n      schedule_id AS \"scheduleId\", \n      schedule_name AS \"scheduleName\", \n      week_count AS \"weekCount\" \n    FROM schedule s\n    JOIN programme p\n    ON (s.programme_id = p.programme_id)\n    WHERE p.programme_id = $1;";
                         return [4, pool_1.default.connect()];
-                    case 2:
+                    case 1:
                         client = _a.sent();
                         return [4, client.query(statement, params)];
-                    case 3:
+                    case 2:
                         result = _a.sent();
+                        console.log(result.rows);
                         res.status(200).json(result.rows);
-                        return [3, 6];
-                    case 4:
-                        err_2 = _a.sent();
-                        console.log(err_2);
-                        res.send("Error" + err_2);
-                        return [3, 6];
-                    case 5:
-                        client.release();
-                        return [7];
-                    case 6: return [2];
+                        return [4, client.release()];
+                    case 3:
+                        _a.sent();
+                        return [2];
                 }
             });
         });
     };
     ScheduleService.prototype.getWeeklySchedule = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, scheduleId, week, params, statement, client, result, err_3;
+            var _a, scheduleId, week, params, statement, client, result, err_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -148,9 +184,9 @@ var ScheduleService = (function () {
                         res.status(200).json(result.rows[0]);
                         return [3, 6];
                     case 4:
-                        err_3 = _b.sent();
-                        console.log(err_3);
-                        res.send("Error" + err_3);
+                        err_2 = _b.sent();
+                        console.log(err_2);
+                        res.send("Error" + err_2);
                         return [3, 6];
                     case 5:
                         client.release();

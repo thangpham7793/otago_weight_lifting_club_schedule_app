@@ -1,29 +1,31 @@
 import { ScheduleService } from "../database/schedule.service"
-import { Application, Request, Response } from "express"
+import { Application } from "express"
+import { LearnerService } from "../database/learner.service"
+
 export class Controller {
   private scheduleService: ScheduleService
+  private learnerService: LearnerService
 
   constructor(private app: Application) {
     this.scheduleService = new ScheduleService()
+    this.learnerService = new LearnerService()
     this.routes()
   }
 
   routes() {
-    this.app
-      .route("/")
-      .get(function welcomeMessage(req: Request, res: Response) {
-        res.status(200).send("Hello World!")
-      })
+    this.app.route("/learners/signup").post(this.learnerService.createLearner)
 
     this.app
       .route("/instructor/login")
-      .post(function instructorLogin(req: Request, res: Response) {
-        res.status(200).send("Under development!")
-      })
+      .post(this.scheduleService.getAllProgrammes)
 
     this.app
-      .route("/learner/login")
+      .route("/learners/login")
       .post(this.scheduleService.checkCredentialsAndGetSchedules)
+
+    this.app
+      .route("/learners/:learnerId/pbs")
+      .put(this.learnerService.updatePbs)
 
     this.app
       .route("/programmes/:programmeId/schedules")

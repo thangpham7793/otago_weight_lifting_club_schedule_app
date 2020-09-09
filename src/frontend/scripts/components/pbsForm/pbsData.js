@@ -1,3 +1,5 @@
+const config = require("../../config")
+
 const defaultPbs = {
   snatch: 0,
   clean: 0,
@@ -10,6 +12,13 @@ const defaultPbs = {
 
 const savePbs = (pbsObject) => {
   localStorage.setItem("pbs_v2", JSON.stringify(pbsObject))
+  const options = {
+    method: "PUT",
+    body: JSON.stringify(pbsObject),
+  }
+  fetch(`${config.LOCAL_HOST}/learners/1/pbs`, options)
+    .then((res) => console.log("Saved Pbs to Server"))
+    .catch((err) => console.error(`Error saving pbs to server: ${err}`))
 }
 
 const getPbs = () => {
