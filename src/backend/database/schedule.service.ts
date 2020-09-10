@@ -44,77 +44,21 @@ export class ScheduleService {
     await client.release()
   }
 
-  async checkCredentialsAndGetSchedules(req: Request, res: Response) {
-    const { email, password } = req.body
-    console.log(email, password)
-    const params = [email]
-
+  async getAllSchedules(req: Request, res: Response) {
+    const client: PoolClient = await pool.connect()
+    const params = [req.body.programmeId]
     const statement = `
-    SELECT email, hashed_password, schedule_name, week_count, schedule_id, programme_name   
-    FROM gym_user st
-    JOIN schedule sc
-    ON (st.programme_id = sc.programme_id)
-    JOIN programme p
-    ON (st.programme_id = p.programme_id)
-    WHERE email = $1;`
-
-    let client: PoolClient
-
+    SELECT "scheduleId", "scheduleName", "weekCount" FROM schedule WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = $1)); 
+    `
     try {
-      client = await pool.connect()
-      const result = await client.query(statement, params)
-      //  console.log(result.rows)
-      //TODO: check password here using jwt and bcrypt
-
-      if (!result.rows) {
-        // need to throw error here!
-        throw new Error("unknown email")
-      }
-
-      const { hashed_password } = result.rows[0]
-
-      if (checkPassword(password, hashed_password)) {
-        //remove email and password from result
-        result.rows.forEach((row) => {
-          delete row.email
-          delete row.hashed_password
-        })
-        //return array of schedule object
-        console.log(result.rows)
-        res.status(200).json(result.rows)
-      } else {
-        throw new Error("wrong password")
-      }
-
-      //console.log(result.rows[0])
+      const { rows } = await client.query(statement, params)
+      res.status(200).send(rows)
     } catch (err) {
       console.log(err)
-      res.send("Error" + err)
+      res.status(404).send({ error: "no available schedule" })
     } finally {
       client.release()
     }
-  }
-
-  async getAllSchedules(req: Request, res: Response) {
-    const { programmeId } = req.params
-    console.log(programmeId)
-    const params = [parseInt(programmeId)]
-    const statement = `
-    SELECT 
-      schedule_id AS "scheduleId", 
-      schedule_name AS "scheduleName", 
-      week_count AS "weekCount" 
-    FROM schedule s
-    JOIN programme p
-    ON (s.programme_id = p.programme_id)
-    WHERE p.programme_id = $1;`
-
-    const client: PoolClient = await pool.connect()
-    const result = await client.query(statement, params)
-    console.log(result.rows)
-    res.status(200).json(result.rows)
-
-    await client.release()
   }
 
   async getWeeklySchedule(req: Request, res: Response) {
@@ -122,11 +66,7 @@ export class ScheduleService {
     //console.log(programmeId, scheduleId, week)
     const params = [scheduleId, week].map((ele) => parseInt(ele))
     const statement = `
-    SELECT timetable as week_${week}
-    FROM weekly_timetable w 
-    JOIN schedule s
-    ON (w.schedule_id = s.schedule_id)
-    WHERE s.schedule_id = $1 AND week = $2;`
+    SELECT timetable[$2] as week_${week} FROM schedule WHERE "scheduleId" = $1;`
 
     let client: PoolClient
 
@@ -137,8 +77,7 @@ export class ScheduleService {
       if (!result.rows) {
         throw new Error("no availale weekly schedule found")
       }
-
-      res.status(200).json(result.rows[0])
+      res.status(200).json(result.rows[0][`week_${week}`])
       //console.log(result.rows[0])
     } catch (err) {
       console.log(err)

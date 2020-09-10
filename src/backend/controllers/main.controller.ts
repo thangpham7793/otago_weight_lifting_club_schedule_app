@@ -11,7 +11,7 @@ export class Controller {
     this.learnerService = new LearnerService()
     this.routes()
   }
-
+  //most routes still need to be protected with jwt
   routes() {
     this.app.route("/learners/signup").post(this.learnerService.createLearner)
 
@@ -19,9 +19,15 @@ export class Controller {
       .route("/instructor/login")
       .post(this.scheduleService.getAllProgrammes)
 
+    //FIXME: this takes too long!
     this.app
       .route("/learners/login")
-      .post(this.scheduleService.checkCredentialsAndGetSchedules)
+      .post(
+        this.learnerService.checkCredentials,
+        this.scheduleService.getAllSchedules
+      )
+
+    this.app.route("/learners/:learnerId/pbs").get(this.learnerService.getPbs)
 
     this.app
       .route("/learners/:learnerId/pbs")

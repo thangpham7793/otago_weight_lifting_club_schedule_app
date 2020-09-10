@@ -7,11 +7,16 @@ const {
   makeDropDownOptions,
   makeScheduleTable,
 } = require("./components/exerciseTable/exerciseTable")
-require("dotenv").config()
+
+const config = require("./config")
 
 //similar to App.js
 const schedule = (function () {
-  const dataURL = "database/september.json"
+  const { scheduleId, week } = JSON.parse(
+    sessionStorage.getItem("weeklySchedule")
+  )
+
+  const dataURL = `${config.LOCAL_HOST}/schedules/${scheduleId}/weeks/${week}`
 
   //global state like Redux or component state like React...
   let scheduleData = ""
@@ -30,7 +35,7 @@ const schedule = (function () {
     const targetName = this.getAttribute("key")
     //update temp form data just like React's controlled form
     formData[targetName] = this.value
-    $("pre").text(JSON.stringify(formData, null, 2))
+    //$("pre").text(JSON.stringify(formData, null, 2))
   }
 
   //only render the form and add props when clicked
@@ -46,14 +51,10 @@ const schedule = (function () {
   //initial render
   function successHandler(data) {
     console.log(data)
-    const { programme, name, schedule } = data
-    const week = sessionStorage.getItem("week")
+    scheduleData = JSON.parse(data)
     console.log(`The chosen week is week ${week}`)
-    scheduleData = schedule[`week ${week}`]
-    console.log(scheduleData)
     //appendContent(makeExerciseHeader(programme, name, week))
     appendContent(makeDropDownOptions(Object.keys(scheduleData), week))
-    //need to allow users to pick a week here (or maybe it should be a form right from the beginning)
 
     //similar to useEffect once/ afterwards it's handled by onChangeHandler
     if (scheduleData) {
@@ -93,6 +94,7 @@ const schedule = (function () {
 
   function onSelectHandler() {
     const pickedDate = document.getElementById("days").value
+    console.log(pickedDate)
     const content = makeScheduleTable(scheduleData[pickedDate])
     updateTable(content)
   }

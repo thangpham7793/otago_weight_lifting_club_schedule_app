@@ -1,0 +1,5 @@
+CREATE OR REPLACE PROCEDURE get_all(table_name TEXT)
+LANGUAGE SQL
+AS $$
+SELECT * FROM table_name;
+$$;

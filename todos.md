@@ -14,7 +14,9 @@
 
 ### Tickets
 
-[] Refactor routes and db scripts
+[] Think about when you should fetch pbs from server
+[] Use middleware stacking to protect certain routes
+[] Rewrite tests and handlers to support new schemas
 [] Set up login so that students can saved their db
 [] Create store procedures for each service
 [] Figure out Callan's use pattern
@@ -31,6 +33,8 @@
 [] How to restrict access to certain routes beyond jwt
 [] Refactor schedule services to instructor/learner routes
 
+[x] Retrieve schedule data from pgsql DB
+[x] Finalized schemas based on new input
 [x] Fix CSS styling to make login form mobile-responsive
 [x] Add basic credentials validation and error message notification
 [x] How to make container talk to each other

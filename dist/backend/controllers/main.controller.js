@@ -11,12 +11,14 @@ var Controller = (function () {
         this.routes();
     }
     Controller.prototype.routes = function () {
+        this.app.route("/learners/signup").post(this.learnerService.createLearner);
         this.app
             .route("/instructor/login")
             .post(this.scheduleService.getAllProgrammes);
         this.app
             .route("/learners/login")
-            .post(this.scheduleService.checkCredentialsAndGetSchedules);
+            .post(this.learnerService.checkCredentials, this.scheduleService.getAllSchedules);
+        this.app.route("/learners/:learnerId/pbs").get(this.learnerService.getPbs);
         this.app
             .route("/learners/:learnerId/pbs")
             .put(this.learnerService.updatePbs);

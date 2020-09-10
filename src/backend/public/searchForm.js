@@ -1,11 +1,13 @@
 //https://stackoverflow.com/questions/40484355/browserify-multiple-files-into-a-single-bundle (does it work if each script works on different page?)
 
-//may not have to do it at all
-
 const searchForm = (function () {
   "use strict"
 
-  const store = {}
+  const tempChosenWeeklySchedule = {
+    scheduleId: "",
+    //initial value is always 1
+    week: 1,
+  }
 
   function makeLogo() {
     return ` <div class="logo-wrapper">
@@ -30,17 +32,18 @@ const searchForm = (function () {
   </div>`
   }
 
-  function makeDropdownOption(value) {
-    return `<option value="${value}">${value}</option>`
+  function makeDropdownOption(value, id) {
+    return `<option value="${value}" data-scheduledId=${id}>${value}</option>`
   }
 
   function makeScheduleDropdown(schedules) {
     const scheduleOptions = schedules
-      .map(({ schedule_name }) => {
-        return makeDropdownOption(schedule_name)
+      .map(({ scheduleName, scheduleId }) => {
+        return makeDropdownOption(scheduleName, scheduleId)
       })
       .join("")
-
+    //default is the first schedule in the array
+    tempChosenWeeklySchedule.scheduleId = schedules[0].scheduleId
     return `<div class="field-container schedule">
     <label for="schedule" class="search-form-label index"
       >Schedule</label
@@ -72,13 +75,13 @@ const searchForm = (function () {
   <div class="search-form-wrapper">
     <form class='search-form'>
       ${makeScheduleDropdown(schedules)}
-      ${makeWeekDropdownMenu(schedules[0].week_count)}
+      ${makeWeekDropdownMenu(schedules[0].weekCount)}
       ${makeSubmitButton("", "Let's Go")}
     </form>
   </div>`
   }
 
-  function displaySearchForm({ schedules }) {
+  function displaySearchForm(schedules) {
     function renderWeekDropdown(weekCount) {
       const newWeekDropdown = makeWeekDropdownMenu(weekCount)
       //remove the stale drop down
@@ -94,39 +97,43 @@ const searchForm = (function () {
       //rerender the week dropdown menu here
       //hmm they probably make extensive use of id for this reason, since
       //it's unique and allow an element to be updated right away
-      const chosenSchedule = e.target.value
-      const weekCount = schedules.filter(({ schedule_name }) => {
-        return schedule_name === chosenSchedule
-      })[0].week_count
-      console.log(chosenSchedule, weekCount)
+      const chosenScheduleName = e.target.value
+      const { weekCount, scheduleId } = schedules.filter(({ scheduleName }) => {
+        return scheduleName === chosenScheduleName
+      })[0]
+      tempChosenWeeklySchedule.scheduleId = scheduleId
+      console.log(
+        `The chosen week'id is ${scheduleId}, ${weekCount} weeks long with the name ${chosenScheduleName}`
+      )
       renderWeekDropdown(weekCount)
     }
 
-    const programmeName = schedules[0].programme_name
-
+    // const programmeName = schedules[0].programme_name
+    // makeProgrammeTitle(programmeName)
     //initial rendering
-    const form = makeProgrammeTitle(programmeName) + makeSearchForm(schedules)
+    const form = makeSearchForm(schedules)
     document.querySelector(".main.index").innerHTML = form
     document.querySelector("#schedule").onchange = onScheduleChangeHander
   }
 
-  function saveChosenWeek(week) {
-    sessionStorage.setItem("week", week)
+  function saveChosenWeeklySchedule(tempChosenWeeklySchedule) {
+    sessionStorage.setItem(
+      "weeklySchedule",
+      JSON.stringify(tempChosenWeeklySchedule)
+    )
   }
 
   function submitWeekHandler(e) {
     e.preventDefault()
-    const week = document.getElementById("week").value
     //TODO: need to use fetched data here as well
     //need to save the week + schedule_id
-    saveChosenWeek(week)
+    saveChosenWeeklySchedule(tempChosenWeeklySchedule)
     //another network call here ...
     location.href = "./timetable.html"
   }
 
   function loginSuccessHandler(schedules) {
-    store.schedules = schedules
-    displaySearchForm(store)
+    displaySearchForm(schedules)
     const submitBtn = document.getElementsByClassName("submit-btn")[0]
     submitBtn.addEventListener("click", submitWeekHandler)
   }
@@ -205,7 +212,7 @@ const searchForm = (function () {
     if (!errorMessage) {
       console.log("Fetching Data")
 
-      const url = `http://localhost:3000/learner/login`
+      const url = `http://localhost:3000/learners/login`
       const fetchOptions = {
         method: "POST",
         mode: "cors",

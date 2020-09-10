@@ -13,8 +13,14 @@ CREATE TABLE programme (
 INSERT INTO programme ("programmeName") VALUES ('Youth and Junior');
 
 -- Not hard to update SCHEDULEIDS
-UPDATE programme SET "scheduleIds" = "scheduleIds" || 6;
-UPDATE programme SET "scheduleIds" = ARRAY_REMOVE("scheduleIds", 6);
+-- add a single element
+UPDATE programme SET "scheduleIds" = "scheduleIds" || 6 WHERE "programmeId" = 1;
+
+-- add multiple eles
+UPDATE programme SET "scheduleIds" = array_cat("scheduleIds", ARRAY[2,3]) WHERE "programmeId" = 1;
+
+-- remove one ele
+UPDATE programme SET "scheduleIds" = ARRAY_REMOVE("scheduleIds", 6) WHERE "programmeId" = 1;
 
 CREATE TABLE schedule (
   "scheduleId" SERIAL PRIMARY KEY,
@@ -29,9 +35,10 @@ INSERT INTO schedule ("scheduleName", "weekCount") VALUES ('September 2020 Stren
 
 --https://dba.stackexchange.com/questions/110743/use-array-expression-from-subquery-in-any-condition
 WITH res AS (SELECT "scheduleIds" FROM programme WHERE "programmeId" = 1) 
-SELECT * FROM schedule WHERE 1 = ANY(ARRAY(SELECT * FROM res); 
+SELECT * FROM schedule WHERE "scheduleId" = ANY(ARRAY(SELECT * FROM res); 
 --either works
-SELECT * FROM schedule WHERE 1 = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = 1)); 
+SELECT "scheduleId", "scheduleName", "weekCount" FROM schedule WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = 1)); 
+
 
 
 --SELECT * FROM schedule WHERE 1 = ANY("programmeId");

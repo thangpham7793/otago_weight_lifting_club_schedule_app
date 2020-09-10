@@ -21,9 +21,8 @@ var herokuConfig = {
         rejectUnauthorized: false,
     },
 };
-var DB_CONFIG = process.env.NODE_ENV === "production" ? herokuConfig : localConfig;
+var DB_CONFIG = herokuConfig;
 var PORT = process.env.PORT || 3000;
-console.log(process.env.NODE_ENV);
 exports.appConfig = {
     PORT: PORT,
     DB_CONFIG: DB_CONFIG,

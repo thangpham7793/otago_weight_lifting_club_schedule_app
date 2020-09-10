@@ -86,76 +86,33 @@ var ScheduleService = (function () {
             });
         });
     };
-    ScheduleService.prototype.checkCredentialsAndGetSchedules = function (req, res) {
+    ScheduleService.prototype.getAllSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, email, password, params, statement, client, result, hashed_password, err_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = req.body, email = _a.email, password = _a.password;
-                        console.log(email, password);
-                        params = [email];
-                        statement = "\n    SELECT email, hashed_password, schedule_name, week_count, schedule_id, programme_name   \n    FROM gym_user st\n    JOIN schedule sc\n    ON (st.programme_id = sc.programme_id)\n    JOIN programme p\n    ON (st.programme_id = p.programme_id)\n    WHERE email = $1;";
-                        _b.label = 1;
+            var client, params, statement, rows, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, pool_1.default.connect()];
                     case 1:
-                        _b.trys.push([1, 4, 5, 6]);
-                        return [4, pool_1.default.connect()];
+                        client = _a.sent();
+                        params = [req.body.programmeId];
+                        statement = "\n    SELECT \"scheduleId\", \"scheduleName\", \"weekCount\" FROM schedule WHERE \"scheduleId\" = ANY(ARRAY(SELECT \"scheduleIds\" FROM programme WHERE \"programmeId\" = $1)); \n    ";
+                        _a.label = 2;
                     case 2:
-                        client = _b.sent();
+                        _a.trys.push([2, 4, 5, 6]);
                         return [4, client.query(statement, params)];
                     case 3:
-                        result = _b.sent();
-                        if (!result.rows) {
-                            throw new Error("unknown email");
-                        }
-                        hashed_password = result.rows[0].hashed_password;
-                        if (auth_1.checkPassword(password, hashed_password)) {
-                            result.rows.forEach(function (row) {
-                                delete row.email;
-                                delete row.hashed_password;
-                            });
-                            console.log(result.rows);
-                            res.status(200).json(result.rows);
-                        }
-                        else {
-                            throw new Error("wrong password");
-                        }
+                        rows = (_a.sent()).rows;
+                        res.status(200).send(rows);
                         return [3, 6];
                     case 4:
-                        err_1 = _b.sent();
+                        err_1 = _a.sent();
                         console.log(err_1);
-                        res.send("Error" + err_1);
+                        res.status(404).send({ error: "no available schedule" });
                         return [3, 6];
                     case 5:
                         client.release();
                         return [7];
                     case 6: return [2];
-                }
-            });
-        });
-    };
-    ScheduleService.prototype.getAllSchedules = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var programmeId, params, statement, client, result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        programmeId = req.params.programmeId;
-                        console.log(programmeId);
-                        params = [parseInt(programmeId)];
-                        statement = "\n    SELECT \n      schedule_id AS \"scheduleId\", \n      schedule_name AS \"scheduleName\", \n      week_count AS \"weekCount\" \n    FROM schedule s\n    JOIN programme p\n    ON (s.programme_id = p.programme_id)\n    WHERE p.programme_id = $1;";
-                        return [4, pool_1.default.connect()];
-                    case 1:
-                        client = _a.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
-                        result = _a.sent();
-                        console.log(result.rows);
-                        res.status(200).json(result.rows);
-                        return [4, client.release()];
-                    case 3:
-                        _a.sent();
-                        return [2];
                 }
             });
         });
@@ -168,7 +125,7 @@ var ScheduleService = (function () {
                     case 0:
                         _a = req.params, scheduleId = _a.scheduleId, week = _a.week;
                         params = [scheduleId, week].map(function (ele) { return parseInt(ele); });
-                        statement = "\n    SELECT timetable as week_" + week + "\n    FROM weekly_timetable w \n    JOIN schedule s\n    ON (w.schedule_id = s.schedule_id)\n    WHERE s.schedule_id = $1 AND week = $2;";
+                        statement = "\n    SELECT timetable[$2] as week_" + week + " FROM schedule WHERE \"scheduleId\" = $1;";
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 4, 5, 6]);

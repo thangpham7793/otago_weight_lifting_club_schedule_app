@@ -14,6 +14,7 @@ var App = (function () {
         this.app = express_1.default();
         this.setConfig();
         this.useStatic();
+        this.initialiseErrorHandlers();
         this.controller = new main_controller_1.Controller(this.app);
     }
     App.prototype.setConfig = function () {
