@@ -46,13 +46,19 @@ export class ScheduleService {
 
   async getAllSchedules(req: Request, res: Response) {
     const client: PoolClient = await pool.connect()
-    const params = [req.body.programmeId]
+    const { programmeId, programmeName } = req.body
+    const params = [programmeId]
     const statement = `
     SELECT "scheduleId", "scheduleName", "weekCount" FROM schedule WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = $1)); 
     `
     try {
       const { rows } = await client.query(statement, params)
-      res.status(200).send(rows)
+
+      const dailySchedules = rows.map((schedule) => {
+        return { ...schedule, programmeName }
+      })
+
+      res.status(200).send(dailySchedules)
     } catch (err) {
       console.log(err)
       res.status(404).send({ error: "no available schedule" })

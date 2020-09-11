@@ -78,7 +78,7 @@ describe("API Integration Tests - Learner Service", () => {
     })
   })
   //NOTE: this implicitly calls 2 separate handlers (checkCredentials and getAllSchedules)
-  describe("POST /learners/login", () => {
+  describe.only("POST /learners/login", () => {
     it("should return all schedule_names, schedule_ids, and their week_counts if credentials are correct", async () => {
       const result = await api
         .post("/learners/login")
@@ -86,16 +86,19 @@ describe("API Integration Tests - Learner Service", () => {
       expect(result.status).toEqual(200)
       const expected = [
         {
+          programmeName: "Youth and Junior",
           scheduleName: "October 2020 Youth and Junior",
           weekCount: 4,
           scheduleId: 7,
         },
         {
+          programmeName: "Youth and Junior",
           scheduleName: "November 2020 Youth and Junior",
           weekCount: 6,
           scheduleId: 8,
         },
         {
+          programmeName: "Youth and Junior",
           scheduleName: "September 2020 Strength",
           weekCount: 5,
           scheduleId: 6,
@@ -112,12 +115,12 @@ describe("API Integration Tests - Learner Service", () => {
       const result = await api.get("/schedules/6/weeks/2")
 
       expect(result.status).toEqual(200)
-      expect(result.body).toHaveProperty("week_2")
-      const { week_2 } = result.body
+      expect(typeof result.body).toBe("string")
+      const dailySchedules = JSON.parse(result.body)
 
       const expectedDays = ["day 1", "day 2", "day 2.5", "day 3"]
       expectedDays.forEach((day) => {
-        expect(Object.keys(JSON.parse(week_2))).toContain(day)
+        expect(Object.keys(dailySchedules)).toContain(day)
       })
     })
   })

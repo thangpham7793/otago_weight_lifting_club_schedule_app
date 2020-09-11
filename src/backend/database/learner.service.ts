@@ -25,7 +25,7 @@ export class LearnerService {
 
     const params = [email]
     const statement = `    
-    SELECT p."hashedPassword", p."programmeId", l."learnerId"
+    SELECT p."hashedPassword", p."programmeId", p."programmeName"
     FROM learner l
     JOIN programme p 
     USING ("programmeId")
@@ -41,11 +41,11 @@ export class LearnerService {
       if (!rows) {
         throw new Error("unknown email")
       }
-      const { hashedPassword, programmeId } = rows[0]
+      const { hashedPassword, programmeId, programmeName } = rows[0]
       //TODO: check password here using jwt and bcrypt
       if (checkPassword(password, hashedPassword)) {
         //send programmeId to scheduleService.getAllProgrammes
-        req.body.programmeId = programmeId
+        req.body = { ...req.body, programmeId, programmeName }
         next()
       } else {
         throw new Error("wrong password")

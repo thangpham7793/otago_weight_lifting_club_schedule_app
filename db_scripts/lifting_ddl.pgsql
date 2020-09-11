@@ -35,7 +35,7 @@ INSERT INTO schedule ("scheduleName", "weekCount") VALUES ('September 2020 Stren
 
 --https://dba.stackexchange.com/questions/110743/use-array-expression-from-subquery-in-any-condition
 WITH res AS (SELECT "scheduleIds" FROM programme WHERE "programmeId" = 1) 
-SELECT * FROM schedule WHERE "scheduleId" = ANY(ARRAY(SELECT * FROM res); 
+SELECT "scheduleId", "scheduleName", "weekCount" FROM schedule WHERE "scheduleId" = ANY(ARRAY(SELECT * FROM res)); 
 --either works
 SELECT "scheduleId", "scheduleName", "weekCount" FROM schedule WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = 1)); 
 

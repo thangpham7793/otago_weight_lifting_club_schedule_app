@@ -89,14 +89,14 @@ var LearnerService = (function () {
     };
     LearnerService.prototype.checkCredentials = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, email, password, params, statement, client, rows, _b, hashedPassword, programmeId, err_1;
+            var _a, email, password, params, statement, client, rows, _b, hashedPassword, programmeId, programmeName, err_1;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         _a = req.body, email = _a.email, password = _a.password;
                         console.log(email, password);
                         params = [email];
-                        statement = "    \n    SELECT p.\"hashedPassword\", p.\"programmeId\", l.\"learnerId\"\n    FROM learner l\n    JOIN programme p \n    USING (\"programmeId\")\n    WHERE email = $1;\n    ";
+                        statement = "    \n    SELECT p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\"\n    FROM learner l\n    JOIN programme p \n    USING (\"programmeId\")\n    WHERE email = $1;\n    ";
                         _c.label = 1;
                     case 1:
                         _c.trys.push([1, 4, 5, 6]);
@@ -109,9 +109,9 @@ var LearnerService = (function () {
                         if (!rows) {
                             throw new Error("unknown email");
                         }
-                        _b = rows[0], hashedPassword = _b.hashedPassword, programmeId = _b.programmeId;
+                        _b = rows[0], hashedPassword = _b.hashedPassword, programmeId = _b.programmeId, programmeName = _b.programmeName;
                         if (auth_1.checkPassword(password, hashedPassword)) {
-                            req.body.programmeId = programmeId;
+                            req.body = __assign(__assign({}, req.body), { programmeId: programmeId, programmeName: programmeName });
                             next();
                         }
                         else {

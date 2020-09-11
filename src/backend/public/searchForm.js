@@ -108,10 +108,9 @@ const searchForm = (function () {
       renderWeekDropdown(weekCount)
     }
 
-    // const programmeName = schedules[0].programme_name
-    // makeProgrammeTitle(programmeName)
+    const programmeName = schedules[0].programmeName
     //initial rendering
-    const form = makeSearchForm(schedules)
+    const form = makeProgrammeTitle(programmeName) + makeSearchForm(schedules)
     document.querySelector(".main.index").innerHTML = form
     document.querySelector("#schedule").onchange = onScheduleChangeHander
   }
