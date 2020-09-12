@@ -1,6 +1,6 @@
 import { verifyToken } from "./../utils/jwtHelpers"
 import { ScheduleService } from "../database/schedule.service"
-import { Application } from "express"
+import { Application, Request, Response } from "express"
 import { LearnerService } from "../database/learner.service"
 
 export class Controller {
@@ -16,6 +16,10 @@ export class Controller {
   }
   //most routes still need to be protected with jwt
   routes() {
+    this.app.route("/learners/signup").get((req: Request, res: Response) => {
+      res.redirect("../signup.html")
+    })
+
     this.app.route("/learners/signup").post(this.learnerService.createLearner)
 
     this.app

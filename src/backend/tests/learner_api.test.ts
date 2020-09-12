@@ -6,15 +6,6 @@ const TEST_COOKIE =
   "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZWFybmVySWQiOjEsImlhdCI6MTU5OTgyNTY5OH0.vhbqD8U6ZsGZ_Ost5qgcM2QKGPf1N-VsTjrLw-ukVnc"
 
 describe("API Integration Tests - Learner Service", () => {
-  describe.only("GET /learners/signup", () => {
-    it("should return redirect user to an html page for signing up", () => {
-      api
-        .get("/learners/signup")
-        .expect("Content-Type", /[text|html]/)
-        .expect(200)
-    })
-  })
-
   describe("POST /learners/signup", () => {
     it("should create a new user in the database and initialise their personal bests", async () => {
       const newLearnerInfo = {
