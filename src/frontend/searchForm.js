@@ -3,6 +3,20 @@
 const searchForm = (function () {
   "use strict"
 
+  function getStore() {
+    if (sessionStorage.getItem("payload")) {
+      return JSON.parse(sessionStorage.getItem("payload"))
+    } else {
+      return null
+    }
+  }
+
+  function saveStore(payload) {
+    sessionStorage.setItem("payload", JSON.stringify(payload))
+  }
+
+  const store = getStore()
+
   const tempChosenWeeklySchedule = {
     scheduleId: "",
     //initial value is always 1
@@ -106,6 +120,7 @@ const searchForm = (function () {
         `The chosen week'id is ${scheduleId}, ${weekCount} weeks long with the name ${chosenScheduleName}`
       )
       renderWeekDropdown(weekCount)
+      document.querySelector("#week").onchange = onWeekSelectedHandler
     }
 
     const programmeName = schedules[0].programmeName
@@ -113,8 +128,15 @@ const searchForm = (function () {
     const form = makeProgrammeTitle(programmeName) + makeSearchForm(schedules)
     document.querySelector(".main.index").innerHTML = form
     document.querySelector("#schedule").onchange = onScheduleChangeHander
+    document.querySelector("#week").onchange = onWeekSelectedHandler
   }
 
+  //save user's chosen week
+  function onWeekSelectedHandler(e) {
+    tempChosenWeeklySchedule.week = e.target.value
+  }
+
+  //so that it can be accessed to fetch data from server later
   function saveChosenWeeklySchedule(tempChosenWeeklySchedule) {
     sessionStorage.setItem(
       "weeklySchedule",
@@ -122,19 +144,18 @@ const searchForm = (function () {
     )
   }
 
-  function submitWeekHandler(e) {
+  function onSubmitWeekHandler(e) {
     e.preventDefault()
     //TODO: need to use fetched data here as well
     //need to save the week + schedule_id
     saveChosenWeeklySchedule(tempChosenWeeklySchedule)
-    //another network call here ...
     location.href = "./timetable.html"
   }
 
-  function loginSuccessHandler(schedules) {
+  function loginSuccessHandler({ schedules }) {
     displaySearchForm(schedules)
     const submitBtn = document.getElementsByClassName("submit-btn")[0]
-    submitBtn.addEventListener("click", submitWeekHandler)
+    submitBtn.addEventListener("click", onSubmitWeekHandler)
   }
 
   function makeErrorMessage(errorMessage) {
@@ -222,9 +243,10 @@ const searchForm = (function () {
         .then((res) => {
           res
             .json()
-            .then((schedules) => {
-              console.log(schedules)
-              loginSuccessHandler(schedules)
+            .then((payload) => {
+              console.log(payload)
+              saveStore(payload)
+              loginSuccessHandler(payload)
             })
             .catch((err) => console.log(`Error parsing JSON: ${err}`))
         })
@@ -235,10 +257,17 @@ const searchForm = (function () {
   }
 
   function setup() {
-    displayLoginForm()
-    document
-      .querySelector(".submit-btn.login")
-      .addEventListener("click", loginBtnHandler)
+    // display login form if user hasn't logged in and there's no payload saved in sessionStorage
+    console.log(store)
+    if (!store) {
+      console.log("No saved info, please log in!")
+      displayLoginForm()
+      document
+        .querySelector(".submit-btn.login")
+        .addEventListener("click", loginBtnHandler)
+    } else {
+      loginSuccessHandler(store)
+    }
     //called after ajax results come back
   }
 

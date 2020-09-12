@@ -1,5 +1,5 @@
 const $ = require("jquery")
-const { getPbs, savePbs, pbsForm } = require("./components/pbsForm/pbs")
+const { savePbs, pbsForm } = require("./components/pbsForm/pbs")
 const { fetchData } = require("./utils")
 const { appendContent } = require("./utils")
 const {
@@ -7,34 +7,36 @@ const {
   makeDropDownOptions,
   makeScheduleTable,
 } = require("./components/exerciseTable/exerciseTable")
-
+const { getStore, saveStore } = require("./utils")
 const config = require("./config")
 
 //similar to App.js
 const schedule = (function () {
+  //global state like Redux or component state like React...
+  const store = getStore()
   const { scheduleId, week } = JSON.parse(
     sessionStorage.getItem("weeklySchedule")
   )
 
   const dataURL = `${config.LOCAL_HOST}/schedules/${scheduleId}/weeks/${week}`
 
-  //global state like Redux or component state like React...
-  let scheduleData = ""
-  //temp storage for input data
-  let formData = getPbs()
-
   function pbsSubmitHandler(e) {
-    savePbs(formData)
+    e.preventDefault()
+    //save pbs to server
+    savePbs(store.pbs)
+    //close pbs modal
     toggleModal()
-    //e.preventDefault()
-    //(no need to do sth complicated, simply reload...rerender) => okay that's why they use virtual DOM
+    //save store
+    saveStore(store)
+    //rerender table with new pbs
+    location.reload()
   }
 
   //update temporary pbs data object
   function onPbsFormInputHandler() {
     const targetName = this.getAttribute("key")
     //update temp form data just like React's controlled form
-    formData[targetName] = this.value
+    store.pbs[targetName] = parseFloat(this.value)
     //$("pre").text(JSON.stringify(formData, null, 2))
   }
 
@@ -49,21 +51,23 @@ const schedule = (function () {
   }
 
   //initial render
-  function successHandler(data) {
-    console.log(data)
-    scheduleData = JSON.parse(data)
+  function successHandler(dailySchedules) {
+    console.log(dailySchedules)
+    if (typeof dailySchedules === "string") {
+      store.dailySchedules = JSON.parse(dailySchedules)
+    }
     console.log(`The chosen week is week ${week}`)
     //appendContent(makeExerciseHeader(programme, name, week))
-    appendContent(makeDropDownOptions(Object.keys(scheduleData), week))
+    appendContent(makeDropDownOptions(Object.keys(store.dailySchedules), week))
 
-    //similar to useEffect once/ afterwards it's handled by onChangeHandler
-    if (scheduleData) {
+    //similar to useEffect once/ afterw+ards it's handled by onChangeHandler
+    if (store.dailySchedules) {
       onSelectHandler()
     }
     $("#days").on({ change: onSelectHandler })
 
     //PBS MODAL
-    $(".pbs-content").append(pbsForm())
+    $(".pbs-content").append(pbsForm(store.pbs))
     $(".pbs-form").on({ submit: pbsSubmitHandler })
     $(".pbs-form > div > input").on({ input: onPbsFormInputHandler })
     $(".pbs-btn").on({ click: toggleModal })
@@ -95,13 +99,33 @@ const schedule = (function () {
   function onSelectHandler() {
     const pickedDate = document.getElementById("days").value
     console.log(pickedDate)
-    const content = makeScheduleTable(scheduleData[pickedDate])
+    const content = makeScheduleTable(store.dailySchedules[pickedDate])
     updateTable(content)
+  }
+
+  window.onbeforeunload = function (e) {
+    //update the chosen week
+    store.chosenWeek = { scheduleId, week }
+    saveStore(store)
   }
 
   //componentDidMount (on page load)
   function setup() {
-    fetchData(dataURL, successHandler)
+    const prevWeek = store.chosenWeek.week
+    const prevScheduleId = store.chosenWeek.scheduleId
+
+    //if user chooses the same week and same schedule, use stored data
+    if (
+      store.dailySchedules &&
+      prevWeek === week &&
+      prevScheduleId === scheduleId
+    ) {
+      console.log("No need to refetch daily schedules!")
+      successHandler(store.dailySchedules)
+      //if the data hasn't been fetched or it's a new week/schedule
+    } else {
+      fetchData(dataURL, successHandler)
+    }
   }
 
   return {

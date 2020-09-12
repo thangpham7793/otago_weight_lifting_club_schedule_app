@@ -9,20 +9,21 @@ var cors_1 = __importDefault(require("cors"));
 var path_1 = __importDefault(require("path"));
 var errorHandlers_1 = __importDefault(require("./utils/errorHandlers"));
 var main_controller_1 = require("./controllers/main.controller");
+var cookie_parser_1 = __importDefault(require("cookie-parser"));
+var morgan_1 = __importDefault(require("morgan"));
 var App = (function () {
     function App() {
         this.app = express_1.default();
         this.setConfig();
         this.useStatic();
-        this.initialiseErrorHandlers();
         this.controller = new main_controller_1.Controller(this.app);
     }
     App.prototype.setConfig = function () {
+        this.app.use(cookie_parser_1.default());
         this.app.use(body_parser_1.default.json({ limit: "50mb" }));
         this.app.use(body_parser_1.default.urlencoded({ limit: "50mb", extended: true }));
         this.app.use(cors_1.default());
-    };
-    App.prototype.initialiseErrorHandlers = function () {
+        this.app.use(morgan_1.default(":method :url :status :res[content-length] - :response-time ms"));
         this.app.use(errorHandlers_1.default.httpErrorHandlers);
     };
     App.prototype.useStatic = function () {

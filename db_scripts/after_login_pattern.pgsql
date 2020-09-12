@@ -11,7 +11,10 @@ INSERT INTO student (first_name, last_name, username, programme_id) VALUES ('Tha
 
 -- check login first/may do the join here?
 -- return programmeId if correct
-SELECT p."hashedPassword", p."programmeId", p."programmeName"
+SELECT 
+p."hashedPassword", p."programmeId", p."programmeName", 
+l."learnerId", l.snatch, l.clean, l.jerk, 
+l."cleanAndJerk", l."backSquat", l."frontSquat", l."pushPress"
 FROM learner l
 JOIN programme p 
 USING ("programmeId")

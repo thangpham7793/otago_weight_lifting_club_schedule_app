@@ -10937,7 +10937,7 @@ module.exports = { makeExerciseHeader }
 },{}],6:[function(require,module,exports){
 const { calculateRealWeight } = require("./calculateRealWeight")
 const { pbsToExercises } = require("../../data")
-const { getPbs } = require("../pbsForm/pbsData")
+const { getStore } = require("../../utils")
 
 const getMatchedPbValue = (exerciseName) => {
   const matchedPb = Object.keys(pbsToExercises).filter((k) => {
@@ -10946,7 +10946,7 @@ const getMatchedPbValue = (exerciseName) => {
       .map((exerciseName) => exerciseName.toLowerCase())
       .includes(exerciseName.toLowerCase())
   })[0]
-  return getPbs()[matchedPb]
+  return getStore().pbs[matchedPb]
 }
 
 //dynamic rendering based on data
@@ -10976,7 +10976,7 @@ function makeExerciseRows(exercises) {
 
 module.exports = { makeExerciseRows }
 
-},{"../../data":13,"../pbsForm/pbsData":10,"./calculateRealWeight":2}],7:[function(require,module,exports){
+},{"../../data":13,"../../utils":15,"./calculateRealWeight":2}],7:[function(require,module,exports){
 const { makeTableHeader } = require("./makeTableHeader")
 const { makeExerciseRows } = require("./makeExerciseRows")
 
@@ -11006,56 +11006,41 @@ module.exports = { getPbs, savePbs, pbsForm }
 },{"./pbsData":10,"./pbsForm":11}],10:[function(require,module,exports){
 const config = require("../../config")
 
-const defaultPbs = {
-  snatch: 0,
-  clean: 0,
-  jerk: 0,
-  cleanAndJerk: 0,
-  backSquat: 0,
-  frontSquat: 0,
-  pushPress: 0,
-}
-
-const savePbs = (pbsObject) => {
-  localStorage.setItem("pbs_v2", JSON.stringify(pbsObject))
+const savePbs = (pbs) => {
+  console.log("Saving", JSON.stringify(pbs))
+  //localStorage.setItem("pbs_v2", JSON.stringify(pbs))
   const options = {
     method: "PUT",
-    body: JSON.stringify(pbsObject),
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(pbs),
   }
   fetch(`${config.LOCAL_HOST}/learners/1/pbs`, options)
     .then((res) => console.log("Saved Pbs to Server"))
     .catch((err) => console.error(`Error saving pbs to server: ${err}`))
 }
 
-const getPbs = () => {
-  if (!localStorage.getItem("pbs_v2")) {
-    console.log("No saved Data!")
-    return defaultPbs
-  } else {
-    return JSON.parse(localStorage.getItem("pbs_v2"))
-  }
-}
-
-module.exports = { savePbs, getPbs }
+module.exports = { savePbs }
 
 },{"../../config":12}],11:[function(require,module,exports){
-const utils = require("../../utils")
-const { getPbs } = require("./pbsData")
+const { camelCaseToNormal } = require("../../utils")
 
 const inputField = ([key, value]) => {
   return `
   <div class='pbs-field'>
-  <label for='${key}'>${utils.camelCaseToNormal(key)}</label>
+  <label for='${key}'>${camelCaseToNormal(key)}</label>
   <input type='text' id='${key}' key='${key}' value='${value}'>
   </div>
   `
 }
 
-const pbsForm = () => {
-  const pbsObj = getPbs()
-  console.log(pbsObj)
+const pbsForm = (pbs) => {
+  //const pbsObj = getPbs()
+  console.log(pbs)
   return `<form class="pbs-form">
-  ${Object.entries(pbsObj).reduce(
+  ${Object.entries(pbs).reduce(
     (strAcc, entry) => strAcc + inputField(entry),
     ""
   )}
@@ -11066,7 +11051,7 @@ const pbsForm = () => {
 
 module.exports = { pbsForm }
 
-},{"../../utils":15,"./pbsData":10}],12:[function(require,module,exports){
+},{"../../utils":15}],12:[function(require,module,exports){
 module.exports = {
   API_ENTRY: "https://lifting-schedule.herokuapp.com",
   LOCAL_HOST: "http://localhost:3000",
@@ -11195,7 +11180,7 @@ module.exports = { pbs, pbsToExercises }
 
 },{}],14:[function(require,module,exports){
 const $ = require("jquery")
-const { getPbs, savePbs, pbsForm } = require("./components/pbsForm/pbs")
+const { savePbs, pbsForm } = require("./components/pbsForm/pbs")
 const { fetchData } = require("./utils")
 const { appendContent } = require("./utils")
 const {
@@ -11203,34 +11188,36 @@ const {
   makeDropDownOptions,
   makeScheduleTable,
 } = require("./components/exerciseTable/exerciseTable")
-
+const { getStore, saveStore } = require("./utils")
 const config = require("./config")
 
 //similar to App.js
 const schedule = (function () {
+  //global state like Redux or component state like React...
+  const store = getStore()
   const { scheduleId, week } = JSON.parse(
     sessionStorage.getItem("weeklySchedule")
   )
 
   const dataURL = `${config.LOCAL_HOST}/schedules/${scheduleId}/weeks/${week}`
 
-  //global state like Redux or component state like React...
-  let scheduleData = ""
-  //temp storage for input data
-  let formData = getPbs()
-
   function pbsSubmitHandler(e) {
-    savePbs(formData)
+    e.preventDefault()
+    //save pbs to server
+    savePbs(store.pbs)
+    //close pbs modal
     toggleModal()
-    //e.preventDefault()
-    //(no need to do sth complicated, simply reload...rerender) => okay that's why they use virtual DOM
+    //save store
+    saveStore(store)
+    //rerender table with new pbs
+    location.reload()
   }
 
   //update temporary pbs data object
   function onPbsFormInputHandler() {
     const targetName = this.getAttribute("key")
     //update temp form data just like React's controlled form
-    formData[targetName] = this.value
+    store.pbs[targetName] = parseFloat(this.value)
     //$("pre").text(JSON.stringify(formData, null, 2))
   }
 
@@ -11245,21 +11232,23 @@ const schedule = (function () {
   }
 
   //initial render
-  function successHandler(data) {
-    console.log(data)
-    scheduleData = JSON.parse(data)
+  function successHandler(dailySchedules) {
+    console.log(dailySchedules)
+    if (typeof dailySchedules === "string") {
+      store.dailySchedules = JSON.parse(dailySchedules)
+    }
     console.log(`The chosen week is week ${week}`)
     //appendContent(makeExerciseHeader(programme, name, week))
-    appendContent(makeDropDownOptions(Object.keys(scheduleData), week))
+    appendContent(makeDropDownOptions(Object.keys(store.dailySchedules), week))
 
-    //similar to useEffect once/ afterwards it's handled by onChangeHandler
-    if (scheduleData) {
+    //similar to useEffect once/ afterw+ards it's handled by onChangeHandler
+    if (store.dailySchedules) {
       onSelectHandler()
     }
     $("#days").on({ change: onSelectHandler })
 
     //PBS MODAL
-    $(".pbs-content").append(pbsForm())
+    $(".pbs-content").append(pbsForm(store.pbs))
     $(".pbs-form").on({ submit: pbsSubmitHandler })
     $(".pbs-form > div > input").on({ input: onPbsFormInputHandler })
     $(".pbs-btn").on({ click: toggleModal })
@@ -11291,13 +11280,33 @@ const schedule = (function () {
   function onSelectHandler() {
     const pickedDate = document.getElementById("days").value
     console.log(pickedDate)
-    const content = makeScheduleTable(scheduleData[pickedDate])
+    const content = makeScheduleTable(store.dailySchedules[pickedDate])
     updateTable(content)
+  }
+
+  window.onbeforeunload = function (e) {
+    //update the chosen week
+    store.chosenWeek = { scheduleId, week }
+    saveStore(store)
   }
 
   //componentDidMount (on page load)
   function setup() {
-    fetchData(dataURL, successHandler)
+    const prevWeek = store.chosenWeek.week
+    const prevScheduleId = store.chosenWeek.scheduleId
+
+    //if user chooses the same week and same schedule, use stored data
+    if (
+      store.dailySchedules &&
+      prevWeek === week &&
+      prevScheduleId === scheduleId
+    ) {
+      console.log("No need to refetch daily schedules!")
+      successHandler(store.dailySchedules)
+      //if the data hasn't been fetched or it's a new week/schedule
+    } else {
+      fetchData(dataURL, successHandler)
+    }
   }
 
   return {
@@ -11324,7 +11333,7 @@ function fetchData(url, successHandler, errorHandler) {
       ...config,
       error: function (xhr, status, err) {
         console.log(`${xhr.status} Error: ${err}`)
-        appendContent("<h2>Error Gettng Schedule Data :(</h2>")
+        appendContent("<h2>Error Getting Weekly Schedule Data :(</h2>")
       },
     }
   } else {
@@ -11361,11 +11370,25 @@ function isMatched(pattern, target) {
   //return pbsToExercises[k].includes(exercise)
 }
 
+function getStore() {
+  if (sessionStorage.getItem("payload")) {
+    return JSON.parse(sessionStorage.getItem("payload"))
+  } else {
+    return null
+  }
+}
+
+function saveStore(payload) {
+  sessionStorage.setItem("payload", JSON.stringify(payload))
+}
+
 module.exports = {
   appendContent,
   fetchData,
   camelCaseToNormal,
   isMatched,
+  getStore,
+  saveStore,
 }
 
 },{"jquery":1}]},{},[14]);

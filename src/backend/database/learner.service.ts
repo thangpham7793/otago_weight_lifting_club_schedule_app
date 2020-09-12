@@ -1,3 +1,4 @@
+import { makeToken } from "./../utils/jwtHelpers"
 import { Request, Response, NextFunction } from "express"
 import { PoolClient } from "pg"
 import pool from "./pool"
@@ -25,7 +26,10 @@ export class LearnerService {
 
     const params = [email]
     const statement = `    
-    SELECT p."hashedPassword", p."programmeId", p."programmeName"
+    SELECT 
+    p."hashedPassword", p."programmeId", p."programmeName", 
+    l."learnerId", l.snatch, l.clean, l.jerk, 
+    l."cleanAndJerk", l."backSquat", l."frontSquat", l."pushPress"
     FROM learner l
     JOIN programme p 
     USING ("programmeId")
@@ -41,11 +45,13 @@ export class LearnerService {
       if (!rows) {
         throw new Error("unknown email")
       }
-      const { hashedPassword, programmeId, programmeName } = rows[0]
+
+      const { hashedPassword, learnerId } = rows[0]
       //TODO: check password here using jwt and bcrypt
       if (checkPassword(password, hashedPassword)) {
         //send programmeId to scheduleService.getAllProgrammes
-        req.body = { ...req.body, programmeId, programmeName }
+        const token = await makeToken({ learnerId: learnerId })
+        req.body = { ...req.body, ...rows[0], token }
         next()
       } else {
         throw new Error("wrong password")
@@ -87,8 +93,9 @@ export class LearnerService {
 
   async updatePbs(req: Request, res: Response) {
     const { learnerId } = req.params
+    console.log("Received", req.body)
     const pbs = Object.values(req.body)
-    const params = [...pbs, parseInt(learnerId)]
+    const params = [...pbs, learnerId].map((ele: string) => parseFloat(ele))
     const statement = `
     UPDATE learner SET
     snatch = $1,

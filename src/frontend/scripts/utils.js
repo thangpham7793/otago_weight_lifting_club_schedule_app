@@ -14,7 +14,7 @@ function fetchData(url, successHandler, errorHandler) {
       ...config,
       error: function (xhr, status, err) {
         console.log(`${xhr.status} Error: ${err}`)
-        appendContent("<h2>Error Gettng Schedule Data :(</h2>")
+        appendContent("<h2>Error Getting Weekly Schedule Data :(</h2>")
       },
     }
   } else {
@@ -51,9 +51,23 @@ function isMatched(pattern, target) {
   //return pbsToExercises[k].includes(exercise)
 }
 
+function getStore() {
+  if (sessionStorage.getItem("payload")) {
+    return JSON.parse(sessionStorage.getItem("payload"))
+  } else {
+    return null
+  }
+}
+
+function saveStore(payload) {
+  sessionStorage.setItem("payload", JSON.stringify(payload))
+}
+
 module.exports = {
   appendContent,
   fetchData,
   camelCaseToNormal,
   isMatched,
+  getStore,
+  saveStore,
 }

@@ -58,6 +58,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LearnerService = void 0;
+var jwtHelpers_1 = require("./../utils/jwtHelpers");
 var pool_1 = __importDefault(require("./pool"));
 var auth_1 = require("../utils/auth");
 var LearnerService = (function () {
@@ -89,17 +90,17 @@ var LearnerService = (function () {
     };
     LearnerService.prototype.checkCredentials = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, email, password, params, statement, client, rows, _b, hashedPassword, programmeId, programmeName, err_1;
+            var _a, email, password, params, statement, client, rows, _b, hashedPassword, learnerId, token, err_1;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         _a = req.body, email = _a.email, password = _a.password;
                         console.log(email, password);
                         params = [email];
-                        statement = "    \n    SELECT p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\"\n    FROM learner l\n    JOIN programme p \n    USING (\"programmeId\")\n    WHERE email = $1;\n    ";
+                        statement = "    \n    SELECT \n    p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n    l.\"learnerId\", l.snatch, l.clean, l.jerk, \n    l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n    FROM learner l\n    JOIN programme p \n    USING (\"programmeId\")\n    WHERE email = $1;\n    ";
                         _c.label = 1;
                     case 1:
-                        _c.trys.push([1, 4, 5, 6]);
+                        _c.trys.push([1, 7, 8, 9]);
                         return [4, pool_1.default.connect()];
                     case 2:
                         client = _c.sent();
@@ -109,24 +110,25 @@ var LearnerService = (function () {
                         if (!rows) {
                             throw new Error("unknown email");
                         }
-                        _b = rows[0], hashedPassword = _b.hashedPassword, programmeId = _b.programmeId, programmeName = _b.programmeName;
-                        if (auth_1.checkPassword(password, hashedPassword)) {
-                            req.body = __assign(__assign({}, req.body), { programmeId: programmeId, programmeName: programmeName });
-                            next();
-                        }
-                        else {
-                            throw new Error("wrong password");
-                        }
-                        return [3, 6];
+                        _b = rows[0], hashedPassword = _b.hashedPassword, learnerId = _b.learnerId;
+                        if (!auth_1.checkPassword(password, hashedPassword)) return [3, 5];
+                        return [4, jwtHelpers_1.makeToken({ learnerId: learnerId })];
                     case 4:
+                        token = _c.sent();
+                        req.body = __assign(__assign(__assign({}, req.body), rows[0]), { token: token });
+                        next();
+                        return [3, 6];
+                    case 5: throw new Error("wrong password");
+                    case 6: return [3, 9];
+                    case 7:
                         err_1 = _c.sent();
                         console.log(err_1);
                         res.send("Error" + err_1);
-                        return [3, 6];
-                    case 5:
+                        return [3, 9];
+                    case 8:
                         client.release();
                         return [7];
-                    case 6: return [2];
+                    case 9: return [2];
                 }
             });
         });
@@ -166,8 +168,9 @@ var LearnerService = (function () {
                 switch (_a.label) {
                     case 0:
                         learnerId = req.params.learnerId;
+                        console.log("Received", req.body);
                         pbs = Object.values(req.body);
-                        params = __spreadArrays(pbs, [parseInt(learnerId)]);
+                        params = __spreadArrays(pbs, [learnerId]).map(function (ele) { return parseFloat(ele); });
                         statement = "\n    UPDATE learner SET\n    snatch = $1,\n    clean = $2,\n    jerk = $3,\n    \"cleanAndJerk\" = $4,\n    \"backSquat\" = $5,\n    \"frontSquat\" = $6,\n    \"pushPress\" = $7\n    WHERE \"learnerId\" = $8;\n    ";
                         console.log(params);
                         return [4, pool_1.default.connect()];

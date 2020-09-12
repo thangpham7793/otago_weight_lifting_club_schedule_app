@@ -1,6 +1,6 @@
 const { calculateRealWeight } = require("./calculateRealWeight")
 const { pbsToExercises } = require("../../data")
-const { getPbs } = require("../pbsForm/pbsData")
+const { getStore } = require("../../utils")
 
 const getMatchedPbValue = (exerciseName) => {
   const matchedPb = Object.keys(pbsToExercises).filter((k) => {
@@ -9,7 +9,7 @@ const getMatchedPbValue = (exerciseName) => {
       .map((exerciseName) => exerciseName.toLowerCase())
       .includes(exerciseName.toLowerCase())
   })[0]
-  return getPbs()[matchedPb]
+  return getStore().pbs[matchedPb]
 }
 
 //dynamic rendering based on data

@@ -1,3 +1,4 @@
+import { verifyToken } from "./../utils/jwtHelpers"
 import { ScheduleService } from "../database/schedule.service"
 import { Application } from "express"
 import { LearnerService } from "../database/learner.service"
@@ -5,10 +6,12 @@ import { LearnerService } from "../database/learner.service"
 export class Controller {
   private scheduleService: ScheduleService
   private learnerService: LearnerService
+  private verifyToken: typeof verifyToken
 
   constructor(private app: Application) {
     this.scheduleService = new ScheduleService()
     this.learnerService = new LearnerService()
+    this.verifyToken = verifyToken
     this.routes()
   }
   //most routes still need to be protected with jwt
@@ -17,7 +20,7 @@ export class Controller {
 
     this.app
       .route("/instructor/login")
-      .post(this.scheduleService.getAllProgrammes)
+      .post(this.verifyToken, this.scheduleService.getAllProgrammes)
 
     //FIXME: this takes too long!
     this.app
@@ -27,18 +30,20 @@ export class Controller {
         this.scheduleService.getAllSchedules
       )
 
-    this.app.route("/learners/:learnerId/pbs").get(this.learnerService.getPbs)
+    this.app
+      .route("/learners/:learnerId/pbs")
+      .get(this.verifyToken, this.learnerService.getPbs)
 
     this.app
       .route("/learners/:learnerId/pbs")
-      .put(this.learnerService.updatePbs)
+      .put(this.verifyToken, this.learnerService.updatePbs)
 
     this.app
       .route("/programmes/:programmeId/schedules")
-      .get(this.scheduleService.getAllSchedules)
+      .get(this.verifyToken, this.scheduleService.getAllSchedules)
 
     this.app
       .route("/schedules/:scheduleId/weeks/:week")
-      .get(this.scheduleService.getWeeklySchedule)
+      .get(this.verifyToken, this.scheduleService.getWeeklySchedule)
   }
 }

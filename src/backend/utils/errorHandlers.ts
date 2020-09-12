@@ -6,6 +6,8 @@ const httpErrorHandlers = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {}
+) => {
+  res.status(500).send({ errorMessage: `Something wrong happen ${err}` })
+}
 
 export default { httpErrorHandlers }

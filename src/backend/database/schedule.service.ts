@@ -46,19 +46,60 @@ export class ScheduleService {
 
   async getAllSchedules(req: Request, res: Response) {
     const client: PoolClient = await pool.connect()
-    const { programmeId, programmeName } = req.body
+    const {
+      programmeId,
+      programmeName,
+      token,
+      snatch,
+      clean,
+      jerk,
+      cleanAndJerk,
+      backSquat,
+      frontSquat,
+      pushPress,
+    } = req.body
+
+    const pbs = {
+      snatch,
+      clean,
+      jerk,
+      cleanAndJerk,
+      backSquat,
+      frontSquat,
+      pushPress,
+    }
+
+    pbs.snatch = parseFloat(pbs.snatch)
+    pbs.clean = parseFloat(pbs.clean)
+    pbs.jerk = parseFloat(pbs.jerk)
+    pbs.cleanAndJerk = parseFloat(pbs.cleanAndJerk)
+    pbs.backSquat = parseFloat(pbs.backSquat)
+    pbs.frontSquat = parseFloat(pbs.frontSquat)
+    pbs.pushPress = parseFloat(pbs.pushPress)
+
     const params = [programmeId]
     const statement = `
-    SELECT "scheduleId", "scheduleName", "weekCount" FROM schedule WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = $1)); 
+    SELECT 
+    "scheduleId", "scheduleName", "weekCount" 
+    FROM schedule 
+    WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = $1)); 
     `
     try {
       const { rows } = await client.query(statement, params)
 
-      const dailySchedules = rows.map((schedule) => {
+      const schedules = rows.map((schedule) => {
         return { ...schedule, programmeName }
       })
 
-      res.status(200).send(dailySchedules)
+      //add token to cookie
+      res.cookie("jwt", token, {
+        expires: new Date(Number(new Date()) + 315360000000),
+        httpOnly: true,
+      })
+
+      console.log(`Sending ${token} to client!`)
+      //send back pbs and programmeInfo
+      res.status(200).send({ pbs, schedules })
     } catch (err) {
       console.log(err)
       res.status(404).send({ error: "no available schedule" })

@@ -99,25 +99,46 @@ var ScheduleService = (function () {
     };
     ScheduleService.prototype.getAllSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var client, _a, programmeId, programmeName, params, statement, rows, dailySchedules, err_1;
+            var client, _a, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, pool_1.default.connect()];
                     case 1:
                         client = _b.sent();
-                        _a = req.body, programmeId = _a.programmeId, programmeName = _a.programmeName;
+                        _a = req.body, programmeId = _a.programmeId, programmeName = _a.programmeName, token = _a.token, snatch = _a.snatch, clean = _a.clean, jerk = _a.jerk, cleanAndJerk = _a.cleanAndJerk, backSquat = _a.backSquat, frontSquat = _a.frontSquat, pushPress = _a.pushPress;
+                        pbs = {
+                            snatch: snatch,
+                            clean: clean,
+                            jerk: jerk,
+                            cleanAndJerk: cleanAndJerk,
+                            backSquat: backSquat,
+                            frontSquat: frontSquat,
+                            pushPress: pushPress,
+                        };
+                        pbs.snatch = parseFloat(pbs.snatch);
+                        pbs.clean = parseFloat(pbs.clean);
+                        pbs.jerk = parseFloat(pbs.jerk);
+                        pbs.cleanAndJerk = parseFloat(pbs.cleanAndJerk);
+                        pbs.backSquat = parseFloat(pbs.backSquat);
+                        pbs.frontSquat = parseFloat(pbs.frontSquat);
+                        pbs.pushPress = parseFloat(pbs.pushPress);
                         params = [programmeId];
-                        statement = "\n    SELECT \"scheduleId\", \"scheduleName\", \"weekCount\" FROM schedule WHERE \"scheduleId\" = ANY(ARRAY(SELECT \"scheduleIds\" FROM programme WHERE \"programmeId\" = $1)); \n    ";
+                        statement = "\n    SELECT \n    \"scheduleId\", \"scheduleName\", \"weekCount\" \n    FROM schedule \n    WHERE \"scheduleId\" = ANY(ARRAY(SELECT \"scheduleIds\" FROM programme WHERE \"programmeId\" = $1)); \n    ";
                         _b.label = 2;
                     case 2:
                         _b.trys.push([2, 4, 5, 6]);
                         return [4, client.query(statement, params)];
                     case 3:
                         rows = (_b.sent()).rows;
-                        dailySchedules = rows.map(function (schedule) {
+                        schedules = rows.map(function (schedule) {
                             return __assign(__assign({}, schedule), { programmeName: programmeName });
                         });
-                        res.status(200).send(dailySchedules);
+                        res.cookie("jwt", token, {
+                            expires: new Date(Number(new Date()) + 315360000000),
+                            httpOnly: true,
+                        });
+                        console.log("Sending " + token + " to client!");
+                        res.status(200).send({ pbs: pbs, schedules: schedules });
                         return [3, 6];
                     case 4:
                         err_1 = _b.sent();
