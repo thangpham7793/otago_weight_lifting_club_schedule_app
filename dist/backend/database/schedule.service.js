@@ -52,46 +52,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleService = void 0;
 var pool_1 = __importDefault(require("./pool"));
-var auth_1 = require("../utils/auth");
 var ScheduleService = (function () {
     function ScheduleService() {
     }
     ScheduleService.prototype.getAllProgrammes = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, email, password, params, statement, client, result, hashed_password, result2;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var statement, client, rows;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = req.body, email = _a.email, password = _a.password;
-                        console.log(email, password);
-                        params = [email];
-                        statement = "\n    SELECT email, hashed_password  \n    FROM gym_user\n    WHERE email = $1;";
+                        statement = "SELECT \"programmeName\", \"programmeId\" FROM programme;";
                         return [4, pool_1.default.connect()];
                     case 1:
-                        client = _b.sent();
-                        return [4, client.query(statement, params)];
+                        client = _a.sent();
+                        return [4, client.query(statement)];
                     case 2:
-                        result = _b.sent();
-                        if (!result.rows) {
-                            throw new Error("unknown email");
-                        }
-                        hashed_password = result.rows[0].hashed_password;
-                        if (!auth_1.checkPassword(password, hashed_password)) return [3, 4];
-                        return [4, client.query("SELECT programme_name AS \"programmeName\", programme_id AS \"programmeId\" FROM programme;")];
-                    case 3:
-                        result2 = _b.sent();
-                        if (!result2) {
+                        rows = (_a.sent()).rows;
+                        if (rows.length === 0) {
                             res.status(404).json({ message: "no programme found" });
                         }
                         else {
-                            console.log(result2.rows);
-                            res.status(200).json(result2.rows);
+                            res.status(200).json(rows);
                         }
-                        return [3, 5];
-                    case 4: throw new Error("wrong password");
-                    case 5: return [4, client.release()];
-                    case 6:
-                        _b.sent();
+                        return [4, client.release()];
+                    case 3:
+                        _a.sent();
                         return [2];
                 }
             });

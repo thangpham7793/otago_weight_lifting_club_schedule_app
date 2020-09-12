@@ -1,16 +1,31 @@
-import app from "../app"
-import request from "supertest"
+import { api } from "./testHelper"
 import pool from "../database/pool"
 
 describe("API Integration Tests - Schedule Service", () => {
+  describe.only("GET /programmes", () => {
+    it("should return an array of object containing programmeName and Id", async () => {
+      const expected = [
+        { programmeName: "Youth and Junior", programmeId: 1 },
+        { programmeName: "Senior", programmeId: 2 },
+      ]
+      const response = await api.get("/programmes")
+      expect(response.status).toEqual(200)
+      response.body.forEach((programme: any) => {
+        expect(programme).toHaveProperty("programmeName")
+        expect(programme).toHaveProperty("programmeId")
+      })
+      expect(response.body).toEqual(expected)
+    })
+  })
+
   // programme/1/schedule/1/week/1
   describe("GET /schedules/:scheduleId/weeks/:week", () => {
     it("should return an object with the name, programme, and schedule for the specified week", async () => {
-      const result = await request(app).get("/schedules/1/weeks/2")
+      const response = await api.get("/schedules/1/weeks/2")
 
-      expect(result.status).toEqual(200)
+      expect(response.status).toEqual(200)
 
-      const { week_2 } = result.body
+      const { week_2 } = response.body
 
       const expectedDays = ["day 1", "day 2", "day 2.5", "day 3", "day 3.5"]
       expectedDays.forEach((day) => {
@@ -19,10 +34,10 @@ describe("API Integration Tests - Schedule Service", () => {
     })
   })
 
-  describe("GET /programmes/:programmeId/schedules", async () => {
+  describe("GET /programmes/:programmeId/schedules", () => {
     it("should return all schedule names, week counts, and ids of a programme as an array of objects", async () => {
-      const result = await request(app).get("/programmes/1/schedules")
-      expect(result.status).toEqual(200)
+      const response = await api.get("/programmes/1/schedules")
+      expect(response.status).toEqual(200)
       const expected = [
         {
           scheduleId: 3,
@@ -42,7 +57,7 @@ describe("API Integration Tests - Schedule Service", () => {
       ]
 
       expected.forEach((schedule) =>
-        expect(result.body).toContainEqual(schedule)
+        expect(response.body).toContainEqual(schedule)
       )
     })
   })

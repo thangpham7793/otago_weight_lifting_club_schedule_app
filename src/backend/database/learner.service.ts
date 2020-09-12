@@ -12,12 +12,18 @@ export class LearnerService {
     VALUES ($1, $2, $3, $4) RETURNING "firstName", "lastName", "email", "programmeId"`
 
     const params = Object.values(newLearnerInfo)
-    const client: PoolClient = await pool.connect()
-    const result = await client.query(statement, params)
-    //TODO: check password here using jwt and bcrypt
+    console.log(params)
 
-    res.status(201).send(result.rows[0])
-    await client.release()
+    const client: PoolClient = await pool.connect()
+
+    try {
+      const result = await client.query(statement, params)
+      res.status(201).send(result.rows[0])
+    } catch (error) {
+      throw new Error(`${error}`)
+    } finally {
+      await client.release()
+    }
   }
 
   async checkCredentials(req: Request, res: Response, next: NextFunction) {

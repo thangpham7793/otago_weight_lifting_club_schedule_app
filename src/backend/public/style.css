@@ -55,7 +55,7 @@ button {
   border-radius: 2%;
   letter-spacing: 0.05rem;
   border: none;
-  width: 50vw;
+  width: 30vw;
   font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
   cursor: pointer;
@@ -203,8 +203,18 @@ a.logo {
   width: 50vw;
 }
 
-.submit-btn.login {
-  margin: 0;
+.submit-btn {
+  padding-left: 0;
+  padding-right: 0;
+  width: 30vw;
+}
+
+.submit-btn.left {
+  margin-right: 1rem;
+}
+
+.submit-btn.right {
+  margin-left: 1rem;
 }
 
 
@@ -230,7 +240,11 @@ a.logo {
   }
   
   #email, #password {
-    width: 30vw
+    width: 30vw;
+  }
+  
+  .submit-btn {
+    width: 15vw;
   }
   
 }

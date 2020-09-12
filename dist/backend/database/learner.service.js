@@ -66,24 +66,33 @@ var LearnerService = (function () {
     }
     LearnerService.prototype.createLearner = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var newLearnerInfo, statement, params, client, result;
+            var newLearnerInfo, statement, params, client, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         newLearnerInfo = req.body;
                         statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\")\n    VALUES ($1, $2, $3, $4) RETURNING \"firstName\", \"lastName\", \"email\", \"programmeId\"";
                         params = Object.values(newLearnerInfo);
+                        console.log(params);
                         return [4, pool_1.default.connect()];
                     case 1:
                         client = _a.sent();
-                        return [4, client.query(statement, params)];
+                        _a.label = 2;
                     case 2:
+                        _a.trys.push([2, 4, 5, 7]);
+                        return [4, client.query(statement, params)];
+                    case 3:
                         result = _a.sent();
                         res.status(201).send(result.rows[0]);
-                        return [4, client.release()];
-                    case 3:
+                        return [3, 7];
+                    case 4:
+                        error_1 = _a.sent();
+                        throw new Error("" + error_1);
+                    case 5: return [4, client.release()];
+                    case 6:
                         _a.sent();
-                        return [2];
+                        return [7];
+                    case 7: return [2];
                 }
             });
         });

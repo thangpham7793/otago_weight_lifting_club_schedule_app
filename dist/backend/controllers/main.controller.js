@@ -13,10 +13,10 @@ var Controller = (function () {
         this.routes();
     }
     Controller.prototype.routes = function () {
+        this.app.route("/learners/signup").get(function (req, res) {
+            res.redirect("../signup.html");
+        });
         this.app.route("/learners/signup").post(this.learnerService.createLearner);
-        this.app
-            .route("/instructor/login")
-            .post(this.verifyToken, this.scheduleService.getAllProgrammes);
         this.app
             .route("/learners/login")
             .post(this.learnerService.checkCredentials, this.scheduleService.getAllSchedules);
@@ -26,12 +26,16 @@ var Controller = (function () {
         this.app
             .route("/learners/:learnerId/pbs")
             .put(this.verifyToken, this.learnerService.updatePbs);
+        this.app.route("/programmes").get(this.scheduleService.getAllProgrammes);
         this.app
             .route("/programmes/:programmeId/schedules")
             .get(this.verifyToken, this.scheduleService.getAllSchedules);
         this.app
             .route("/schedules/:scheduleId/weeks/:week")
             .get(this.verifyToken, this.scheduleService.getWeeklySchedule);
+        this.app
+            .route("/instructor/login")
+            .post(this.verifyToken, this.scheduleService.getAllProgrammes);
     };
     return Controller;
 }());

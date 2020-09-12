@@ -16,17 +16,13 @@ export class Controller {
   }
   //most routes still need to be protected with jwt
   routes() {
+    //learners
     this.app.route("/learners/signup").get((req: Request, res: Response) => {
       res.redirect("../signup.html")
     })
 
     this.app.route("/learners/signup").post(this.learnerService.createLearner)
 
-    this.app
-      .route("/instructor/login")
-      .post(this.verifyToken, this.scheduleService.getAllProgrammes)
-
-    //FIXME: this takes too long!
     this.app
       .route("/learners/login")
       .post(
@@ -42,6 +38,9 @@ export class Controller {
       .route("/learners/:learnerId/pbs")
       .put(this.verifyToken, this.learnerService.updatePbs)
 
+    //programmes/schedules
+    this.app.route("/programmes").get(this.scheduleService.getAllProgrammes)
+
     this.app
       .route("/programmes/:programmeId/schedules")
       .get(this.verifyToken, this.scheduleService.getAllSchedules)
@@ -49,5 +48,10 @@ export class Controller {
     this.app
       .route("/schedules/:scheduleId/weeks/:week")
       .get(this.verifyToken, this.scheduleService.getWeeklySchedule)
+
+    //instructor
+    this.app
+      .route("/instructor/login")
+      .post(this.verifyToken, this.scheduleService.getAllProgrammes)
   }
 }

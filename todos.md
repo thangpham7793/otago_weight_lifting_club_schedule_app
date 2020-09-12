@@ -14,6 +14,9 @@
 
 ### Tickets
 
+- [  ] Handle errors on both sides
+- [  ] Fix Signup CSS Style
+- [  ] Add spinning icon during network calls
 - [  ] Add sign up page
 - [  ] Rewrite certain routes & handlers to use cookies instead of including ids in url
 - [  ] Create store procedures for each service

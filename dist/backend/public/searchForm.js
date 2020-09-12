@@ -33,10 +33,8 @@ const searchForm = (function () {
   </div>`
   }
 
-  function makeSubmitButton(customClassName, label) {
-    return `<div class="submit-btn-container">
-    <button type="submit" class="submit-btn ${customClassName}">${label}</button>
-  </div>`
+  function makeButton(customClassName, label) {
+    return `<button type="submit" class="submit-btn ${customClassName}">${label}</button>`
   }
 
   function makeProgrammeTitle(programmeName) {
@@ -90,7 +88,10 @@ const searchForm = (function () {
     <form class='search-form'>
       ${makeScheduleDropdown(schedules)}
       ${makeWeekDropdownMenu(schedules[0].weekCount)}
-      ${makeSubmitButton("", "Let's Go")}
+      <div class="submit-btn-container">
+        ${makeButton("logout left", "Log Out")}
+        ${makeButton("submit-week right", "Let's Go")}
+      </div>
     </form>
   </div>`
   }
@@ -152,10 +153,17 @@ const searchForm = (function () {
     location.href = "./timetable.html"
   }
 
+  function onLogOutHandler(e) {
+    sessionStorage.clear()
+    localStorage.clear()
+  }
+
   function loginSuccessHandler({ schedules }) {
     displaySearchForm(schedules)
-    const submitBtn = document.getElementsByClassName("submit-btn")[0]
-    submitBtn.addEventListener("click", onSubmitWeekHandler)
+    const submitWeekBtn = document.querySelector(".submit-week")
+    const logoutBtn = document.querySelector(".logout")
+    submitWeekBtn.addEventListener("click", onSubmitWeekHandler)
+    logoutBtn.addEventListener("click", onLogOutHandler)
   }
 
   function makeErrorMessage(errorMessage) {
@@ -172,12 +180,15 @@ const searchForm = (function () {
   }
 
   function makeLoginForm() {
-    return `<div class='search-form-wrapper'>
+    return `<div class='search-form-wrapper form-wrapper search-form'>
     <form class='login-form'>
       ${makeTextInput("email")}
       ${makeTextInput("password")}
       ${makeErrorMessage("some error")}
-      ${makeSubmitButton("login", "Log In")}
+      <div class="submit-btn-container">
+        ${makeButton("signup left", "Sign Up")}
+        ${makeButton("login right", "Log In")}
+      </div>
       </form>
     </div>`
   }
@@ -223,7 +234,12 @@ const searchForm = (function () {
     document.querySelector("#password").onchange = onTextInputChangeHander
   }
 
-  function loginBtnHandler(e) {
+  function onSignupHandler(e) {
+    e.preventDefault()
+    location.href = "./signup.html"
+  }
+
+  function onLoginHandler(e) {
     e.preventDefault()
     //make ajax call here
 
@@ -245,6 +261,7 @@ const searchForm = (function () {
             .json()
             .then((payload) => {
               console.log(payload)
+              //FIXME: site will get stuck if it receives an error object as payload. Need to check status code.
               saveStore(payload)
               loginSuccessHandler(payload)
             })
@@ -264,8 +281,12 @@ const searchForm = (function () {
       displayLoginForm()
       document
         .querySelector(".submit-btn.login")
-        .addEventListener("click", loginBtnHandler)
+        .addEventListener("click", onLoginHandler)
+      document
+        .querySelector(".submit-btn.signup")
+        .addEventListener("click", onSignupHandler)
     } else {
+      console.log("User already logged in!")
       loginSuccessHandler(store)
     }
     //called after ajax results come back

@@ -11292,17 +11292,21 @@ const schedule = (function () {
 
   //componentDidMount (on page load)
   function setup() {
-    const prevWeek = store.chosenWeek.week
-    const prevScheduleId = store.chosenWeek.scheduleId
-
-    //if user chooses the same week and same schedule, use stored data
-    if (
-      store.dailySchedules &&
-      prevWeek === week &&
-      prevScheduleId === scheduleId
-    ) {
-      console.log("No need to refetch daily schedules!")
-      successHandler(store.dailySchedules)
+    //if user has picked a week once
+    if (store.chosenWeek) {
+      const prevWeek = store.chosenWeek.week
+      const prevScheduleId = store.chosenWeek.scheduleId
+      //if user chooses the same week and same schedule, use stored data
+      if (
+        store.dailySchedules &&
+        prevWeek === week &&
+        prevScheduleId === scheduleId
+      ) {
+        console.log("No need to refetch daily schedules!")
+        successHandler(store.dailySchedules)
+      } else {
+        fetchData(dataURL, successHandler)
+      }
       //if the data hasn't been fetched or it's a new week/schedule
     } else {
       fetchData(dataURL, successHandler)
