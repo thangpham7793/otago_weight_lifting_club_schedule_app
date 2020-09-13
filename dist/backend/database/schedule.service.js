@@ -84,13 +84,13 @@ var ScheduleService = (function () {
     };
     ScheduleService.prototype.getAllSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var client, _a, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules, err_1;
+            var client, _a, learnerId, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, pool_1.default.connect()];
                     case 1:
                         client = _b.sent();
-                        _a = req.body, programmeId = _a.programmeId, programmeName = _a.programmeName, token = _a.token, snatch = _a.snatch, clean = _a.clean, jerk = _a.jerk, cleanAndJerk = _a.cleanAndJerk, backSquat = _a.backSquat, frontSquat = _a.frontSquat, pushPress = _a.pushPress;
+                        _a = req.body, learnerId = _a.learnerId, programmeId = _a.programmeId, programmeName = _a.programmeName, token = _a.token, snatch = _a.snatch, clean = _a.clean, jerk = _a.jerk, cleanAndJerk = _a.cleanAndJerk, backSquat = _a.backSquat, frontSquat = _a.frontSquat, pushPress = _a.pushPress;
                         pbs = {
                             snatch: snatch,
                             clean: clean,
@@ -123,7 +123,7 @@ var ScheduleService = (function () {
                             httpOnly: true,
                         });
                         console.log("Sending " + token + " to client!");
-                        res.status(200).send({ pbs: pbs, schedules: schedules });
+                        res.status(200).send({ pbs: pbs, schedules: schedules, learnerId: learnerId });
                         return [3, 6];
                     case 4:
                         err_1 = _b.sent();

@@ -175,7 +175,9 @@ const searchForm = (function () {
   function makeTextInput(field) {
     return `<div class="field-container ${field}">
     <label for="${field}" class="search-form-label index ${field}">${field}</label>
-    <input type="text" name="${field}" id="${field}">
+    <input type="${
+      field === "password" ? "password" : "text"
+    }" name="${field}" id="${field}">
     </div>`
   }
 
@@ -186,7 +188,7 @@ const searchForm = (function () {
       ${makeTextInput("password")}
       ${makeErrorMessage("some error")}
       <div class="submit-btn-container">
-        ${makeButton("signup left", "Sign Up")}
+        ${makeButton("to-signup left", "Sign Up")}
         ${makeButton("login right", "Log In")}
       </div>
       </form>
@@ -283,7 +285,7 @@ const searchForm = (function () {
         .querySelector(".submit-btn.login")
         .addEventListener("click", onLoginHandler)
       document
-        .querySelector(".submit-btn.signup")
+        .querySelector(".submit-btn.to-signup")
         .addEventListener("click", onSignupHandler)
     } else {
       console.log("User already logged in!")

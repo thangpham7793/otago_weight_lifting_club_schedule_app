@@ -23,7 +23,7 @@ const schedule = (function () {
   function pbsSubmitHandler(e) {
     e.preventDefault()
     //save pbs to server
-    savePbs(store.pbs)
+    savePbs(store)
     //close pbs modal
     toggleModal()
     //save store

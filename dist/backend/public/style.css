@@ -201,6 +201,7 @@ a.logo {
 
 #email, #password {
   width: 50vw;
+  height: 5vh;
 }
 
 .submit-btn {
@@ -230,6 +231,7 @@ a.logo {
   
   #email, #password {
     width: 35vw
+    height: 6vh;
   }
 }
 
@@ -241,6 +243,7 @@ a.logo {
   
   #email, #password {
     width: 30vw;
+    height: 6vh;
   }
   
   .submit-btn {
@@ -252,11 +255,12 @@ a.logo {
 @media only screen and (min-width: 900px) {
   .search-form-label.email,
   .search-form-label.password {
-    width: 10vw;
+    width: 13vw;
   }
   
   #email, #password {
-    width: 20vw
+    width: 20vw;
+    height: 3vw;
   }
   
 }
@@ -339,6 +343,148 @@ a.logo {
   padding: 0;
 }
 
+
+/* SIGN UP PAGE */
+.logo-wrapper.signup {
+  padding-bottom: 1rem;
+  margin-top: -1rem;
+}
+
+.signup-form {
+  padding-top: 0.25rem;
+  text-align: left;
+  font-size: calc(var(--fs-sm) * 0.75);
+}
+
+.field-container.signup {
+}
+
+.signup.search-form-label {
+    margin-left: 4vw;
+}
+
+.field-container.signup.email {
+  display: block;
+}
+
+#email.signup-input {
+  display: block;
+  width: 80vw;
+}
+
+.signup-input {
+  display: block;
+  width: 80vw;
+  margin: 0 auto;
+}
+
+.submit-btn-container.signup {
+  text-align: center;
+  padding: 0;
+}
+
+.submit-btn.back-to-home, .submit-btn.signup {
+  font-size: calc(var(--fs-sm) * 0.75);
+  align-items: center;
+  margin: 0 1rem 0.5rem 1rem;
+  padding: 0.25rem 0;
+}
+
+.error-message.signup {
+  margin: 0.25rem;
+  padding: calc(var(--pd-sm) / 4);
+  line-height: calc(var(--pd-sm) * 0.5);
+  text-align: center;
+  font-size: calc(var(--fs-sm) * 0.5)
+}
+
+@media only screen and (min-width: 450px) {
+   .signup-form {
+    font-size: calc(var(--fs-sm));
+  }
+  
+  .signup.search-form-label {
+    margin-left: 10vw;
+  }
+  
+  #email.signup-input {
+    width: 70vw;
+  }
+
+  .signup-input {
+    width: 70vw;
+  }
+  
+  
+  .submit-btn.back-to-home, .submit-btn.signup {
+    font-size: calc(var(--fs-sm) * 0.75);
+    align-items: center;
+    margin: 0 1.25rem 0.5rem 1.25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+   
+  .error-message.signup { 
+      margin: 0.25rem;
+      padding: calc(var(--pd-sm));
+      line-height: 1.25rem;
+      text-align: center;
+      font-size: calc(var(--fs-sm) * 0.75)
+    }
+}
+
+@media only screen and (min-width: 768px) {
+  
+  .signup-form {
+    font-size: calc(var(--fs-sm));
+  }
+  
+  .signup.search-form-label {
+    margin-left: 28vw;
+  }
+  
+  #email.signup-input {
+    width: 37vw;
+  }
+
+  .signup-input {
+    width: 37vw;
+    margin-bottom: 0.5vw;
+  }
+}
+
+@media only screen and (min-width: 900px) {
+  .signup-form {
+    font-size: calc(var(--fs-sm));
+  }
+  
+  .signup.search-form-label {
+    margin-left: 31vw;
+  }
+  
+  #email.signup-input {
+    width: 34.5vw;
+  }
+
+  .signup-input {
+    width: 34.5vw;
+    margin-bottom: 0.5vw;
+    height: 5vh;
+  }
+  
+  .submit-btn.back-to-home, .submit-btn.signup {
+    font-size: calc(var(--fs-sm) * 0.75);
+    align-items: center;
+    margin: 0 1.25rem 1rem 1.25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+  
+  .error-message.signup {
+    height: 2vw;
+    padding: 0;
+  }
+}
 
 /* MODAL */
 

@@ -15,23 +15,23 @@
 ### Tickets
 
 - [  ] Handle errors on both sides
-- [  ] Fix Signup CSS Style
 - [  ] Add spinning icon during network calls
-- [  ] Add sign up page
-- [  ] Rewrite certain routes & handlers to use cookies instead of including ids in url
+- [  ] Refactor client-side scripts
 - [  ] Create store procedures for each service
-- [  ] Figure out Callan's use pattern
-- [  ] Hide password when user types in login form
-- [  ] Add logout button
-- [  ] Implement cookie/session so that the browser remembers
+- [  ] Use a framework to make instructor's UI (React/Vue)
+- [  ] Figure out Callan's use patterns and write tests
 - [  ] Auto-suggest when making new schedules
-- [  ] Test Queries for Client Access Patterns
-- [  ] Can't inject Pool/Client into Schedule Service?
-- [  ] How to restrict access to certain routes beyond jwt
 - [  ] Refactor schedule services to instructor/learner routes
 - [  ] Replace JQuery with native functions
 
 
+- [ x ] How to restrict access to certain routes using cookies + jwt
+- [ x ] Add logout button
+- [ x ] Implement cookie/session so that the browser remembers
+- [ x ] Rewrite POST pbs routes & handlers to save pbs using learnerId
+- [ x ] Add sign up page
+- [ x ] Hide password when user types in login form
+- [ x ] Fix Signup CSS Style
 - [ x ] Make browser remember session to avoid asking users to login again 
 - [ x ] Rewrite tests and handlers to support new schemas
 - [ x ] Save and retrieve students' pbs from server

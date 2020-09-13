@@ -30,6 +30,7 @@ describe("API Integration Tests - Learner Service", () => {
       expect(result.body).toEqual(newLearnerInfo)
     })
   })
+  //Callan can also use this
   describe("PUT /learners/:learnerId/pbs", () => {
     it("should update the personal bests of a learner", async () => {
       const newPbs = {
@@ -68,13 +69,14 @@ describe("API Integration Tests - Learner Service", () => {
     })
   })
   //NOTE: this implicitly calls 2 separate handlers (checkCredentials and getAllSchedules)
-  describe("POST /learners/login", () => {
+  describe.only("POST /learners/login", () => {
     it("should return all schedule_names, schedule_ids, and their week_counts if credentials are correct", async () => {
       const result = await api
         .post("/learners/login")
         .send({ email: "thangnus@gmail.com", password: "password" })
       expect(result.status).toEqual(200)
       const expected = {
+        learnerId: 1,
         pbs: {
           snatch: 120.35,
           clean: 30.87,
@@ -107,30 +109,19 @@ describe("API Integration Tests - Learner Service", () => {
       }
       expect(result.body).toHaveProperty("pbs")
       expect(result.body).toHaveProperty("schedules")
+      expect(result.body).toHaveProperty("learnerId")
       expect(result.body.pbs).toEqual(expected.pbs)
+      expect(result.body.learnerId).toEqual(expected.learnerId)
       expect(result.body.schedules).toEqual(expected.schedules)
     })
   })
 
-  describe("GET /schedules/:scheduleId/weeks/:week", () => {
-    it("should return an object with the name, programme, and schedule for the specified week", async () => {
-      const result = await api
-        .get("/schedules/6/weeks/2")
-        .set("Cookie", [TEST_COOKIE])
-
-      expect(result.status).toEqual(200)
-      expect(typeof result.body).toBe("string")
-      const dailySchedules = JSON.parse(result.body)
-
-      const expectedDays = ["day 1", "day 2", "day 2.5", "day 3"]
-      expectedDays.forEach((day) => {
-        expect(Object.keys(dailySchedules)).toContain(day)
-      })
-    })
+  describe("GET /learners", () => {
+    it("should get all learners names, ids and the programmes they're following", async () => {
   })
 
   afterAll(async () => {
     await pool.end()
   })
 })
-//need to match my routes to my queries before writing tests
+

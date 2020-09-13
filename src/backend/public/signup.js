@@ -4,7 +4,7 @@ const signup = (function () {
   "use strict"
 
   function makeLogo() {
-    return ` <div class="logo-wrapper">
+    return ` <div class="logo-wrapper signup">
       <img
         class="logo"
         src="./assets/logo.jpg"
@@ -22,15 +22,17 @@ const signup = (function () {
   }
 
   function makeTextInput(field) {
-    return `<div class="field-container ${field}">
-      <label for="${field}" class="search-form-label index ${field}">${field}</label>
-      <input type="text" name="${field}" id="${field}">
+    return `<div class="field-container ${field} signup">
+      <label for="${field}" class="search-form-label signup ${field}">${field}</label>
+      <input type="${
+        field === "password" ? "password" : "text"
+      }" name="${field}" id="${field}" class="signup-input">
       </div>`
   }
 
   function makeErrorMessage(errorMessage) {
     return `<div class='error-message-wrapper'>
-      <p class='error-message' style='visibility:hidden;'>${errorMessage}</p>
+      <p class='error-message signup' style='visibility:hidden;'>${errorMessage}</p>
       </div>`
   }
 
@@ -43,9 +45,9 @@ const signup = (function () {
       ""
     )
 
-    return `<div class="field-container programmeName">
-          <label for="programmeName" class="search-form-label index">Programme</label>
-          <select name="programmeName" id="programmeName" required>
+    return `<div class="field-container programmeName signup">
+          <label for="programmeName" class="search-form-label signup">Programme</label>
+          <select name="programmeName" id="programmeName" class="signup-input" required>
             ${options}
           </select>
         </div>`
@@ -60,9 +62,9 @@ const signup = (function () {
         ${makeTextInput("email")}
         ${makeProgrammeDropDownMenu(programmes)}
         ${makeErrorMessage("some error")}
-        <div class="submit-btn-container">
-        ${makeButton("back-to-login left", "Back to Log In")}
-        ${makeButton("signup right", "Sign Up")}
+        <div class="submit-btn-container signup">
+        ${makeButton("back-to-home left", "Home Page")}
+        ${makeButton("signup-btn signup right", "Sign Up")}
         </div>
         </form>
       </div>`
@@ -136,8 +138,8 @@ const signup = (function () {
     document.querySelector("#lastName").onchange = onTextInputChangeHander
     document.querySelector("#email").onchange = onTextInputChangeHander
     document.querySelector("#programmeName").onchange = onTextInputChangeHander
-    document.querySelector(".signup").onclick = onSignUpHandler
-    document.querySelector(".back-to-login").onclick = onBackToLoginHandler
+    document.querySelector(".signup-btn").onclick = onSignUpHandler
+    document.querySelector(".back-to-home").onclick = onBackToLoginHandler
   }
 
   function processSignUpInfo(tempSignUpInfo) {

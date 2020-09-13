@@ -21,6 +21,7 @@ export class ScheduleService {
   async getAllSchedules(req: Request, res: Response) {
     const client: PoolClient = await pool.connect()
     const {
+      learnerId,
       programmeId,
       programmeName,
       token,
@@ -73,7 +74,7 @@ export class ScheduleService {
 
       console.log(`Sending ${token} to client!`)
       //send back pbs and programmeInfo
-      res.status(200).send({ pbs, schedules })
+      res.status(200).send({ pbs, schedules, learnerId })
     } catch (err) {
       console.log(err)
       res.status(404).send({ error: "no available schedule" })

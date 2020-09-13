@@ -1,6 +1,10 @@
 import { api } from "./testHelper"
 import pool from "../database/pool"
 
+jest.setTimeout(30000)
+const TEST_COOKIE =
+  "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZWFybmVySWQiOjEsImlhdCI6MTU5OTgyNTY5OH0.vhbqD8U6ZsGZ_Ost5qgcM2QKGPf1N-VsTjrLw-ukVnc"
+
 describe("API Integration Tests - Schedule Service", () => {
   describe.only("GET /programmes", () => {
     it("should return an array of object containing programmeName and Id", async () => {
@@ -18,23 +22,24 @@ describe("API Integration Tests - Schedule Service", () => {
     })
   })
 
-  // programme/1/schedule/1/week/1
-  describe("GET /schedules/:scheduleId/weeks/:week", () => {
+  describe.only("GET /schedules/:scheduleId/weeks/:week", () => {
     it("should return an object with the name, programme, and schedule for the specified week", async () => {
-      const response = await api.get("/schedules/1/weeks/2")
+      const result = await api
+        .get("/schedules/6/weeks/2")
+        .set("Cookie", [TEST_COOKIE])
 
-      expect(response.status).toEqual(200)
+      expect(result.status).toEqual(200)
+      expect(typeof result.body).toBe("string")
+      const dailySchedules = JSON.parse(result.body)
 
-      const { week_2 } = response.body
-
-      const expectedDays = ["day 1", "day 2", "day 2.5", "day 3", "day 3.5"]
+      const expectedDays = ["day 1", "day 2", "day 2.5", "day 3"]
       expectedDays.forEach((day) => {
-        expect(Object.keys(week_2)).toContain(day)
+        expect(Object.keys(dailySchedules)).toContain(day)
       })
     })
   })
 
-  describe("GET /programmes/:programmeId/schedules", () => {
+  describe.only("GET /programmes/:programmeId/schedules", () => {
     it("should return all schedule names, week counts, and ids of a programme as an array of objects", async () => {
       const response = await api.get("/programmes/1/schedules")
       expect(response.status).toEqual(200)
@@ -60,6 +65,31 @@ describe("API Integration Tests - Schedule Service", () => {
         expect(response.body).toContainEqual(schedule)
       )
     })
+  })
+
+  //top priority
+  describe("POST /schedules", () => {
+    it("should create a new schedule", async () => {
+  })
+  
+  describe("POST /programmes/:programmeId/password", () => {
+    it("should change the login password of a programme", async () => {
+  })
+
+  describe("POST /programmes/:programmeId/schedules/:scheduleId", () => {
+    it("should add/publish a schedule to a programme", async () => {
+  })
+
+  describe("DELETE /programmes/:programmeId/schedules/:scheduleId", () => {
+    it("should unpublish a schedule from a programme", async () => {
+  })
+  
+  describe("DELETE /programmes/:programmeId/password", () => {
+    it("should delete a programme", async () => {
+  })
+  
+  describe("DELETE /schedules/:scheduleId", () => {
+    it("should delete a schedule and remove it from all programmes", async () => {
   })
 
   afterAll(async () => {

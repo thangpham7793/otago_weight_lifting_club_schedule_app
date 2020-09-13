@@ -57,6 +57,15 @@ CREATE TABLE IF NOT EXISTS learner (
   "programmeId" INT REFERENCES programme("programmeId") ON DELETE SET NULL
 );
 
+CREATE TABLE instructor (
+  "instructorId" SERIAL PRIMARY KEY,
+  "email" VARCHAR(50) UNIQUE NOT NULL,
+  "hashedPassword" VARCHAR(150) NOT NULL,
+  "firstName" VARCHAR(50) NOT NULL,
+  "lastName" VARCHAR(50) NOT NULL
+);
+
 INSERT INTO learner ("firstName", "lastName", email, "programmeId") VALUES ('Thang', 'Pham', 'thangnus@gmail.com', 1);
+
 
 

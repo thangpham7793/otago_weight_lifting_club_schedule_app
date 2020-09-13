@@ -11006,9 +11006,8 @@ module.exports = { getPbs, savePbs, pbsForm }
 },{"./pbsData":10,"./pbsForm":11}],10:[function(require,module,exports){
 const config = require("../../config")
 
-const savePbs = (pbs) => {
+const savePbs = ({ pbs, learnerId }) => {
   console.log("Saving", JSON.stringify(pbs))
-  //localStorage.setItem("pbs_v2", JSON.stringify(pbs))
   const options = {
     method: "PUT",
     mode: "cors",
@@ -11017,7 +11016,8 @@ const savePbs = (pbs) => {
     },
     body: JSON.stringify(pbs),
   }
-  fetch(`${config.LOCAL_HOST}/learners/1/pbs`, options)
+  //FIXME: need to find a way to retrieve learnerId or remove Id from this route
+  fetch(`${config.LOCAL_HOST}/learners/${learnerId}/pbs`, options)
     .then((res) => console.log("Saved Pbs to Server"))
     .catch((err) => console.error(`Error saving pbs to server: ${err}`))
 }
@@ -11204,7 +11204,7 @@ const schedule = (function () {
   function pbsSubmitHandler(e) {
     e.preventDefault()
     //save pbs to server
-    savePbs(store.pbs)
+    savePbs(store)
     //close pbs modal
     toggleModal()
     //save store
