@@ -165,23 +165,39 @@ const signup = (function () {
 
     const { errorMessage } = areCredentialsValid(tempSignUpInfo)
 
-    if (!errorMessage) {
-      const url = `http://localhost:3000/learners/signup`
-      const fetchOptions = {
-        method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(processSignUpInfo(tempSignUpInfo)),
-      }
-      fetch(url, fetchOptions)
-        .then((res) => (location.href = "index.html"))
-        .catch((err) => {
-          console.log(`Error Signing Up: ${err}`)
-          location.reload()
-        })
-    } else {
+    if (errorMessage) {
       showErrorMessage(errorMessage)
+      return
     }
+
+    const url = `http://localhost:3000/learners/signup`
+    const fetchOptions = {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(processSignUpInfo(tempSignUpInfo)),
+    }
+    fetch(url, fetchOptions)
+      .then((res) => {
+        console.log(res)
+        if (res.ok === false) {
+          console.log("Failed signup")
+          res
+            .json()
+            .then((res) => {
+              showErrorMessage(res.message)
+            })
+            .catch((err) =>
+              console.log(`Error parsing JSON from response ${err}`)
+            )
+          return
+        }
+        location.href = "index.html"
+      })
+      .catch((err) => {
+        console.log(`Error Sending Sign Up Request: ${err}`)
+        location.reload()
+      })
   }
 
   function fetchProgrammes() {

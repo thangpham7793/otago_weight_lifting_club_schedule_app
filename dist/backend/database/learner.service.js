@@ -58,15 +58,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LearnerService = void 0;
+var errorHandlers_1 = require("./../utils/errorHandlers");
 var jwtHelpers_1 = require("./../utils/jwtHelpers");
 var pool_1 = __importDefault(require("./pool"));
 var auth_1 = require("../utils/auth");
 var LearnerService = (function () {
     function LearnerService() {
     }
-    LearnerService.prototype.createLearner = function (req, res) {
+    LearnerService.prototype.createLearner = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var newLearnerInfo, statement, params, client, result, error_1;
+            var newLearnerInfo, statement, params, client, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -77,72 +78,49 @@ var LearnerService = (function () {
                         return [4, pool_1.default.connect()];
                     case 1:
                         client = _a.sent();
-                        _a.label = 2;
-                    case 2:
-                        _a.trys.push([2, 4, 5, 7]);
                         return [4, client.query(statement, params)];
-                    case 3:
+                    case 2:
                         result = _a.sent();
                         res.status(201).send(result.rows[0]);
-                        return [3, 7];
-                    case 4:
-                        error_1 = _a.sent();
-                        throw new Error("" + error_1);
-                    case 5: return [4, client.release()];
-                    case 6:
-                        _a.sent();
-                        return [7];
-                    case 7: return [2];
+                        return [2, client.release()];
                 }
             });
         });
     };
     LearnerService.prototype.checkCredentials = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, email, password, params, statement, client, rows, _b, hashedPassword, learnerId, token, err_1;
+            var _a, email, password, params, statement, client, rows, _b, hashedPassword, learnerId, token;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         _a = req.body, email = _a.email, password = _a.password;
                         console.log(email, password);
                         params = [email];
-                        statement = "    \n    SELECT \n    p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n    l.\"learnerId\", l.snatch, l.clean, l.jerk, \n    l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n    FROM learner l\n    JOIN programme p \n    USING (\"programmeId\")\n    WHERE email = $1;\n    ";
-                        _c.label = 1;
-                    case 1:
-                        _c.trys.push([1, 7, 8, 9]);
+                        statement = "    \n      SELECT \n      p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n      l.\"learnerId\", l.snatch, l.clean, l.jerk, \n      l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n      FROM learner l\n      JOIN programme p \n      USING (\"programmeId\")\n      WHERE email = $1;";
                         return [4, pool_1.default.connect()];
-                    case 2:
+                    case 1:
                         client = _c.sent();
                         return [4, client.query(statement, params)];
-                    case 3:
+                    case 2:
                         rows = (_c.sent()).rows;
-                        if (!rows) {
-                            throw new Error("unknown email");
+                        if (rows.length === 0) {
+                            throw new errorHandlers_1.httpError(401, "unknown email");
                         }
                         _b = rows[0], hashedPassword = _b.hashedPassword, learnerId = _b.learnerId;
-                        if (!auth_1.checkPassword(password, hashedPassword)) return [3, 5];
+                        if (!auth_1.checkPassword(password, hashedPassword)) return [3, 4];
                         return [4, jwtHelpers_1.makeToken({ learnerId: learnerId })];
-                    case 4:
+                    case 3:
                         token = _c.sent();
                         req.body = __assign(__assign(__assign({}, req.body), rows[0]), { token: token });
                         next();
-                        return [3, 6];
-                    case 5: throw new Error("wrong password");
-                    case 6: return [3, 9];
-                    case 7:
-                        err_1 = _c.sent();
-                        console.log(err_1);
-                        res.send("Error" + err_1);
-                        return [3, 9];
-                    case 8:
-                        client.release();
-                        return [7];
-                    case 9: return [2];
+                        return [3, 5];
+                    case 4: throw new errorHandlers_1.httpError(401, "wrong password");
+                    case 5: return [2, client.release()];
                 }
             });
         });
     };
-    LearnerService.prototype.getPbs = function (req, res) {
+    LearnerService.prototype.getPbs = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
             var learnerId, params, statement, client, rows, pbs;
             return __generator(this, function (_a) {
@@ -162,15 +140,12 @@ var LearnerService = (function () {
                             pbs[k] = parseFloat(rows[0][k]);
                         });
                         res.status(200).json(pbs);
-                        return [4, client.release()];
-                    case 3:
-                        _a.sent();
-                        return [2];
+                        return [2, client.release()];
                 }
             });
         });
     };
-    LearnerService.prototype.updatePbs = function (req, res) {
+    LearnerService.prototype.updatePbs = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
             var learnerId, pbs, params, statement, client;
             return __generator(this, function (_a) {
@@ -189,10 +164,7 @@ var LearnerService = (function () {
                     case 2:
                         _a.sent();
                         res.status(204).send();
-                        return [4, client.release()];
-                    case 3:
-                        _a.sent();
-                        return [2];
+                        return [2, client.release()];
                 }
             });
         });

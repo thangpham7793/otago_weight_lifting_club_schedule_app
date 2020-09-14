@@ -1,10 +1,14 @@
 ### Outcomes
 
-- [  ] User can select schedule name, week name to search after logging in
-- [  ] User can sign up and add themselves to a programme
+- [   ] User can sign up and add themselves to a programme of their choice
+- [   ] User receives descriptive messages on failed login
 
+- [ x ] User can select schedule name, week name to search after logging in
+- [ x ] User can log in after they successfully register
 - [ x ] Users can type in their pbs and update it.
-- [ x ] Weight should be calculated
+- [ x ] Weight should be automatically calculated
+- [ x ] User can log out
+- [ x ] User can go back and choose a different week
 
 ### Questions
 
@@ -14,6 +18,10 @@
 
 ### Tickets
 
+- [  ] User can stil sign up with the same email
+- [  ] Should alert user when CAPLOCK is on
+- [  ] Programme doesn't default to first option when signing up
+- [  ] Added input validation on client side
 - [  ] Handle errors on both sides
 - [  ] Add spinning icon during network calls
 - [  ] Refactor client-side scripts
@@ -24,7 +32,7 @@
 - [  ] Refactor schedule services to instructor/learner routes
 - [  ] Replace JQuery with native functions
 
-
+- [ x ] Added basic custom errors to backend
 - [ x ] How to restrict access to certain routes using cookies + jwt
 - [ x ] Add logout button
 - [ x ] Implement cookie/session so that the browser remembers

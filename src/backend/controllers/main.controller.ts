@@ -1,3 +1,4 @@
+import { checkEmail } from "./../utils/auth"
 import { catchAsync, verifyToken } from "./../utils/register"
 import { LearnerService, ScheduleService } from "../database/register"
 import { Application, Request, Response } from "express"
@@ -22,11 +23,12 @@ export class Controller {
 
     this.app
       .route("/learners/signup")
-      .post(catchAsync(this.learnerService.createLearner))
+      .post(checkEmail, catchAsync(this.learnerService.createLearner))
 
     this.app
       .route("/learners/login")
       .post(
+        checkEmail,
         catchAsync(this.learnerService.checkCredentials),
         catchAsync(this.scheduleService.getAllSchedules)
       )

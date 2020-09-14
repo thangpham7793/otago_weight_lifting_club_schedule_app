@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var register_1 = require("./utils/register");
+var main_controller_1 = require("./controllers/main.controller");
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var cors_1 = __importDefault(require("cors"));
 var path_1 = __importDefault(require("path"));
-var errorHandlers_1 = __importDefault(require("./utils/errorHandlers"));
-var main_controller_1 = require("./controllers/main.controller");
 var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var morgan_1 = __importDefault(require("morgan"));
 var App = (function () {
@@ -17,6 +17,7 @@ var App = (function () {
         this.setConfig();
         this.useStatic();
         this.controller = new main_controller_1.Controller(this.app);
+        this.useErrorHandlers();
     }
     App.prototype.setConfig = function () {
         this.app.use(cookie_parser_1.default());
@@ -24,7 +25,10 @@ var App = (function () {
         this.app.use(body_parser_1.default.urlencoded({ limit: "50mb", extended: true }));
         this.app.use(cors_1.default());
         this.app.use(morgan_1.default(":method :url :status :res[content-length] - :response-time ms"));
-        this.app.use(errorHandlers_1.default.httpErrorHandlers);
+    };
+    App.prototype.useErrorHandlers = function () {
+        this.app.use(register_1.unknownEndpoint);
+        this.app.use(register_1.serverError);
     };
     App.prototype.useStatic = function () {
         this.app.use(express_1.default.static(path_1.default.join(__dirname, "public")));

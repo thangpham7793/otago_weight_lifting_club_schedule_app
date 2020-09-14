@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var app_1 = __importDefault(require("./app"));
-var config_1 = require("./utils/config");
-app_1.default.listen(config_1.appConfig.PORT, function () {
-    return console.log("Listening on port " + config_1.appConfig.PORT);
+var register_1 = require("./utils/register");
+app_1.default.listen(register_1.appConfig.PORT, function () {
+    return console.log("Listening on port " + register_1.appConfig.PORT);
 });

@@ -10,10 +10,14 @@ export const catchAsync = (handler: RequestHandler) => (
 //custom http error class
 export class httpError extends Error {
   status: number
+  code?: string
+  detail?: string
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, code?: string, detail?: string) {
     super(message)
     this.status = status
+    this.code = code
+    this.detail = detail
   }
 }
 
@@ -31,12 +35,23 @@ export const serverError = (
   res: Response,
   next: NextFunction
 ) => {
+  //console.log(err)
   //handle custom errors
   if (err.status) {
-    res.status(err.status).json({ message: err.message })
+    return res.status(err.status).json({ message: err.message })
+  }
+  //for postgres database specific error
+  else if (err.code) {
+    switch (err.code) {
+      case "23505":
+        return res.status(400).json({ message: "email already used" })
+      default:
+        return res.status(400).json({ message: err.detail })
+    }
   }
   //other errors
   else {
-    res.status(500).send({ errorMessage: `Something wrong happen ${err}` })
+    res.status(500).json({ errorMessage: `Something wrong happen ${err}` })
   }
+  return
 }

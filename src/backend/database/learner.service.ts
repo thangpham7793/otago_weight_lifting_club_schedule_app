@@ -1,3 +1,4 @@
+import { isEmail } from "./../utils/auth"
 import { httpError } from "./../utils/errorHandlers"
 import { makeToken } from "./../utils/jwtHelpers"
 import { Request, Response, NextFunction } from "express"
@@ -14,9 +15,7 @@ export class LearnerService {
 
     const params = Object.values(newLearnerInfo)
     console.log(params)
-
     const client: PoolClient = await pool.connect()
-
     const result = await client.query(statement, params)
     res.status(201).send(result.rows[0])
     return client.release()

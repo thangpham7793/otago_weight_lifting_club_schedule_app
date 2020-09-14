@@ -241,38 +241,65 @@ const searchForm = (function () {
     location.href = "./signup.html"
   }
 
+  function onFailedLoginHandler({ message }) {
+    console.log(message)
+    showErrorMessage(message)
+  }
+
+  function showSpiner(status) {
+    if (status === true) {
+      console.log("Show spinner now!")
+    } else {
+      console.log("Hide spinner")
+    }
+  }
+
   function onLoginHandler(e) {
     e.preventDefault()
     //make ajax call here
 
     const { errorMessage } = areCredentialsValid(tempCredentials)
 
-    if (!errorMessage) {
-      console.log("Fetching Data")
+    if (errorMessage) {
+      showErrorMessage(errorMessage)
+      return
+    }
 
-      const url = `http://localhost:3000/learners/login`
-      const fetchOptions = {
-        method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tempCredentials),
-      }
-      fetch(url, fetchOptions)
-        .then((res) => {
+    console.log("Logging in and Fetching Data")
+
+    showSpiner(true)
+
+    const url = `http://localhost:3000/learners/login`
+    const fetchOptions = {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(tempCredentials),
+    }
+
+    fetch(url, fetchOptions)
+      .then((res) => {
+        showSpiner(false)
+        if (res.ok === false) {
           res
             .json()
             .then((payload) => {
-              console.log(payload)
-              //FIXME: site will get stuck if it receives an error object as payload. Need to check status code.
-              saveStore(payload)
-              loginSuccessHandler(payload)
+              onFailedLoginHandler(payload)
             })
             .catch((err) => console.log(`Error parsing JSON: ${err}`))
-        })
-        .catch((err) => console.log(`Error fetching data: ${err}`))
-    } else {
-      showErrorMessage(errorMessage)
-    }
+          return
+        }
+        res
+          .json()
+          .then((payload) => {
+            console.log(payload)
+            //FIXME: site will get stuck if it receives an error object as payload. Need to check status code.
+            saveStore(payload)
+            loginSuccessHandler(payload)
+          })
+          .catch((err) => console.log(`Error parsing JSON: ${err}`))
+      })
+      .catch((err) => console.log(`Error fetching data: ${err}`))
   }
 
   function setup() {

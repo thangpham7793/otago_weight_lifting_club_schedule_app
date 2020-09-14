@@ -74,17 +74,14 @@ var ScheduleService = (function () {
                         else {
                             res.status(200).json(rows);
                         }
-                        return [4, client.release()];
-                    case 3:
-                        _a.sent();
-                        return [2];
+                        return [2, client.release()];
                 }
             });
         });
     };
     ScheduleService.prototype.getAllSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var client, _a, learnerId, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules, err_1;
+            var client, _a, learnerId, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, pool_1.default.connect()];
@@ -109,67 +106,48 @@ var ScheduleService = (function () {
                         pbs.pushPress = parseFloat(pbs.pushPress);
                         params = [programmeId];
                         statement = "\n    SELECT \n    \"scheduleId\", \"scheduleName\", \"weekCount\" \n    FROM schedule \n    WHERE \"scheduleId\" = ANY(ARRAY(SELECT \"scheduleIds\" FROM programme WHERE \"programmeId\" = $1)); \n    ";
-                        _b.label = 2;
-                    case 2:
-                        _b.trys.push([2, 4, 5, 6]);
                         return [4, client.query(statement, params)];
-                    case 3:
+                    case 2:
                         rows = (_b.sent()).rows;
-                        schedules = rows.map(function (schedule) {
-                            return __assign(__assign({}, schedule), { programmeName: programmeName });
-                        });
-                        res.cookie("jwt", token, {
-                            expires: new Date(Number(new Date()) + 315360000000),
-                            httpOnly: true,
-                        });
-                        console.log("Sending " + token + " to client!");
-                        res.status(200).send({ pbs: pbs, schedules: schedules, learnerId: learnerId });
-                        return [3, 6];
-                    case 4:
-                        err_1 = _b.sent();
-                        console.log(err_1);
-                        res.status(404).send({ error: "no available schedule" });
-                        return [3, 6];
-                    case 5:
-                        client.release();
-                        return [7];
-                    case 6: return [2];
+                        if (rows.length === 0) {
+                            res.status(404).json({ message: "no available schedule" });
+                        }
+                        else {
+                            schedules = rows.map(function (schedule) {
+                                return __assign(__assign({}, schedule), { programmeName: programmeName });
+                            });
+                            res.cookie("jwt", token, {
+                                expires: new Date(Number(new Date()) + 315360000000),
+                                httpOnly: true,
+                            });
+                            console.log("Sending " + token + " to client!");
+                            res.status(200).send({ pbs: pbs, schedules: schedules, learnerId: learnerId });
+                        }
+                        return [2, client.release()];
                 }
             });
         });
     };
     ScheduleService.prototype.getWeeklySchedule = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, scheduleId, week, params, statement, client, result, err_2;
+            var _a, scheduleId, week, params, statement, client, result;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _a = req.params, scheduleId = _a.scheduleId, week = _a.week;
                         params = [scheduleId, week].map(function (ele) { return parseInt(ele); });
                         statement = "\n    SELECT timetable[$2] as week_" + week + " FROM schedule WHERE \"scheduleId\" = $1;";
-                        _b.label = 1;
-                    case 1:
-                        _b.trys.push([1, 4, 5, 6]);
                         return [4, pool_1.default.connect()];
-                    case 2:
+                    case 1:
                         client = _b.sent();
                         return [4, client.query(statement, params)];
-                    case 3:
+                    case 2:
                         result = _b.sent();
                         if (!result.rows) {
-                            throw new Error("no availale weekly schedule found");
+                            res.status(404).json({ message: "no weekly schedule found" });
                         }
                         res.status(200).json(result.rows[0]["week_" + week]);
-                        return [3, 6];
-                    case 4:
-                        err_2 = _b.sent();
-                        console.log(err_2);
-                        res.send("Error" + err_2);
-                        return [3, 6];
-                    case 5:
-                        client.release();
-                        return [7];
-                    case 6: return [2];
+                        return [2, client.release()];
                 }
             });
         });
