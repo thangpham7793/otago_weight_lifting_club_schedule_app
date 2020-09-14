@@ -52,6 +52,7 @@ const schedule = (function () {
 
   //initial render
   function successHandler(dailySchedules) {
+    spinner.show(false)
     console.log(dailySchedules)
     if (typeof dailySchedules === "string") {
       store.dailySchedules = JSON.parse(dailySchedules)
@@ -111,6 +112,7 @@ const schedule = (function () {
 
   //componentDidMount (on page load)
   function setup() {
+    spinner.show(true)
     //if user has picked a week once
     if (store.chosenWeek) {
       const prevWeek = store.chosenWeek.week

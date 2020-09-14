@@ -160,6 +160,7 @@ const searchForm = (function () {
 
   function loginSuccessHandler({ schedules }) {
     displaySearchForm(schedules)
+    spinner.show(false)
     const submitWeekBtn = document.querySelector(".submit-week")
     const logoutBtn = document.querySelector(".logout")
     submitWeekBtn.addEventListener("click", onSubmitWeekHandler)
@@ -246,14 +247,6 @@ const searchForm = (function () {
     showErrorMessage(message)
   }
 
-  function showSpiner(status) {
-    if (status === true) {
-      console.log("Show spinner now!")
-    } else {
-      console.log("Hide spinner")
-    }
-  }
-
   function onLoginHandler(e) {
     e.preventDefault()
     //make ajax call here
@@ -267,7 +260,7 @@ const searchForm = (function () {
 
     console.log("Logging in and Fetching Data")
 
-    showSpiner(true)
+    spinner.show(true)
 
     const url = `http://localhost:3000/learners/login`
     const fetchOptions = {
@@ -279,7 +272,6 @@ const searchForm = (function () {
 
     fetch(url, fetchOptions)
       .then((res) => {
-        showSpiner(false)
         if (res.ok === false) {
           res
             .json()
@@ -299,15 +291,18 @@ const searchForm = (function () {
           })
           .catch((err) => console.log(`Error parsing JSON: ${err}`))
       })
-      .catch((err) => console.log(`Error fetching data: ${err}`))
+      .catch((err) => console.log(`Error fetching data: `))
+      .finally(() => spinner.show(false))
   }
 
   function setup() {
     // display login form if user hasn't logged in and there's no payload saved in sessionStorage
+    spinner.show(true)
     console.log(store)
     if (!store) {
       console.log("No saved info, please log in!")
       displayLoginForm()
+      spinner.show(false)
       document
         .querySelector(".submit-btn.login")
         .addEventListener("click", onLoginHandler)

@@ -11007,6 +11007,7 @@ module.exports = { getPbs, savePbs, pbsForm }
 const config = require("../../config")
 
 const savePbs = ({ pbs, learnerId }) => {
+  spinner.show(true)
   console.log("Saving", JSON.stringify(pbs))
   const options = {
     method: "PUT",
@@ -11018,8 +11019,13 @@ const savePbs = ({ pbs, learnerId }) => {
   }
   //FIXME: need to find a way to retrieve learnerId or remove Id from this route
   fetch(`${config.LOCAL_HOST}/learners/${learnerId}/pbs`, options)
-    .then((res) => console.log("Saved Pbs to Server"))
+    .then((res) => {
+      console.log("Saved Pbs to Server")
+    })
     .catch((err) => console.error(`Error saving pbs to server: ${err}`))
+    .finally(() => {
+      spinner.show(false)
+    })
 }
 
 module.exports = { savePbs }
@@ -11233,6 +11239,7 @@ const schedule = (function () {
 
   //initial render
   function successHandler(dailySchedules) {
+    spinner.show(false)
     console.log(dailySchedules)
     if (typeof dailySchedules === "string") {
       store.dailySchedules = JSON.parse(dailySchedules)
@@ -11292,6 +11299,7 @@ const schedule = (function () {
 
   //componentDidMount (on page load)
   function setup() {
+    spinner.show(true)
     //if user has picked a week once
     if (store.chosenWeek) {
       const prevWeek = store.chosenWeek.week
@@ -11323,7 +11331,7 @@ $(schedule.setup)
 },{"./components/exerciseTable/exerciseTable":3,"./components/pbsForm/pbs":9,"./config":12,"./utils":15,"jquery":1}],15:[function(require,module,exports){
 const $ = require("jquery")
 
-function fetchData(url, successHandler, errorHandler) {
+function fetchData(url, successHandler, errorHandler, spinner) {
   let config = {
     url: url,
     dataType: "json",

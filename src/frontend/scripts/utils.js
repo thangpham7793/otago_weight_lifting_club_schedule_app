@@ -1,6 +1,6 @@
 const $ = require("jquery")
 
-function fetchData(url, successHandler, errorHandler) {
+function fetchData(url, successHandler, errorHandler, spinner) {
   let config = {
     url: url,
     dataType: "json",

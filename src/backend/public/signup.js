@@ -170,6 +170,8 @@ const signup = (function () {
       return
     }
 
+    spinner.show(true)
+
     const url = `http://localhost:3000/learners/signup`
     const fetchOptions = {
       method: "POST",
@@ -179,6 +181,7 @@ const signup = (function () {
     }
     fetch(url, fetchOptions)
       .then((res) => {
+        spinner.show(false)
         console.log(res)
         if (res.ok === false) {
           console.log("Failed signup")
@@ -201,6 +204,7 @@ const signup = (function () {
   }
 
   function fetchProgrammes() {
+    spinner.show(true)
     const url = `http://localhost:3000/programmes`
     const fetchOptions = {
       method: "GET",
@@ -209,13 +213,15 @@ const signup = (function () {
 
     fetch(url, fetchOptions)
       .then((res) => {
+        spinner.show(false)
         res
           .json()
           .then((programmes) => {
             console.log(programmes)
-
             sessionStorage.setItem("programmes", JSON.stringify(programmes))
 
+            //set the programme to the first one in case user doesn't pick a different one
+            tempSignUpInfo.programmeName = programmes[0].programmeName
             displaySignUpForm(programmes)
           })
           .catch((err) => console.log(`Error parsing JSON: ${err}`))

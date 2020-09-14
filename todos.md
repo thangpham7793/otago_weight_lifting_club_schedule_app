@@ -18,10 +18,8 @@
 
 ### Tickets
 
-- [  ] User can stil sign up with the same email
+
 - [  ] Should alert user when CAPLOCK is on
-- [  ] Programme doesn't default to first option when signing up
-- [  ] Added input validation on client side
 - [  ] Handle errors on both sides
 - [  ] Add spinning icon during network calls
 - [  ] Refactor client-side scripts
@@ -32,6 +30,9 @@
 - [  ] Refactor schedule services to instructor/learner routes
 - [  ] Replace JQuery with native functions
 
+- [ x ] Added input validation on client side
+- [ x ] User can stil sign up with the same email
+- [ x ] Programme doesn't default to first option when signing up/this freezes screen with spinner
 - [ x ] Added basic custom errors to backend
 - [ x ] How to restrict access to certain routes using cookies + jwt
 - [ x ] Add logout button

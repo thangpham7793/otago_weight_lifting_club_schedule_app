@@ -597,8 +597,31 @@ a.logo {
   font-size: calc(var(--fs-sm) * 0.75);
 }
 
+
+/* SPINNER MODAL */
+
+.modal-content.spinner {
+  margin: 30vh auto;
+}
+
+.spinner-circle {
+  border: calc(30vh/6) solid var(--txt-cl); /* Light grey */
+  border-top: calc(30vh/6) solid var(--primary-cl); /* Blue */
+  border-radius: 50%;
+  width: 30vh;
+  height: 30vh;
+  margin: 0 auto;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
 /* MEDIA QUERIES */
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 768px) {  
   #days {
     width: 10vw;
   }
