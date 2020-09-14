@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 import { PoolClient } from "pg"
 import pool from "./pool"
-import { checkPassword } from "../utils/auth"
 
 export class ScheduleService {
   async getAllProgrammes(req: Request, res: Response) {
@@ -15,7 +14,7 @@ export class ScheduleService {
       //return array of object with programmeName and Id
       res.status(200).json(rows)
     }
-    await client.release()
+    return client.release()
   }
 
   async getAllSchedules(req: Request, res: Response) {
@@ -59,9 +58,12 @@ export class ScheduleService {
     FROM schedule 
     WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = $1)); 
     `
-    try {
-      const { rows } = await client.query(statement, params)
 
+    const { rows } = await client.query(statement, params)
+
+    if (rows.length === 0) {
+      res.status(404).json({ message: "no available schedule" })
+    } else {
       const schedules = rows.map((schedule) => {
         return { ...schedule, programmeName }
       })
@@ -75,12 +77,9 @@ export class ScheduleService {
       console.log(`Sending ${token} to client!`)
       //send back pbs and programmeInfo
       res.status(200).send({ pbs, schedules, learnerId })
-    } catch (err) {
-      console.log(err)
-      res.status(404).send({ error: "no available schedule" })
-    } finally {
-      client.release()
     }
+
+    return client.release()
   }
 
   async getWeeklySchedule(req: Request, res: Response) {
@@ -90,23 +89,16 @@ export class ScheduleService {
     const statement = `
     SELECT timetable[$2] as week_${week} FROM schedule WHERE "scheduleId" = $1;`
 
-    let client: PoolClient
+    const client: PoolClient = await pool.connect()
+    const result = await client.query(statement, params)
 
-    try {
-      client = await pool.connect()
-      const result = await client.query(statement, params)
-
-      if (!result.rows) {
-        throw new Error("no availale weekly schedule found")
-      }
-      res.status(200).json(result.rows[0][`week_${week}`])
-      //console.log(result.rows[0])
-    } catch (err) {
-      console.log(err)
-      res.send("Error" + err)
-    } finally {
-      client.release()
+    if (!result.rows) {
+      res.status(404).json({ message: "no weekly schedule found" })
     }
+
+    res.status(200).json(result.rows[0][`week_${week}`])
+
+    return client.release()
   }
 
   async endPool() {

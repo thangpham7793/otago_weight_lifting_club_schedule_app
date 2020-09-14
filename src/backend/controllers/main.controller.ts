@@ -1,7 +1,6 @@
-import { verifyToken } from "./../utils/jwtHelpers"
-import { ScheduleService } from "../database/schedule.service"
+import { catchAsync, verifyToken } from "./../utils/register"
+import { LearnerService, ScheduleService } from "../database/register"
 import { Application, Request, Response } from "express"
-import { LearnerService } from "../database/learner.service"
 
 export class Controller {
   private scheduleService: ScheduleService
@@ -21,37 +20,41 @@ export class Controller {
       res.redirect("../signup.html")
     })
 
-    this.app.route("/learners/signup").post(this.learnerService.createLearner)
+    this.app
+      .route("/learners/signup")
+      .post(catchAsync(this.learnerService.createLearner))
 
     this.app
       .route("/learners/login")
       .post(
-        this.learnerService.checkCredentials,
-        this.scheduleService.getAllSchedules
+        catchAsync(this.learnerService.checkCredentials),
+        catchAsync(this.scheduleService.getAllSchedules)
       )
 
     this.app
       .route("/learners/:learnerId/pbs")
-      .get(this.verifyToken, this.learnerService.getPbs)
+      .get(this.verifyToken, catchAsync(this.learnerService.getPbs))
 
     this.app
       .route("/learners/:learnerId/pbs")
-      .put(this.verifyToken, this.learnerService.updatePbs)
+      .put(this.verifyToken, catchAsync(this.learnerService.updatePbs))
 
     //programmes/schedules
-    this.app.route("/programmes").get(this.scheduleService.getAllProgrammes)
+    this.app
+      .route("/programmes")
+      .get(catchAsync(this.scheduleService.getAllProgrammes))
 
     this.app
       .route("/programmes/:programmeId/schedules")
-      .get(this.verifyToken, this.scheduleService.getAllSchedules)
+      .get(this.verifyToken, catchAsync(this.scheduleService.getAllSchedules))
 
     this.app
       .route("/schedules/:scheduleId/weeks/:week")
-      .get(this.verifyToken, this.scheduleService.getWeeklySchedule)
+      .get(this.verifyToken, catchAsync(this.scheduleService.getWeeklySchedule))
 
     //instructor
     this.app
       .route("/instructor/login")
-      .post(this.verifyToken, this.scheduleService.getAllProgrammes)
+      .post(this.verifyToken, catchAsync(this.scheduleService.getAllProgrammes))
   }
 }

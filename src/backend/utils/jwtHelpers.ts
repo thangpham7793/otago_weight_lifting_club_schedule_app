@@ -1,3 +1,4 @@
+import { httpError } from "./errorHandlers"
 import { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
 import path from "path"
@@ -10,7 +11,7 @@ export const makeToken = async (userId: {}) => {
     const token = await jwt.sign(userId, process.env.SECRET)
     return token
   } catch (error) {
-    throw new Error(`Error signing token ${error}`)
+    throw new httpError(500, `Error signing token ${error}`)
   }
 }
 
@@ -28,6 +29,6 @@ export const verifyToken = async (
     next()
   } catch (error) {
     console.log(`No valid JWT found: ${error}`)
-    res.redirect("/", 301)
+    res.redirect(301, "/")
   }
 }

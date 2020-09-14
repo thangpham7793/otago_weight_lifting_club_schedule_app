@@ -69,31 +69,30 @@ describe("API Integration Tests - Schedule Service", () => {
 
   //top priority
   describe("POST /schedules", () => {
-    it("should create a new schedule", async () => {
+    it("should create a new schedule", async () => {})
   })
-  
+
   describe("POST /programmes/:programmeId/password", () => {
-    it("should change the login password of a programme", async () => {
+    it("should change the login password of a programme", async () => {})
   })
 
   describe("POST /programmes/:programmeId/schedules/:scheduleId", () => {
-    it("should add/publish a schedule to a programme", async () => {
+    it("should add/publish a schedule to a programme", async () => {})
   })
 
   describe("DELETE /programmes/:programmeId/schedules/:scheduleId", () => {
-    it("should unpublish a schedule from a programme", async () => {
+    it("should unpublish a schedule from a programme", async () => {})
   })
-  
+
   describe("DELETE /programmes/:programmeId/password", () => {
-    it("should delete a programme", async () => {
+    it("should delete a programme", async () => {})
   })
-  
+
   describe("DELETE /schedules/:scheduleId", () => {
-    it("should delete a schedule and remove it from all programmes", async () => {
+    it("should delete a schedule and remove it from all programmes", async () => {})
   })
 
   afterAll(async () => {
     await pool.end()
   })
 })
-//need to match my routes to my queries before writing tests

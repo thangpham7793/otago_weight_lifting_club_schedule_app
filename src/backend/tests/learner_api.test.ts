@@ -69,7 +69,7 @@ describe("API Integration Tests - Learner Service", () => {
     })
   })
   //NOTE: this implicitly calls 2 separate handlers (checkCredentials and getAllSchedules)
-  describe.only("POST /learners/login", () => {
+  describe("POST /learners/login", () => {
     it("should return all schedule_names, schedule_ids, and their week_counts if credentials are correct", async () => {
       const result = await api
         .post("/learners/login")
@@ -117,11 +117,10 @@ describe("API Integration Tests - Learner Service", () => {
   })
 
   describe("GET /learners", () => {
-    it("should get all learners names, ids and the programmes they're following", async () => {
+    it("should get all learners names, ids and the programmes they're following", async () => {})
   })
 
   afterAll(async () => {
     await pool.end()
   })
 })
-

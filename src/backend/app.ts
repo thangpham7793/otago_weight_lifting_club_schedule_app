@@ -1,25 +1,26 @@
+import { serverError, unknownEndpoint } from "./utils/register"
+import { Controller } from "./controllers/main.controller"
+
+//native or 3rd party modules
 import express, { Application } from "express"
 import bodyParser from "body-parser"
 import cors from "cors"
 import path from "path"
-import errorHandlers from "./utils/errorHandlers"
-import { Controller } from "./controllers/main.controller"
 import cookieParser from "cookie-parser"
 import morgan from "morgan"
-
-//TODO: add other middlewares and write error handlers as well
 
 //TODO: learn from this lady :D https://dev.to/nyagarcia/pokeapi-rest-in-nodejs-with-express-typescript-mongodb-and-docker-part-1-5f8g
 
 class App {
-  public app: Application
-  public controller: Controller
+  app: Application
+  controller: Controller
 
   constructor() {
     this.app = express()
     this.setConfig()
     this.useStatic()
     this.controller = new Controller(this.app)
+    this.useErrorHandlers()
   }
 
   private setConfig() {
@@ -39,9 +40,12 @@ class App {
     this.app.use(
       morgan(":method :url :status :res[content-length] - :response-time ms")
     )
-
     //Enable error-handlers
-    this.app.use(errorHandlers.httpErrorHandlers)
+  }
+
+  private useErrorHandlers() {
+    this.app.use(unknownEndpoint)
+    this.app.use(serverError)
   }
 
   private useStatic() {

@@ -1,3 +1,4 @@
+import { httpError } from "./../utils/errorHandlers"
 import { makeToken } from "./../utils/jwtHelpers"
 import { Request, Response, NextFunction } from "express"
 import { PoolClient } from "pg"
@@ -5,7 +6,7 @@ import pool from "./pool"
 import { checkPassword } from "../utils/auth"
 
 export class LearnerService {
-  async createLearner(req: Request, res: Response) {
+  async createLearner(req: Request, res: Response, next: NextFunction) {
     const newLearnerInfo = req.body
     const statement = `
     INSERT INTO learner ("firstName", "lastName", "email", "programmeId")
@@ -16,14 +17,9 @@ export class LearnerService {
 
     const client: PoolClient = await pool.connect()
 
-    try {
-      const result = await client.query(statement, params)
-      res.status(201).send(result.rows[0])
-    } catch (error) {
-      throw new Error(`${error}`)
-    } finally {
-      await client.release()
-    }
+    const result = await client.query(statement, params)
+    res.status(201).send(result.rows[0])
+    return client.release()
   }
 
   async checkCredentials(req: Request, res: Response, next: NextFunction) {
@@ -32,47 +28,38 @@ export class LearnerService {
 
     const params = [email]
     const statement = `    
-    SELECT 
-    p."hashedPassword", p."programmeId", p."programmeName", 
-    l."learnerId", l.snatch, l.clean, l.jerk, 
-    l."cleanAndJerk", l."backSquat", l."frontSquat", l."pushPress"
-    FROM learner l
-    JOIN programme p 
-    USING ("programmeId")
-    WHERE email = $1;
-    `
+      SELECT 
+      p."hashedPassword", p."programmeId", p."programmeName", 
+      l."learnerId", l.snatch, l.clean, l.jerk, 
+      l."cleanAndJerk", l."backSquat", l."frontSquat", l."pushPress"
+      FROM learner l
+      JOIN programme p 
+      USING ("programmeId")
+      WHERE email = $1;`
 
-    let client: PoolClient
+    const client: PoolClient = await pool.connect()
+    const { rows } = await client.query(statement, params)
 
-    try {
-      client = await pool.connect()
-      const { rows } = await client.query(statement, params)
-      //console.log(result.rows)
-      if (!rows) {
-        throw new Error("unknown email")
-      }
-
-      const { hashedPassword, learnerId } = rows[0]
-      //TODO: check password here using jwt and bcrypt
-      if (checkPassword(password, hashedPassword)) {
-        //send programmeId to scheduleService.getAllProgrammes
-        const token = await makeToken({ learnerId: learnerId })
-        req.body = { ...req.body, ...rows[0], token }
-        next()
-      } else {
-        throw new Error("wrong password")
-      }
-
-      //console.log(result.rows[0])
-    } catch (err) {
-      console.log(err)
-      res.send("Error" + err)
-    } finally {
-      client.release()
+    //console.log(result.rows)
+    if (rows.length === 0) {
+      throw new httpError(401, "unknown email")
     }
+
+    const { hashedPassword, learnerId } = rows[0]
+    //TODO: check password here using jwt and bcrypt
+
+    if (checkPassword(password, hashedPassword)) {
+      //send programmeId to scheduleService.getAllProgrammes
+      const token = await makeToken({ learnerId: learnerId })
+      req.body = { ...req.body, ...rows[0], token }
+      next()
+    } else {
+      throw new httpError(401, "wrong password")
+    }
+    return client.release()
   }
 
-  async getPbs(req: Request, res: Response) {
+  async getPbs(req: Request, res: Response, next: NextFunction) {
     const { learnerId } = req.params
     const params = [parseInt(learnerId)]
     const statement = `
@@ -94,10 +81,10 @@ export class LearnerService {
       pbs[k] = parseFloat(rows[0][k])
     })
     res.status(200).json(pbs)
-    await client.release()
+    return client.release()
   }
 
-  async updatePbs(req: Request, res: Response) {
+  async updatePbs(req: Request, res: Response, next: NextFunction) {
     const { learnerId } = req.params
     console.log("Received", req.body)
     const pbs = Object.values(req.body)
@@ -117,6 +104,6 @@ export class LearnerService {
     const client: PoolClient = await pool.connect()
     await client.query(statement, params)
     res.status(204).send()
-    await client.release()
+    return client.release()
   }
 }
