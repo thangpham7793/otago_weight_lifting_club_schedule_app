@@ -11006,7 +11006,7 @@ module.exports = { getPbs, savePbs, pbsForm }
 },{"./pbsData":10,"./pbsForm":11}],10:[function(require,module,exports){
 const config = require("../../config")
 
-const savePbs = ({ pbs, learnerId }) => {
+const savePbs = ({ pbs, token }) => {
   spinner.show(true)
   console.log("Saving", JSON.stringify(pbs))
   const options = {
@@ -11014,13 +11014,16 @@ const savePbs = ({ pbs, learnerId }) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(pbs),
   }
   //FIXME: need to find a way to retrieve learnerId or remove Id from this route
-  fetch(`${config.API_ENTRY}/learners/${learnerId}/pbs`, options)
+  fetch(`${config.LOCAL_HOST}/learners/pbs`, options)
     .then((res) => {
       console.log("Saved Pbs to Server")
+      //reload page to recalculate pbs based on the updated info
+      location.reload()
     })
     .catch((err) => console.error(`Error saving pbs to server: ${err}`))
     .finally(() => {
@@ -11206,7 +11209,7 @@ const schedule = (function () {
     sessionStorage.getItem("weeklySchedule")
   )
 
-  const dataURL = `${config.API_ENTRY}/schedules/${scheduleId}/weeks/${week}`
+  const dataURL = `${config.LOCAL_HOST}/schedules/${scheduleId}/weeks/${week}`
 
   function pbsSubmitHandler(e) {
     e.preventDefault()
@@ -11217,7 +11220,7 @@ const schedule = (function () {
     //save store
     saveStore(store)
     //rerender table with new pbs
-    location.reload()
+    //location.reload() moved to savePbs successHandler
   }
 
   //update temporary pbs data object
@@ -11314,11 +11317,11 @@ const schedule = (function () {
         console.log("No need to refetch daily schedules!")
         successHandler(store.dailySchedules)
       } else {
-        fetchData(dataURL, successHandler)
+        fetchData(dataURL, store.token, successHandler)
       }
       //if the data hasn't been fetched or it's a new week/schedule
     } else {
-      fetchData(dataURL, successHandler)
+      fetchData(dataURL, store.token, successHandler)
     }
   }
 
@@ -11332,10 +11335,13 @@ $(schedule.setup)
 },{"./components/exerciseTable/exerciseTable":3,"./components/pbsForm/pbs":9,"./config":12,"./utils":15,"jquery":1}],15:[function(require,module,exports){
 const $ = require("jquery")
 
-function fetchData(url, successHandler, errorHandler, spinner) {
+function fetchData(url, token, successHandler, errorHandler) {
   let config = {
     url: url,
     dataType: "json",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`)
+    },
     success: function (data) {
       successHandler(data)
     },

@@ -1,17 +1,20 @@
-import { checkEmail } from "./../utils/auth"
-import { catchAsync, verifyToken } from "./../utils/register"
-import { LearnerService, ScheduleService } from "../database/register"
 import { Application, Request, Response } from "express"
+import {
+  catchAsync,
+  extractHeaderAuthToken,
+  checkEmail,
+} from "./../utils/register"
+import { LearnerService, ScheduleService } from "../database/register"
 
 export class Controller {
   private scheduleService: ScheduleService
   private learnerService: LearnerService
-  private verifyToken: typeof verifyToken
+  private extractHeaderAuthToken: typeof extractHeaderAuthToken
 
   constructor(private app: Application) {
     this.scheduleService = new ScheduleService()
     this.learnerService = new LearnerService()
-    this.verifyToken = verifyToken
+    this.extractHeaderAuthToken = extractHeaderAuthToken
     this.routes()
   }
   //most routes still need to be protected with jwt
@@ -34,36 +37,52 @@ export class Controller {
       )
 
     this.app
-      .route("/learners/:learnerId/pbs")
-      .get(this.verifyToken, catchAsync(this.learnerService.getPbs))
+      .route("/learners/pbs")
+      .get(
+        catchAsync(this.extractHeaderAuthToken),
+        catchAsync(this.learnerService.getPbs)
+      )
 
     this.app
-      .route("/learners/:learnerId/pbs")
-      .put(this.verifyToken, catchAsync(this.learnerService.updatePbs))
+      .route("/learners/pbs")
+      .put(
+        catchAsync(this.extractHeaderAuthToken),
+        catchAsync(this.learnerService.updatePbs)
+      )
 
     //programmes/schedules
     this.app
       .route("/programmes")
+      //TODO: should I check for Bearer Auth here?
       .get(catchAsync(this.scheduleService.getAllProgrammes))
 
     this.app
       .route("/programmes/:programmeId/schedules")
-      .get(this.verifyToken, catchAsync(this.scheduleService.getAllSchedules))
+      .get(
+        catchAsync(this.extractHeaderAuthToken),
+        catchAsync(this.scheduleService.getAllSchedules)
+      )
 
     this.app
       .route("/schedules/:scheduleId/weeks/:week")
-      .get(this.verifyToken, catchAsync(this.scheduleService.getWeeklySchedule))
+      .get(
+        catchAsync(this.extractHeaderAuthToken),
+        catchAsync(this.scheduleService.getWeeklySchedule)
+      )
 
     this.app
       .route("/programmes/:programmeId/password")
       .put(
-        this.verifyToken,
+        catchAsync(this.extractHeaderAuthToken),
         catchAsync(this.scheduleService.changeProgrammePassword)
       )
 
     //instructor
     this.app
       .route("/instructor/login")
-      .post(this.verifyToken, catchAsync(this.scheduleService.getAllProgrammes))
+      .post(
+        catchAsync(this.extractHeaderAuthToken),
+        catchAsync(this.scheduleService.getAllProgrammes)
+      )
   }
 }

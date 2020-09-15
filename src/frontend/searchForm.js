@@ -3,7 +3,7 @@
 const searchForm = (function () {
   "use strict"
   const API_ENTRYPOINT = {
-    PROD: "https://lifting-schedule.herokuapp.com/",
+    PROD: "https://lifting-schedule.herokuapp.com",
     DEV: "http://localhost:3000",
   }
 
@@ -266,7 +266,7 @@ const searchForm = (function () {
 
     spinner.show(true)
 
-    const url = `${API_ENTRYPOINT.PROD}learners/login`
+    const url = `${API_ENTRYPOINT.DEV}/learners/login`
     const fetchOptions = {
       method: "POST",
       mode: "cors",

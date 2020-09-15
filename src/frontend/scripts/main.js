@@ -19,7 +19,7 @@ const schedule = (function () {
     sessionStorage.getItem("weeklySchedule")
   )
 
-  const dataURL = `${config.API_ENTRY}/schedules/${scheduleId}/weeks/${week}`
+  const dataURL = `${config.LOCAL_HOST}/schedules/${scheduleId}/weeks/${week}`
 
   function pbsSubmitHandler(e) {
     e.preventDefault()
@@ -30,7 +30,7 @@ const schedule = (function () {
     //save store
     saveStore(store)
     //rerender table with new pbs
-    location.reload()
+    //location.reload() moved to savePbs successHandler
   }
 
   //update temporary pbs data object
@@ -127,11 +127,11 @@ const schedule = (function () {
         console.log("No need to refetch daily schedules!")
         successHandler(store.dailySchedules)
       } else {
-        fetchData(dataURL, successHandler)
+        fetchData(dataURL, store.token, successHandler)
       }
       //if the data hasn't been fetched or it's a new week/schedule
     } else {
-      fetchData(dataURL, successHandler)
+      fetchData(dataURL, store.token, successHandler)
     }
   }
 

@@ -17,7 +17,10 @@
 - [ x ] Are there multiple existing schedules for a programme? Yes
 
 ### Tickets
-
+- [  ] deploy as a separate app to test on Heroku
+- [  ] rewrite routes to avoid including user credentials in the url
+- [  ] rewrite fetch requests on client side to user Bearer Auth Header
+- [  ] Need to switch to bearer authorization scheme to avoid TypeError with fetch requests
 - [  ] Encrypt programmes' passwords with BCrypt
 - [  ] Should alert user when CAPLOCK is on
 - [  ] Handle errors on both sides
@@ -30,6 +33,7 @@
 - [  ] Refactor schedule services to instructor/learner routes
 - [  ] Replace JQuery with native functions
 
+- [ x ] does FetchRequest error out on new page load cause pbs to not be saved on mobile ? https://bugzilla.mozilla.org/show_bug.cgi?id=1280189
 - [ x ] Added input validation on client side
 - [ x ] User can stil sign up with the same email
 - [ x ] Programme doesn't default to first option when signing up/this freezes screen with spinner

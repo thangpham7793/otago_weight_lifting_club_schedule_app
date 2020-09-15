@@ -129,8 +129,9 @@ var LearnerService = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        learnerId = req.params.learnerId;
-                        params = [parseInt(learnerId)];
+                        learnerId = req.body.token.learnerId;
+                        console.log("Receiving credentials from Auth Header as " + learnerId);
+                        params = [learnerId];
                         statement = "\n    SELECT\n    snatch,\n    clean,\n    jerk,\n    \"cleanAndJerk\",\n    \"backSquat\",\n    \"frontSquat\",\n    \"pushPress\" \n    FROM learner\n    WHERE \"learnerId\" = $1;\n    ";
                         return [4, pool_1.default.connect()];
                     case 1:
@@ -150,22 +151,26 @@ var LearnerService = (function () {
     };
     LearnerService.prototype.updatePbs = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var learnerId, pbs, params, statement, client;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, token, newPbs, params, statement, client;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        learnerId = req.params.learnerId;
                         console.log("Received", req.body);
-                        pbs = Object.values(req.body);
-                        params = __spreadArrays(pbs, [learnerId]).map(function (ele) { return parseFloat(ele); });
+                        _a = req.body, token = _a.token, newPbs = _a.newPbs;
+                        if (!newPbs) {
+                            throw new errorHandlers_1.httpError(400, "Missing new personal bests to update!");
+                        }
+                        params = __spreadArrays(Object.values(newPbs), [
+                            token.learnerId,
+                        ]).map(function (ele) { return parseFloat(ele); });
                         statement = "\n    UPDATE learner SET\n    snatch = $1,\n    clean = $2,\n    jerk = $3,\n    \"cleanAndJerk\" = $4,\n    \"backSquat\" = $5,\n    \"frontSquat\" = $6,\n    \"pushPress\" = $7\n    WHERE \"learnerId\" = $8;\n    ";
                         console.log(params);
                         return [4, pool_1.default.connect()];
                     case 1:
-                        client = _a.sent();
+                        client = _b.sent();
                         return [4, client.query(statement, params)];
                     case 2:
-                        _a.sent();
+                        _b.sent();
                         res.status(204).send();
                         return [2, client.release()];
                 }

@@ -55,21 +55,29 @@ var errorHandlers_1 = require("./errorHandlers");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var path_1 = __importDefault(require("path"));
 var dotenv_1 = require("dotenv");
+var NOW = Math.floor(Date.now() / 1000);
+var DAYS_IN_SECONDS = 86400;
 dotenv_1.config({ path: path_1.default.resolve(__dirname, "../.env") });
 exports.makeToken = function (userId) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, error_1;
+    var signOptions, token, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4, jsonwebtoken_1.default.sign(userId, process.env.SECRET)];
+                signOptions = {
+                    exp: NOW + 28 * DAYS_IN_SECONDS,
+                    data: userId,
+                };
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4, jsonwebtoken_1.default.sign(signOptions, process.env.SECRET)];
+            case 2:
                 token = _a.sent();
                 return [2, token];
-            case 2:
+            case 3:
                 error_1 = _a.sent();
                 throw new errorHandlers_1.httpError(500, "Error signing token " + error_1);
-            case 3: return [2];
+            case 4: return [2];
         }
     });
 }); };
@@ -78,6 +86,7 @@ exports.verifyToken = function (req, res, next) { return __awaiter(void 0, void 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                next();
                 console.log("Verifying JWT");
                 token = req.cookies["jwt"];
                 _a.label = 1;

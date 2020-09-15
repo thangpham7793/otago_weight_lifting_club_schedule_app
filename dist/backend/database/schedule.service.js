@@ -113,12 +113,7 @@ var ScheduleService = (function () {
                         schedules = rows.map(function (schedule) {
                             return __assign(__assign({}, schedule), { programmeName: programmeName });
                         });
-                        res.cookie("jwt", token, {
-                            expires: new Date(Number(new Date()) + 315360000000),
-                            httpOnly: true,
-                        });
-                        console.log("Sending " + token + " to client!");
-                        res.status(200).send({ pbs: pbs, schedules: schedules, learnerId: learnerId });
+                        res.status(200).send({ pbs: pbs, schedules: schedules, token: token });
                         return [2, client.release()];
                 }
             });

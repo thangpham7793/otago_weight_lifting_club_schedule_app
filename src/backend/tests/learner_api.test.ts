@@ -2,8 +2,14 @@ import pool from "../database/pool"
 import { api } from "./testHelper"
 
 jest.setTimeout(30000)
-const TEST_COOKIE =
-  "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZWFybmVySWQiOjEsImlhdCI6MTU5OTgyNTY5OH0.vhbqD8U6ZsGZ_Ost5qgcM2QKGPf1N-VsTjrLw-ukVnc"
+// const TEST_COOKIE =
+//   "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZWFybmVySWQiOjEsImlhdCI6MTU5OTgyNTY5OH0.vhbqD8U6ZsGZ_Ost5qgcM2QKGPf1N-VsTjrLw-ukVnc"
+
+//seems like a new signature is generated for every new login
+
+//this is used for the test user
+const TEST_TOKEN =
+  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZWFybmVySWQiOjEsImlhdCI6MTU5OTgyNTY5OH0.vhbqD8U6ZsGZ_Ost5qgcM2QKGPf1N-VsTjrLw-ukVnc"
 
 describe("API Integration Tests - Learner Service", () => {
   describe("POST /learners/signup", () => {
@@ -31,7 +37,7 @@ describe("API Integration Tests - Learner Service", () => {
     })
   })
   //Callan can also use this
-  describe("PUT /learners/:learnerId/pbs", () => {
+  describe.only("PUT /learners/pbs", () => {
     it("should update the personal bests of a learner", async () => {
       const newPbs = {
         snatch: 120.35,
@@ -43,14 +49,14 @@ describe("API Integration Tests - Learner Service", () => {
         pushPress: 100.15,
       }
       const result = await api
-        .put("/learners/1/pbs")
-        .set("Cookie", [TEST_COOKIE])
-        .send(newPbs)
+        .put("/learners/pbs")
+        .set("Authorization", TEST_TOKEN)
+        .send({ newPbs })
       expect(result.status).toEqual(204)
     })
   })
-
-  describe("GET /learners/:learnerId/pbs", () => {
+  //fixme: no longer uses learnerId in req.param
+  describe("GET /learners/pbs", () => {
     it("should retrieve the personal bests of a learner", async () => {
       const expected = {
         snatch: 120.35,
@@ -62,8 +68,9 @@ describe("API Integration Tests - Learner Service", () => {
         pushPress: 100.15,
       }
       const result = await api
-        .get("/learners/1/pbs")
-        .set("Cookie", [TEST_COOKIE])
+        .get("/learners/pbs")
+        .set("Authorization", TEST_TOKEN)
+
       expect(result.status).toEqual(200)
       expect(result.body).toEqual(expected)
     })
@@ -93,25 +100,15 @@ describe("API Integration Tests - Learner Service", () => {
             weekCount: 5,
             scheduleId: 6,
           },
-          {
-            programmeName: "Youth and Junior",
-            scheduleName: "October 2020 Youth and Junior",
-            weekCount: 4,
-            scheduleId: 7,
-          },
-          {
-            programmeName: "Youth and Junior",
-            scheduleName: "November 2020 Youth and Junior",
-            weekCount: 6,
-            scheduleId: 8,
-          },
         ],
       }
+      console.log(result.body)
+
+      //NOTE: does it generate a new token every time?
       expect(result.body).toHaveProperty("pbs")
       expect(result.body).toHaveProperty("schedules")
-      expect(result.body).toHaveProperty("learnerId")
+      expect(result.body).toHaveProperty("token")
       expect(result.body.pbs).toEqual(expected.pbs)
-      expect(result.body.learnerId).toEqual(expected.learnerId)
       expect(result.body.schedules).toEqual(expected.schedules)
     })
   })

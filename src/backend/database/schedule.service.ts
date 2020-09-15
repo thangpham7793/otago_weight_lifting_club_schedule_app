@@ -67,15 +67,19 @@ export class ScheduleService {
       return { ...schedule, programmeName }
     })
 
-    //add token to cookie
-    res.cookie("jwt", token, {
-      expires: new Date(Number(new Date()) + 315360000000),
-      httpOnly: true,
-    })
+    // //add token to cookie
+    // res.cookie("jwt", token, {
+    //   expires: new Date(Number(new Date()) + 315360000000),
+    //   httpOnly: true,
+    // })
 
-    console.log(`Sending ${token} to client!`)
-    //send back pbs and programmeInfo
-    res.status(200).send({ pbs, schedules, learnerId })
+    // console.log(
+    //   `Sending ${token} ${JSON.stringify(schedules)} ${JSON.stringify(
+    //     pbs
+    //   )} to client!`
+    // )
+    //send back pbs, token and programmeInfo
+    res.status(200).send({ pbs, schedules, token })
 
     return client.release()
   }

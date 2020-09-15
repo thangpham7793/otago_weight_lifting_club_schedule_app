@@ -1,5 +1,4 @@
 import { compare } from "bcrypt"
-import { isEmail } from "./../utils/auth"
 import { httpError } from "./../utils/errorHandlers"
 import { makeToken } from "./../utils/jwtHelpers"
 import { Request, Response, NextFunction } from "express"
@@ -49,7 +48,7 @@ export class LearnerService {
     const isValidPassword = await compare(password, hashedPassword)
     if (isValidPassword) {
       //send programmeId to scheduleService.getAllProgrammes
-      const token = await makeToken({ learnerId: learnerId })
+      const token = await makeToken({ learnerId })
       req.body = { ...req.body, ...rows[0], token }
       next()
     } else {
@@ -59,8 +58,9 @@ export class LearnerService {
   }
 
   async getPbs(req: Request, res: Response, next: NextFunction) {
-    const { learnerId } = req.params
-    const params = [parseInt(learnerId)]
+    const { learnerId } = req.body.token
+    console.log(`Receiving credentials from Auth Header as ${learnerId}`)
+    const params = [learnerId]
     const statement = `
     SELECT
     snatch,
@@ -84,10 +84,15 @@ export class LearnerService {
   }
 
   async updatePbs(req: Request, res: Response, next: NextFunction) {
-    const { learnerId } = req.params
     console.log("Received", req.body)
-    const pbs = Object.values(req.body)
-    const params = [...pbs, learnerId].map((ele: string) => parseFloat(ele))
+    const { token, newPbs } = req.body
+    if (!newPbs) {
+      throw new httpError(400, "Missing new personal bests to update!")
+    }
+    const params = [
+      ...Object.values(newPbs),
+      token.learnerId,
+    ].map((ele: string) => parseFloat(ele))
     const statement = `
     UPDATE learner SET
     snatch = $1,

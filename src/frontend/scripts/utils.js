@@ -1,9 +1,12 @@
 const $ = require("jquery")
 
-function fetchData(url, successHandler, errorHandler, spinner) {
+function fetchData(url, token, successHandler, errorHandler) {
   let config = {
     url: url,
     dataType: "json",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`)
+    },
     success: function (data) {
       successHandler(data)
     },

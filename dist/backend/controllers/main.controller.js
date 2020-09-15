@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Controller = void 0;
-var auth_1 = require("./../utils/auth");
 var register_1 = require("./../utils/register");
 var register_2 = require("../database/register");
 var Controller = (function () {
@@ -9,7 +8,7 @@ var Controller = (function () {
         this.app = app;
         this.scheduleService = new register_2.ScheduleService();
         this.learnerService = new register_2.LearnerService();
-        this.verifyToken = register_1.verifyToken;
+        this.extractHeaderAuthToken = register_1.extractHeaderAuthToken;
         this.routes();
     }
     Controller.prototype.routes = function () {
@@ -18,31 +17,31 @@ var Controller = (function () {
         });
         this.app
             .route("/learners/signup")
-            .post(auth_1.checkEmail, register_1.catchAsync(this.learnerService.createLearner));
+            .post(register_1.checkEmail, register_1.catchAsync(this.learnerService.createLearner));
         this.app
             .route("/learners/login")
-            .post(auth_1.checkEmail, register_1.catchAsync(this.learnerService.checkCredentials), register_1.catchAsync(this.scheduleService.getAllSchedules));
+            .post(register_1.checkEmail, register_1.catchAsync(this.learnerService.checkCredentials), register_1.catchAsync(this.scheduleService.getAllSchedules));
         this.app
-            .route("/learners/:learnerId/pbs")
-            .get(this.verifyToken, register_1.catchAsync(this.learnerService.getPbs));
+            .route("/learners/pbs")
+            .get(register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.getPbs));
         this.app
-            .route("/learners/:learnerId/pbs")
-            .put(this.verifyToken, register_1.catchAsync(this.learnerService.updatePbs));
+            .route("/learners/pbs")
+            .put(register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.updatePbs));
         this.app
             .route("/programmes")
             .get(register_1.catchAsync(this.scheduleService.getAllProgrammes));
         this.app
             .route("/programmes/:programmeId/schedules")
-            .get(this.verifyToken, register_1.catchAsync(this.scheduleService.getAllSchedules));
+            .get(register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.scheduleService.getAllSchedules));
         this.app
             .route("/schedules/:scheduleId/weeks/:week")
-            .get(this.verifyToken, register_1.catchAsync(this.scheduleService.getWeeklySchedule));
+            .get(register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.scheduleService.getWeeklySchedule));
         this.app
             .route("/programmes/:programmeId/password")
-            .put(this.verifyToken, register_1.catchAsync(this.scheduleService.changeProgrammePassword));
+            .put(register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.scheduleService.changeProgrammePassword));
         this.app
             .route("/instructor/login")
-            .post(this.verifyToken, register_1.catchAsync(this.scheduleService.getAllProgrammes));
+            .post(register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.scheduleService.getAllProgrammes));
     };
     return Controller;
 }());

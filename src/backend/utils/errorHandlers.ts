@@ -1,3 +1,6 @@
+import jwt from "jsonwebtoken"
+import path from "path"
+import { config } from "dotenv"
 import { NextFunction, Request, RequestHandler, Response } from "express"
 //wanago.io/2018/12/17/typescript-express-error-handling-validation/https:
 
@@ -18,6 +21,36 @@ export class httpError extends Error {
     this.status = status
     this.code = code
     this.detail = detail
+  }
+}
+
+config({ path: path.resolve(__dirname, "../.env") })
+
+export const extractHeaderAuthToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log(`Receiving Auth Header as ${req.headers.authorization}`)
+
+  const bearerToken = req.headers.authorization
+
+  if (bearerToken && bearerToken.toLowerCase().startsWith("bearer ")) {
+    try {
+      const token = await jwt.verify(
+        bearerToken.substring(7),
+        process.env.SECRET
+      )
+
+      console.log(`The decoded token is ${JSON.stringify(token)}`)
+      req.body = { ...req.body, token }
+      next()
+    } catch (error) {
+      console.error(error)
+      throw new httpError(500, `Error decoding verifying jwt token ${error}`)
+    }
+  } else {
+    return res.status(401).json({ message: "Invalid or missing credentials!" })
   }
 }
 
