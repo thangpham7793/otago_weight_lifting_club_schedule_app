@@ -22,6 +22,8 @@ UPDATE programme SET "scheduleIds" = array_cat("scheduleIds", ARRAY[2,3]) WHERE 
 -- remove one ele
 UPDATE programme SET "scheduleIds" = ARRAY_REMOVE("scheduleIds", 6) WHERE "programmeId" = 1;
 
+
+-- need to also delete the id from the programme
 CREATE TABLE schedule (
   "scheduleId" SERIAL PRIMARY KEY,
   "scheduleName" VARCHAR(50) NOT NULL,

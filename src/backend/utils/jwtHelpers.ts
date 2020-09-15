@@ -20,15 +20,17 @@ export const verifyToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("Verifying JWT")
-  const token = req.cookies["jwt"]
-  try {
-    const decoded = await jwt.verify(token, process.env.SECRET)
-    console.log(decoded)
-    req.body = { ...req.body }
-    next()
-  } catch (error) {
-    console.log(`No valid JWT found: ${error}`)
-    res.redirect(301, "/")
-  }
+  next()
+  //disable cookie check for now (problem on mobile)
+  // console.log("Verifying JWT")
+  // const token = req.cookies["jwt"]
+  // try {
+  //   const decoded = await jwt.verify(token, process.env.SECRET)
+  //   console.log(decoded)
+  //   req.body = { ...req.body }
+  //   next()
+  // } catch (error) {
+  //   console.log(`No valid JWT found: ${error}`)
+  //   res.redirect(301, "/")
+  // }
 }
