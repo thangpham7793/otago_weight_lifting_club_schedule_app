@@ -16,7 +16,7 @@ const localConfig: ClientConfig = {
 }
 //https://stackoverflow.com/questions/47297212/heroku-postgres-add-on-connection-string-for-nodejs-app
 const herokuConfig: ClientConfig = {
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || process.env.STORED_DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
   },

@@ -3,6 +3,11 @@
 const signup = (function () {
   "use strict"
 
+  const API_ENTRYPOINT = {
+    PROD: "https://lifting-schedule.herokuapp.com/",
+    DEV: "http://localhost:3000/",
+  } 
+  
   function makeLogo() {
     return ` <div class="logo-wrapper signup">
       <img
@@ -11,7 +16,7 @@ const signup = (function () {
         alt="New Zealand Olympic Weight-Lifting Logo"
       />
     </div>`
-  }
+  })
 
   function makeButton(customClassName, label) {
     return `<button type="submit" class="submit-btn ${customClassName}">${label}</button>`
@@ -92,18 +97,18 @@ const signup = (function () {
     return pattern.test(email.trim())
   }
 
-  function onlyAlphanumeric(str) {
-    const pattern = /[a-zA-Z]+/gi
+  function onlyChar(str) {
+    const pattern = /^[a-zA-Z ]+$/gi
     return pattern.test(str.trim())
   }
 
   function areCredentialsValid({ firstName, lastName, email }) {
-    if (!onlyAlphanumeric(firstName)) {
+    if (!onlyChar(firstName)) {
       return {
         errorMessage:
           "First Name can't be empty and should only contain letters!",
       }
-    } else if (!onlyAlphanumeric(lastName)) {
+    } else if (!onlyChar(lastName)) {
       return {
         errorMessage:
           "Last Name can't be empty and should only contain letters!",
@@ -159,6 +164,21 @@ const signup = (function () {
     return cleanedInfo
   }
 
+  function onSignUpSuccessHandler(res) {
+    location.href = "index.html"
+  }
+
+  function onSignUpFailureHandler(res) {
+    console.log("Failed Sign Up")
+    res
+      .json()
+      .then((res) => {
+        showErrorMessage(res.message)
+      })
+      .catch((err) => console.log(`Error parsing JSON from response ${err}`))
+    return
+  }
+
   function onSignUpHandler(e) {
     e.preventDefault()
     //make ajax call here
@@ -172,7 +192,7 @@ const signup = (function () {
 
     spinner.show(true)
 
-    const url = `http://localhost:3000/learners/signup`
+    const url = `${API_ENTRYPOINT.PROD}learners/signup`
     const fetchOptions = {
       method: "POST",
       mode: "cors",
@@ -183,19 +203,10 @@ const signup = (function () {
       .then((res) => {
         spinner.show(false)
         console.log(res)
-        if (res.ok === false) {
-          console.log("Failed signup")
-          res
-            .json()
-            .then((res) => {
-              showErrorMessage(res.message)
-            })
-            .catch((err) =>
-              console.log(`Error parsing JSON from response ${err}`)
-            )
-          return
-        }
-        location.href = "index.html"
+
+        res.ok === false
+          ? onSignUpFailureHandler(res)
+          : onSignUpSuccessHandler(res)
       })
       .catch((err) => {
         console.log(`Error Sending Sign Up Request: ${err}`)
@@ -205,7 +216,7 @@ const signup = (function () {
 
   function fetchProgrammes() {
     spinner.show(true)
-    const url = `http://localhost:3000/programmes`
+    const url = `${API_ENTRYPOINT.PROD}programmes`
     const fetchOptions = {
       method: "GET",
       mode: "cors",

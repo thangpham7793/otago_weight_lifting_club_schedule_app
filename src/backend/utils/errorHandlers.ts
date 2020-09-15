@@ -42,9 +42,13 @@ export const serverError = (
   }
   //for postgres database specific error
   else if (err.code) {
+    console.log(err)
     switch (err.code) {
       case "23505":
         return res.status(400).json({ message: "email already used" })
+      //no schedule has been added to a programme yet
+      case "22004":
+        return res.status(404).json({ message: "no schedule found" })
       default:
         return res.status(400).json({ message: err.detail })
     }

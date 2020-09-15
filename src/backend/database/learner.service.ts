@@ -1,10 +1,10 @@
+import { compare } from "bcrypt"
 import { isEmail } from "./../utils/auth"
 import { httpError } from "./../utils/errorHandlers"
 import { makeToken } from "./../utils/jwtHelpers"
 import { Request, Response, NextFunction } from "express"
 import { PoolClient } from "pg"
 import pool from "./pool"
-import { checkPassword } from "../utils/auth"
 
 export class LearnerService {
   async createLearner(req: Request, res: Response, next: NextFunction) {
@@ -46,8 +46,8 @@ export class LearnerService {
 
     const { hashedPassword, learnerId } = rows[0]
     //TODO: check password here using jwt and bcrypt
-
-    if (checkPassword(password, hashedPassword)) {
+    const isValidPassword = await compare(password, hashedPassword)
+    if (isValidPassword) {
       //send programmeId to scheduleService.getAllProgrammes
       const token = await makeToken({ learnerId: learnerId })
       req.body = { ...req.body, ...rows[0], token }

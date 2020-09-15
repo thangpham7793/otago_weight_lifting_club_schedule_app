@@ -1,3 +1,5 @@
+import { hash } from "bcrypt"
+
 import { Request, Response } from "express"
 import { PoolClient } from "pg"
 import pool from "./pool"
@@ -61,23 +63,19 @@ export class ScheduleService {
 
     const { rows } = await client.query(statement, params)
 
-    if (rows.length === 0) {
-      res.status(404).json({ message: "no available schedule" })
-    } else {
-      const schedules = rows.map((schedule) => {
-        return { ...schedule, programmeName }
-      })
+    const schedules = rows.map((schedule) => {
+      return { ...schedule, programmeName }
+    })
 
-      //add token to cookie
-      res.cookie("jwt", token, {
-        expires: new Date(Number(new Date()) + 315360000000),
-        httpOnly: true,
-      })
+    //add token to cookie
+    res.cookie("jwt", token, {
+      expires: new Date(Number(new Date()) + 315360000000),
+      httpOnly: true,
+    })
 
-      console.log(`Sending ${token} to client!`)
-      //send back pbs and programmeInfo
-      res.status(200).send({ pbs, schedules, learnerId })
-    }
+    console.log(`Sending ${token} to client!`)
+    //send back pbs and programmeInfo
+    res.status(200).send({ pbs, schedules, learnerId })
 
     return client.release()
   }
@@ -99,6 +97,23 @@ export class ScheduleService {
     res.status(200).json(result.rows[0][`week_${week}`])
 
     return client.release()
+  }
+
+  async changeProgrammePassword(req: Request, res: Response) {
+    const { newPassword } = req.body
+    const { programmeId } = req.params
+    const hashedPassword = await hash(newPassword, 10)
+
+    const params = [hashedPassword, programmeId]
+    const statement = `
+      UPDATE programme 
+      SET "hashedPassword" = $1 
+      WHERE "programmeId" = $2`
+
+    const client: PoolClient = await pool.connect()
+    await client.query(statement, params)
+
+    return res.status(204)
   }
 
   async endPool() {

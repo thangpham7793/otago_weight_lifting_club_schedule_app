@@ -13,12 +13,13 @@ const config = require("./config")
 //similar to App.js
 const schedule = (function () {
   //global state like Redux or component state like React...
+
   const store = getStore()
   const { scheduleId, week } = JSON.parse(
     sessionStorage.getItem("weeklySchedule")
   )
 
-  const dataURL = `${config.LOCAL_HOST}/schedules/${scheduleId}/weeks/${week}`
+  const dataURL = `${config.API_ENTRY}/schedules/${scheduleId}/weeks/${week}`
 
   function pbsSubmitHandler(e) {
     e.preventDefault()

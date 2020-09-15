@@ -1,9 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkEmail = exports.isEmail = exports.checkPassword = void 0;
-exports.checkPassword = function (password, hashed_password) {
-    return password === hashed_password;
-};
+exports.checkEmail = exports.isEmail = void 0;
 exports.isEmail = function (email) {
     var pattern = /^([\w_-]+|[\w_-]+(.[\w_-]+)+?)@([\w_-]+|[\w_-]+(.[\w_-]+)+?)$/;
     return pattern.test(email);

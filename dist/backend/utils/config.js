@@ -16,7 +16,7 @@ var localConfig = {
     password: "6500826",
 };
 var herokuConfig = {
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL || process.env.STORED_DATABASE_URL,
     ssl: {
         rejectUnauthorized: false,
     },

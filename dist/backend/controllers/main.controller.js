@@ -38,6 +38,9 @@ var Controller = (function () {
             .route("/schedules/:scheduleId/weeks/:week")
             .get(this.verifyToken, register_1.catchAsync(this.scheduleService.getWeeklySchedule));
         this.app
+            .route("/programmes/:programmeId/password")
+            .put(this.verifyToken, register_1.catchAsync(this.scheduleService.changeProgrammePassword));
+        this.app
             .route("/instructor/login")
             .post(this.verifyToken, register_1.catchAsync(this.scheduleService.getAllProgrammes));
     };

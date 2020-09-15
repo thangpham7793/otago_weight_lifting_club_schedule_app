@@ -51,6 +51,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleService = void 0;
+var bcrypt_1 = require("bcrypt");
 var pool_1 = __importDefault(require("./pool"));
 var ScheduleService = (function () {
     function ScheduleService() {
@@ -109,20 +110,15 @@ var ScheduleService = (function () {
                         return [4, client.query(statement, params)];
                     case 2:
                         rows = (_b.sent()).rows;
-                        if (rows.length === 0) {
-                            res.status(404).json({ message: "no available schedule" });
-                        }
-                        else {
-                            schedules = rows.map(function (schedule) {
-                                return __assign(__assign({}, schedule), { programmeName: programmeName });
-                            });
-                            res.cookie("jwt", token, {
-                                expires: new Date(Number(new Date()) + 315360000000),
-                                httpOnly: true,
-                            });
-                            console.log("Sending " + token + " to client!");
-                            res.status(200).send({ pbs: pbs, schedules: schedules, learnerId: learnerId });
-                        }
+                        schedules = rows.map(function (schedule) {
+                            return __assign(__assign({}, schedule), { programmeName: programmeName });
+                        });
+                        res.cookie("jwt", token, {
+                            expires: new Date(Number(new Date()) + 315360000000),
+                            httpOnly: true,
+                        });
+                        console.log("Sending " + token + " to client!");
+                        res.status(200).send({ pbs: pbs, schedules: schedules, learnerId: learnerId });
                         return [2, client.release()];
                 }
             });
@@ -148,6 +144,30 @@ var ScheduleService = (function () {
                         }
                         res.status(200).json(result.rows[0]["week_" + week]);
                         return [2, client.release()];
+                }
+            });
+        });
+    };
+    ScheduleService.prototype.changeProgrammePassword = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var newPassword, programmeId, hashedPassword, params, statement, client;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        newPassword = req.body.newPassword;
+                        programmeId = req.params.programmeId;
+                        return [4, bcrypt_1.hash(newPassword, 10)];
+                    case 1:
+                        hashedPassword = _a.sent();
+                        params = [hashedPassword, programmeId];
+                        statement = "\n      UPDATE programme \n      SET \"hashedPassword\" = $1 \n      WHERE \"programmeId\" = $2";
+                        return [4, pool_1.default.connect()];
+                    case 2:
+                        client = _a.sent();
+                        return [4, client.query(statement, params)];
+                    case 3:
+                        _a.sent();
+                        return [2, res.status(204)];
                 }
             });
         });

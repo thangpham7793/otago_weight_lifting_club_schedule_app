@@ -12,7 +12,7 @@ const savePbs = ({ pbs, learnerId }) => {
     body: JSON.stringify(pbs),
   }
   //FIXME: need to find a way to retrieve learnerId or remove Id from this route
-  fetch(`${config.LOCAL_HOST}/learners/${learnerId}/pbs`, options)
+  fetch(`${config.API_ENTRY}/learners/${learnerId}/pbs`, options)
     .then((res) => {
       console.log("Saved Pbs to Server")
     })

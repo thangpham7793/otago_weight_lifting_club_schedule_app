@@ -18,7 +18,7 @@
 
 ### Tickets
 
-
+- [  ] Encrypt programmes' passwords with BCrypt
 - [  ] Should alert user when CAPLOCK is on
 - [  ] Handle errors on both sides
 - [  ] Add spinning icon during network calls

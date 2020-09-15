@@ -41,9 +41,12 @@ exports.serverError = function (err, req, res, next) {
         return res.status(err.status).json({ message: err.message });
     }
     else if (err.code) {
+        console.log(err);
         switch (err.code) {
             case "23505":
                 return res.status(400).json({ message: "email already used" });
+            case "22004":
+                return res.status(404).json({ message: "no schedule found" });
             default:
                 return res.status(400).json({ message: err.detail });
         }

@@ -54,6 +54,13 @@ export class Controller {
       .route("/schedules/:scheduleId/weeks/:week")
       .get(this.verifyToken, catchAsync(this.scheduleService.getWeeklySchedule))
 
+    this.app
+      .route("/programmes/:programmeId/password")
+      .put(
+        this.verifyToken,
+        catchAsync(this.scheduleService.changeProgrammePassword)
+      )
+
     //instructor
     this.app
       .route("/instructor/login")

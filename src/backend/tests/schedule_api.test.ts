@@ -1,3 +1,5 @@
+import { compare } from "bcrypt"
+import { PoolClient } from "pg"
 import { api } from "./testHelper"
 import pool from "../database/pool"
 
@@ -6,7 +8,7 @@ const TEST_COOKIE =
   "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZWFybmVySWQiOjEsImlhdCI6MTU5OTgyNTY5OH0.vhbqD8U6ZsGZ_Ost5qgcM2QKGPf1N-VsTjrLw-ukVnc"
 
 describe("API Integration Tests - Schedule Service", () => {
-  describe.only("GET /programmes", () => {
+  describe("GET /programmes", () => {
     it("should return an array of object containing programmeName and Id", async () => {
       const expected = [
         { programmeName: "Youth and Junior", programmeId: 1 },
@@ -22,7 +24,7 @@ describe("API Integration Tests - Schedule Service", () => {
     })
   })
 
-  describe.only("GET /schedules/:scheduleId/weeks/:week", () => {
+  describe("GET /schedules/:scheduleId/weeks/:week", () => {
     it("should return an object with the name, programme, and schedule for the specified week", async () => {
       const result = await api
         .get("/schedules/6/weeks/2")
@@ -39,7 +41,7 @@ describe("API Integration Tests - Schedule Service", () => {
     })
   })
 
-  describe.only("GET /programmes/:programmeId/schedules", () => {
+  describe("GET /programmes/:programmeId/schedules", () => {
     it("should return all schedule names, week counts, and ids of a programme as an array of objects", async () => {
       const response = await api.get("/programmes/1/schedules")
       expect(response.status).toEqual(200)
@@ -72,8 +74,29 @@ describe("API Integration Tests - Schedule Service", () => {
     it("should create a new schedule", async () => {})
   })
 
-  describe("POST /programmes/:programmeId/password", () => {
-    it("should change the login password of a programme", async () => {})
+  describe.only("PUT /programmes/:programmeId/password", () => {
+    it("should change the login password of a programme", () => {
+      const payload = { newPassword: "new password", programmeId: 2 }
+      api
+        .put(`/programmes/${payload.programmeId}/password`)
+        .set("Cookie", [TEST_COOKIE])
+        .set("Content-Type", "application/json")
+        .send({ ...payload })
+        .expect(204)
+        .end((err, res) => {
+          if (err) throw err
+        })
+
+      // const client: PoolClient = await pool.connect()
+      // const { rows } = await client.query(
+      //   `SELECT "hashedPassword" FROM programme WHERE programmeId = 2`
+      // )
+      // const comparePasswordResult = await compare(
+      //   rows[0].hashedPassword,
+      //   payload.newPassword
+      // )
+      // expect(comparePasswordResult).toBe(true)
+    })
   })
 
   describe("POST /programmes/:programmeId/schedules/:scheduleId", () => {

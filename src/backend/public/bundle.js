@@ -11018,7 +11018,7 @@ const savePbs = ({ pbs, learnerId }) => {
     body: JSON.stringify(pbs),
   }
   //FIXME: need to find a way to retrieve learnerId or remove Id from this route
-  fetch(`${config.LOCAL_HOST}/learners/${learnerId}/pbs`, options)
+  fetch(`${config.API_ENTRY}/learners/${learnerId}/pbs`, options)
     .then((res) => {
       console.log("Saved Pbs to Server")
     })
@@ -11200,12 +11200,13 @@ const config = require("./config")
 //similar to App.js
 const schedule = (function () {
   //global state like Redux or component state like React...
+
   const store = getStore()
   const { scheduleId, week } = JSON.parse(
     sessionStorage.getItem("weeklySchedule")
   )
 
-  const dataURL = `${config.LOCAL_HOST}/schedules/${scheduleId}/weeks/${week}`
+  const dataURL = `${config.API_ENTRY}/schedules/${scheduleId}/weeks/${week}`
 
   function pbsSubmitHandler(e) {
     e.preventDefault()

@@ -58,10 +58,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LearnerService = void 0;
+var bcrypt_1 = require("bcrypt");
 var errorHandlers_1 = require("./../utils/errorHandlers");
 var jwtHelpers_1 = require("./../utils/jwtHelpers");
 var pool_1 = __importDefault(require("./pool"));
-var auth_1 = require("../utils/auth");
 var LearnerService = (function () {
     function LearnerService() {
     }
@@ -89,7 +89,7 @@ var LearnerService = (function () {
     };
     LearnerService.prototype.checkCredentials = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, email, password, params, statement, client, rows, _b, hashedPassword, learnerId, token;
+            var _a, email, password, params, statement, client, rows, _b, hashedPassword, learnerId, isValidPassword, token;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -107,15 +107,18 @@ var LearnerService = (function () {
                             throw new errorHandlers_1.httpError(401, "unknown email");
                         }
                         _b = rows[0], hashedPassword = _b.hashedPassword, learnerId = _b.learnerId;
-                        if (!auth_1.checkPassword(password, hashedPassword)) return [3, 4];
-                        return [4, jwtHelpers_1.makeToken({ learnerId: learnerId })];
+                        return [4, bcrypt_1.compare(password, hashedPassword)];
                     case 3:
+                        isValidPassword = _c.sent();
+                        if (!isValidPassword) return [3, 5];
+                        return [4, jwtHelpers_1.makeToken({ learnerId: learnerId })];
+                    case 4:
                         token = _c.sent();
                         req.body = __assign(__assign(__assign({}, req.body), rows[0]), { token: token });
                         next();
-                        return [3, 5];
-                    case 4: throw new errorHandlers_1.httpError(401, "wrong password");
-                    case 5: return [2, client.release()];
+                        return [3, 6];
+                    case 5: throw new errorHandlers_1.httpError(401, "wrong password");
+                    case 6: return [2, client.release()];
                 }
             });
         });
