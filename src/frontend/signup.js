@@ -6,8 +6,8 @@ const signup = (function () {
   const API_ENTRYPOINT = {
     PROD: "https://lifting-schedule.herokuapp.com/",
     DEV: "http://localhost:3000/",
-  } 
-  
+  }
+
   function makeLogo() {
     return ` <div class="logo-wrapper signup">
       <img
@@ -16,7 +16,7 @@ const signup = (function () {
         alt="New Zealand Olympic Weight-Lifting Logo"
       />
     </div>`
-  })
+  }
 
   function makeButton(customClassName, label) {
     return `<button type="submit" class="submit-btn ${customClassName}">${label}</button>`
