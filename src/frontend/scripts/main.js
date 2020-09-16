@@ -8,7 +8,6 @@ const {
   makeScheduleTable,
 } = require("./components/exerciseTable/exerciseTable")
 const { getStore, saveStore } = require("./utils")
-const config = require("./config")
 
 //similar to App.js
 const schedule = (function () {
@@ -19,7 +18,7 @@ const schedule = (function () {
     sessionStorage.getItem("weeklySchedule")
   )
 
-  const dataURL = `${config.LOCAL_HOST}/schedules/${scheduleId}/weeks/${week}`
+  const dataURL = `${config.URL}/schedules/${scheduleId}/weeks/${week}`
 
   function pbsSubmitHandler(e) {
     e.preventDefault()

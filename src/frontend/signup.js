@@ -3,11 +3,6 @@
 const signup = (function () {
   "use strict"
 
-  const API_ENTRYPOINT = {
-    PROD: "https://lifting-schedule.herokuapp.com",
-    DEV: "http://localhost:3000",
-  }
-
   function makeLogo() {
     return ` <div class="logo-wrapper signup">
       <img
@@ -192,7 +187,7 @@ const signup = (function () {
 
     spinner.show(true)
 
-    const url = `${API_ENTRYPOINT.DEV}/learners/signup`
+    const url = `${config.URL}/learners/signup`
     const fetchOptions = {
       method: "POST",
       mode: "cors",
@@ -216,7 +211,7 @@ const signup = (function () {
 
   function fetchProgrammes() {
     spinner.show(true)
-    const url = `${API_ENTRYPOINT.DEV}/programmes`
+    const url = `${config.URL}/programmes`
     const fetchOptions = {
       method: "GET",
       mode: "cors",

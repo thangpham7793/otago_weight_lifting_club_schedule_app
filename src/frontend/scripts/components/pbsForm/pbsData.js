@@ -1,5 +1,3 @@
-const config = require("../../config")
-
 const savePbs = ({ pbs, token }) => {
   spinner.show(true)
   console.log("Saving", JSON.stringify(pbs))
@@ -13,7 +11,7 @@ const savePbs = ({ pbs, token }) => {
     body: JSON.stringify(pbs),
   }
   //FIXME: need to find a way to retrieve learnerId or remove Id from this route
-  fetch(`${config.LOCAL_HOST}/learners/pbs`, options)
+  fetch(`${config.URL}/learners/pbs`, options)
     .then((res) => {
       console.log("Saved Pbs to Server")
       //reload page to recalculate pbs based on the updated info

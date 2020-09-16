@@ -10976,7 +10976,7 @@ function makeExerciseRows(exercises) {
 
 module.exports = { makeExerciseRows }
 
-},{"../../data":13,"../../utils":15,"./calculateRealWeight":2}],7:[function(require,module,exports){
+},{"../../data":12,"../../utils":14,"./calculateRealWeight":2}],7:[function(require,module,exports){
 const { makeTableHeader } = require("./makeTableHeader")
 const { makeExerciseRows } = require("./makeExerciseRows")
 
@@ -11004,8 +11004,6 @@ const { pbsForm } = require("./pbsForm")
 module.exports = { getPbs, savePbs, pbsForm }
 
 },{"./pbsData":10,"./pbsForm":11}],10:[function(require,module,exports){
-const config = require("../../config")
-
 const savePbs = ({ pbs, token }) => {
   spinner.show(true)
   console.log("Saving", JSON.stringify(pbs))
@@ -11019,7 +11017,7 @@ const savePbs = ({ pbs, token }) => {
     body: JSON.stringify(pbs),
   }
   //FIXME: need to find a way to retrieve learnerId or remove Id from this route
-  fetch(`${config.LOCAL_HOST}/learners/pbs`, options)
+  fetch(`${config.URL}/learners/pbs`, options)
     .then((res) => {
       console.log("Saved Pbs to Server")
       //reload page to recalculate pbs based on the updated info
@@ -11033,7 +11031,7 @@ const savePbs = ({ pbs, token }) => {
 
 module.exports = { savePbs }
 
-},{"../../config":12}],11:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 const { camelCaseToNormal } = require("../../utils")
 
 const inputField = ([key, value]) => {
@@ -11060,13 +11058,7 @@ const pbsForm = (pbs) => {
 
 module.exports = { pbsForm }
 
-},{"../../utils":15}],12:[function(require,module,exports){
-module.exports = {
-  API_ENTRY: "https://lifting-schedule.herokuapp.com",
-  LOCAL_HOST: "http://localhost:3000",
-}
-
-},{}],13:[function(require,module,exports){
+},{"../../utils":14}],12:[function(require,module,exports){
 //actual values
 //watch out for cases when some or all pbs are unavailable
 const pbs = {
@@ -11187,7 +11179,7 @@ const pbsToExercises = {
 
 module.exports = { pbs, pbsToExercises }
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 const $ = require("jquery")
 const { savePbs, pbsForm } = require("./components/pbsForm/pbs")
 const { fetchData } = require("./utils")
@@ -11198,7 +11190,6 @@ const {
   makeScheduleTable,
 } = require("./components/exerciseTable/exerciseTable")
 const { getStore, saveStore } = require("./utils")
-const config = require("./config")
 
 //similar to App.js
 const schedule = (function () {
@@ -11209,7 +11200,7 @@ const schedule = (function () {
     sessionStorage.getItem("weeklySchedule")
   )
 
-  const dataURL = `${config.LOCAL_HOST}/schedules/${scheduleId}/weeks/${week}`
+  const dataURL = `${config.URL}/schedules/${scheduleId}/weeks/${week}`
 
   function pbsSubmitHandler(e) {
     e.preventDefault()
@@ -11332,7 +11323,7 @@ const schedule = (function () {
 
 $(schedule.setup)
 
-},{"./components/exerciseTable/exerciseTable":3,"./components/pbsForm/pbs":9,"./config":12,"./utils":15,"jquery":1}],15:[function(require,module,exports){
+},{"./components/exerciseTable/exerciseTable":3,"./components/pbsForm/pbs":9,"./utils":14,"jquery":1}],14:[function(require,module,exports){
 const $ = require("jquery")
 
 function fetchData(url, token, successHandler, errorHandler) {
@@ -11410,4 +11401,4 @@ module.exports = {
   saveStore,
 }
 
-},{"jquery":1}]},{},[14]);
+},{"jquery":1}]},{},[13]);
