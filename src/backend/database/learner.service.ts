@@ -91,7 +91,7 @@ export class LearnerService {
     }
     const params = [
       ...Object.values(newPbs),
-      token.learnerId,
+      token.data.learnerId,
     ].map((ele: string) => parseFloat(ele))
     const statement = `
     UPDATE learner SET

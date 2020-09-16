@@ -11006,7 +11006,7 @@ module.exports = { getPbs, savePbs, pbsForm }
 },{"./pbsData":10,"./pbsForm":11}],10:[function(require,module,exports){
 const savePbs = ({ pbs, token }) => {
   spinner.show(true)
-  console.log("Saving", JSON.stringify(pbs))
+  console.log("Saving", JSON.stringify({ newPbs: pbs }))
   const options = {
     method: "PUT",
     mode: "cors",
@@ -11014,7 +11014,7 @@ const savePbs = ({ pbs, token }) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(pbs),
+    body: JSON.stringify({ newPbs: pbs }),
   }
   //FIXME: need to find a way to retrieve learnerId or remove Id from this route
   fetch(`${config.URL}/learners/pbs`, options)

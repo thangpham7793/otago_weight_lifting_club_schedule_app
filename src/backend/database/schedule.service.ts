@@ -22,7 +22,6 @@ export class ScheduleService {
   async getAllSchedules(req: Request, res: Response) {
     const client: PoolClient = await pool.connect()
     const {
-      learnerId,
       programmeId,
       programmeName,
       token,
@@ -80,7 +79,6 @@ export class ScheduleService {
     // )
     //send back pbs, token and programmeInfo
     res.status(200).send({ pbs, schedules, token })
-
     return client.release()
   }
 

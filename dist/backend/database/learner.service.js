@@ -161,7 +161,7 @@ var LearnerService = (function () {
                             throw new errorHandlers_1.httpError(400, "Missing new personal bests to update!");
                         }
                         params = __spreadArrays(Object.values(newPbs), [
-                            token.learnerId,
+                            token.data.learnerId,
                         ]).map(function (ele) { return parseFloat(ele); });
                         statement = "\n    UPDATE learner SET\n    snatch = $1,\n    clean = $2,\n    jerk = $3,\n    \"cleanAndJerk\" = $4,\n    \"backSquat\" = $5,\n    \"frontSquat\" = $6,\n    \"pushPress\" = $7\n    WHERE \"learnerId\" = $8;\n    ";
                         console.log(params);

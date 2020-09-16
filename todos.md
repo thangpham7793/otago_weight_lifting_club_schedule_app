@@ -17,14 +17,10 @@
 - [ x ] Are there multiple existing schedules for a programme? Yes
 
 ### Tickets
-- [  ] deploy as a separate app to test on Heroku
-- [  ] rewrite routes to avoid including user credentials in the url
-- [  ] rewrite fetch requests on client side to user Bearer Auth Header
-- [  ] Need to switch to bearer authorization scheme to avoid TypeError with fetch requests
-- [  ] Encrypt programmes' passwords with BCrypt
+
+- [  ] fix 400 error can't update pbs when deployed
 - [  ] Should alert user when CAPLOCK is on
 - [  ] Handle errors on both sides
-- [  ] Add spinning icon during network calls
 - [  ] Refactor client-side scripts
 - [  ] Create store procedures for each service
 - [  ] Use a framework to make instructor's UI (React/Vue)
@@ -33,6 +29,12 @@
 - [  ] Refactor schedule services to instructor/learner routes
 - [  ] Replace JQuery with native functions
 
+- [ x ] Add spinning icon during network calls
+- [ x ] rewrite fetch requests on client side to user Bearer Auth Header
+- [ x ] Need to switch to bearer authorization scheme to avoid TypeError with fetch requests
+- [ x ] Encrypt programmes' passwords with BCrypt
+- [ x ] rewrite routes to avoid including user credentials in the url
+- [ x ] deploy as a separate app to test on Heroku
 - [ x ] does FetchRequest error out on new page load cause pbs to not be saved on mobile ? https://bugzilla.mozilla.org/show_bug.cgi?id=1280189
 - [ x ] Added input validation on client side
 - [ x ] User can stil sign up with the same email
