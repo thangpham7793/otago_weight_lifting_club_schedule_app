@@ -2,11 +2,11 @@ import { hash } from "bcrypt"
 
 import { Request, Response } from "express"
 import { PoolClient } from "pg"
-import pool from "./pool"
+import { pool } from "./pool"
 
 export class ScheduleService {
   async getAllProgrammes(req: Request, res: Response) {
-    const statement = `SELECT "programmeName", "programmeId" FROM programme;`
+    const statement = `SELECT "programmeName", "programmeId", "scheduleIds" FROM programme;`
     const client: PoolClient = await pool.connect()
     const { rows } = await client.query(statement)
 
@@ -14,7 +14,7 @@ export class ScheduleService {
       res.status(404).json({ message: "no programme found" })
     } else {
       //return array of object with programmeName and Id
-      res.status(200).json(rows)
+      res.status(200).json({ rows, token: req.body.token })
     }
     return client.release()
   }

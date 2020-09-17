@@ -1,3 +1,4 @@
+import { InstructorRouter } from "./../routers/register"
 import { Application, Request, Response } from "express"
 import {
   catchAsync,
@@ -10,10 +11,12 @@ export class Controller {
   private scheduleService: ScheduleService
   private learnerService: LearnerService
   private extractHeaderAuthToken: typeof extractHeaderAuthToken
+  private instructorRouter: InstructorRouter
 
   constructor(private app: Application) {
     this.scheduleService = new ScheduleService()
     this.learnerService = new LearnerService()
+    this.instructorRouter = new InstructorRouter(app)
     this.extractHeaderAuthToken = extractHeaderAuthToken
     this.routes()
   }
@@ -77,12 +80,9 @@ export class Controller {
         catchAsync(this.scheduleService.changeProgrammePassword)
       )
 
-    //instructor
-    this.app
-      .route("/instructor/login")
-      .post(
-        catchAsync(this.extractHeaderAuthToken),
-        catchAsync(this.scheduleService.getAllProgrammes)
-      )
+    // //instructor
+    // this.app
+    //   .route("/instructor/login")
+    //   .post(catchAsync(this.scheduleService.getAllProgrammes))
   }
 }

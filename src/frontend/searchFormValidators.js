@@ -1,4 +1,6 @@
 const searchFormValidators = (function () {
+  "use strict"
+
   function isEmail(email) {
     const pattern = /^([\w_-]+|[\w_-]+(.[\w_-]+)+?)@([\w_-]+|[\w_-]+(.[\w_-]+)+?)$/
     return pattern.test(email)

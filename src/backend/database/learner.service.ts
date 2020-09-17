@@ -3,7 +3,7 @@ import { httpError } from "./../utils/errorHandlers"
 import { makeToken } from "./../utils/jwtHelpers"
 import { Request, Response, NextFunction } from "express"
 import { PoolClient } from "pg"
-import pool from "./pool"
+import { pool } from "./pool"
 
 export class LearnerService {
   async createLearner(req: Request, res: Response, next: NextFunction) {
