@@ -1,6 +1,3 @@
-import pool from "./pool"
-import { Pool, PoolClient } from "pg"
-
 const schedules = {
   programme: "Youth and Junior",
   name: "September 2020 Strength",
@@ -487,33 +484,3 @@ const schedules = {
     },
   },
 }
-
-const testConn = async (pool: Pool) => {
-  let client: PoolClient
-
-  try {
-    client = await pool.connect()
-    console.log("Connected successfully!")
-
-    const { name, schedule } = schedules
-    const scheduleArr = Object.values(schedule)
-    // const {
-    //   rows,
-    // } = await client.query(
-    //   `INSERT INTO schedule ("scheduleName", "weekCount", timetable) VALUES ($1, $2, $3) RETURNING timetable`,
-    //   [name, scheduleArr.length, scheduleArr]
-    // )
-
-    const { rows } = await client.query(
-      'SELECT timetable[3] FROM schedule WHERE "scheduleId" = 6;'
-    )
-    //don't have to parse here, just send to client and they can parse it there
-    console.log(JSON.parse(rows[0].timetable))
-    await client.release()
-    await pool.end()
-  } catch (error) {
-    console.log("Something went wrong!", error)
-  }
-}
-
-testConn(pool)

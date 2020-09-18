@@ -1,17 +1,18 @@
-import { catchAsync } from "./../utils/register"
+import { catchAsync, extractHeaderAuthToken } from "./../utils/register"
 import { InstructorService, ScheduleService } from "./../database/register"
 import { Router, Application } from "express"
-import { nextTick } from "process"
 
 export class InstructorRouter {
   private instructorRouter: Router
   private instructorService: InstructorService
   private scheduleService: ScheduleService
+  private extractHeaderAuthToken: typeof extractHeaderAuthToken
 
   constructor(private app: Application) {
     this.instructorService = new InstructorService()
     this.scheduleService = new ScheduleService()
     this.instructorRouter = Router()
+    this.extractHeaderAuthToken = extractHeaderAuthToken
     this.addRoutes(this.instructorRouter)
     this.app.use("/instructor", this.instructorRouter)
   }
@@ -25,10 +26,7 @@ export class InstructorRouter {
 
     instructorRouter.post(
       "/password",
-      (req, res, next) => {
-        console.log(`I'm working!`, req.body)
-        next()
-      },
+      catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.instructorService.changeInstructorPassword)
     )
   }

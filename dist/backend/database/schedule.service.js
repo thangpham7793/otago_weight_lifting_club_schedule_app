@@ -46,13 +46,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleService = void 0;
 var bcrypt_1 = require("bcrypt");
-var pool_1 = __importDefault(require("./pool"));
+var pool_1 = require("./pool");
 var ScheduleService = (function () {
     function ScheduleService() {
     }
@@ -62,8 +59,8 @@ var ScheduleService = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        statement = "SELECT \"programmeName\", \"programmeId\" FROM programme;";
-                        return [4, pool_1.default.connect()];
+                        statement = "SELECT \"programmeName\", \"programmeId\", \"scheduleIds\" FROM programme;";
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _a.sent();
                         return [4, client.query(statement)];
@@ -73,7 +70,7 @@ var ScheduleService = (function () {
                             res.status(404).json({ message: "no programme found" });
                         }
                         else {
-                            res.status(200).json(rows);
+                            res.status(200).json({ programmes: rows, token: req.body.token });
                         }
                         return [2, client.release()];
                 }
@@ -85,7 +82,7 @@ var ScheduleService = (function () {
             var client, _a, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4, pool_1.default.connect()];
+                    case 0: return [4, pool_1.pool.connect()];
                     case 1:
                         client = _b.sent();
                         _a = req.body, programmeId = _a.programmeId, programmeName = _a.programmeName, token = _a.token, snatch = _a.snatch, clean = _a.clean, jerk = _a.jerk, cleanAndJerk = _a.cleanAndJerk, backSquat = _a.backSquat, frontSquat = _a.frontSquat, pushPress = _a.pushPress;
@@ -128,7 +125,7 @@ var ScheduleService = (function () {
                         _a = req.params, scheduleId = _a.scheduleId, week = _a.week;
                         params = [scheduleId, week].map(function (ele) { return parseInt(ele); });
                         statement = "\n    SELECT timetable[$2] as week_" + week + " FROM schedule WHERE \"scheduleId\" = $1;";
-                        return [4, pool_1.default.connect()];
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _b.sent();
                         return [4, client.query(statement, params)];
@@ -156,7 +153,7 @@ var ScheduleService = (function () {
                         hashedPassword = _a.sent();
                         params = [hashedPassword, programmeId];
                         statement = "\n      UPDATE programme \n      SET \"hashedPassword\" = $1 \n      WHERE \"programmeId\" = $2";
-                        return [4, pool_1.default.connect()];
+                        return [4, pool_1.pool.connect()];
                     case 2:
                         client = _a.sent();
                         return [4, client.query(statement, params)];
@@ -171,7 +168,7 @@ var ScheduleService = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, pool_1.default.end()];
+                    case 0: return [4, pool_1.pool.end()];
                     case 1:
                         _a.sent();
                         return [2];

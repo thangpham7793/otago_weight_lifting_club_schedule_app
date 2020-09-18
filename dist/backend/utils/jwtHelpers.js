@@ -86,7 +86,6 @@ exports.verifyToken = function (req, res, next) { return __awaiter(void 0, void 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                next();
                 console.log("Verifying JWT");
                 token = req.cookies["jwt"];
                 _a.label = 1;

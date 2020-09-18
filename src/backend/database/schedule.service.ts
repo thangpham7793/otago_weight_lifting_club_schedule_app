@@ -14,7 +14,7 @@ export class ScheduleService {
       res.status(404).json({ message: "no programme found" })
     } else {
       //return array of object with programmeName and Id
-      res.status(200).json({ rows, token: req.body.token })
+      res.status(200).json({ programmes: rows, token: req.body.token })
     }
     return client.release()
   }

@@ -42,6 +42,7 @@ export class InstructorService {
     const hashedPassword = await hash(newPassword, 10)
     console.log("Received", req.body)
     const params = [hashedPassword, email]
+    console.log("Sending", params)
     const statement = `
       UPDATE instructor 
       SET "hashedPassword" = $1 
@@ -50,6 +51,6 @@ export class InstructorService {
     const client: PoolClient = await pool.connect()
     await client.query(statement, params)
 
-    return res.status(204)
+    return res.status(204).send()
   }
 }

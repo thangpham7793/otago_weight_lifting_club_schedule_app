@@ -22,7 +22,32 @@ UPDATE programme SET "scheduleIds" = array_cat("scheduleIds", ARRAY[2,3]) WHERE 
 -- remove one ele
 UPDATE programme SET "scheduleIds" = ARRAY_REMOVE("scheduleIds", 6) WHERE "programmeId" = 1;
 
+-- this can take care of updating as well!
+CREATE TABLE programme_schedule (
+  "programmeId" INT NOT NULL REFERENCES programme("programmeId") ON DELETE CASCADE, 
+  "scheduleId" INT NOT NULL REFERENCES schedule("scheduleId") ON DELETE CASCADE, 
+  PRIMARY KEY("scheduleId", "programmeId")
+);
 
+-- To publish a schedule to a certain programme
+INSERT INTO programme_schedule
+VALUES (@programmeId, @scheduleId);
+
+-- To unpublish a schedule from a certain programme
+DELETE FROM programme_schedule
+WHERE @scheduleId = ... AND @programmeId = ...;
+
+-- 11
+
+-- To get all schedules belonging to a programme
+-- only get timetable when he actually needs to open it 
+SELECT s."scheduleName", s."scheduleId", s."weekCount" 
+FROM schedule s
+JOIN programme_schedule ps
+ON s."scheduleId" = ps."scheduleId"
+WHERE ps."programmeId" = 1;
+
+-- 9 + 10
 -- need to also delete the id from the programme
 CREATE TABLE schedule (
   "scheduleId" SERIAL PRIMARY KEY,

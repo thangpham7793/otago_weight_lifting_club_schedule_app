@@ -53,15 +53,12 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LearnerService = void 0;
 var bcrypt_1 = require("bcrypt");
 var errorHandlers_1 = require("./../utils/errorHandlers");
 var jwtHelpers_1 = require("./../utils/jwtHelpers");
-var pool_1 = __importDefault(require("./pool"));
+var pool_1 = require("./pool");
 var LearnerService = (function () {
     function LearnerService() {
     }
@@ -75,7 +72,7 @@ var LearnerService = (function () {
                         statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\")\n    VALUES ($1, $2, $3, $4) RETURNING \"firstName\", \"lastName\", \"email\", \"programmeId\"";
                         params = Object.values(newLearnerInfo);
                         console.log(params);
-                        return [4, pool_1.default.connect()];
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _a.sent();
                         return [4, client.query(statement, params)];
@@ -97,7 +94,7 @@ var LearnerService = (function () {
                         console.log(email, password);
                         params = [email];
                         statement = "    \n      SELECT \n      p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n      l.\"learnerId\", l.snatch, l.clean, l.jerk, \n      l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n      FROM learner l\n      JOIN programme p \n      USING (\"programmeId\")\n      WHERE email = $1;";
-                        return [4, pool_1.default.connect()];
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _c.sent();
                         return [4, client.query(statement, params)];
@@ -133,7 +130,7 @@ var LearnerService = (function () {
                         console.log("Receiving credentials from Auth Header as " + learnerId);
                         params = [learnerId];
                         statement = "\n    SELECT\n    snatch,\n    clean,\n    jerk,\n    \"cleanAndJerk\",\n    \"backSquat\",\n    \"frontSquat\",\n    \"pushPress\" \n    FROM learner\n    WHERE \"learnerId\" = $1;\n    ";
-                        return [4, pool_1.default.connect()];
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _a.sent();
                         return [4, client.query(statement, params)];
@@ -165,7 +162,7 @@ var LearnerService = (function () {
                         ]).map(function (ele) { return parseFloat(ele); });
                         statement = "\n    UPDATE learner SET\n    snatch = $1,\n    clean = $2,\n    jerk = $3,\n    \"cleanAndJerk\" = $4,\n    \"backSquat\" = $5,\n    \"frontSquat\" = $6,\n    \"pushPress\" = $7\n    WHERE \"learnerId\" = $8;\n    ";
                         console.log(params);
-                        return [4, pool_1.default.connect()];
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _b.sent();
                         return [4, client.query(statement, params)];

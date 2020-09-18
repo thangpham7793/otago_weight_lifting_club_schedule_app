@@ -28,7 +28,6 @@ export const verifyToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  next()
   //disable cookie check for now (problem on mobile)
   console.log("Verifying JWT")
   const token = req.cookies["jwt"]
