@@ -34,7 +34,17 @@ class App {
     this.app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }))
 
     //Enables cors
-    this.app.use(cors())
+    this.app.use(cors({ credentials: true, origin: "*" }))
+
+    this.app.use(function (req, res, next) {
+      res.header("Access-Control-Allow-Origin", "*")
+      res.header("Access-Control-Allow-Methods", "DELETE, PUT, GET, POST")
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+      )
+      next()
+    })
 
     //Enables logging
     this.app.use(
