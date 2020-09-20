@@ -66,6 +66,28 @@ function saveStore(payload) {
   sessionStorage.setItem("payload", JSON.stringify(payload))
 }
 
+const spinner = (function () {
+  function show(status) {
+    if (status === true) {
+      console.log("Show spinner now!")
+      document.querySelector("#spinner").style.display = "block"
+    } else {
+      document.querySelector("#spinner").style.display = "none"
+      console.log("Hide spinner")
+    }
+  }
+  return { show }
+})()
+
+const config = (function () {
+  "use strict"
+
+  const PROD = "https://lifting-schedule-v2.herokuapp.com"
+  const DEV = "http://localhost:3000"
+
+  return { URL: location.href.split(".").includes("herokuapp") ? PROD : DEV }
+})()
+
 module.exports = {
   appendContent,
   fetchData,
@@ -73,4 +95,6 @@ module.exports = {
   isMatched,
   getStore,
   saveStore,
+  spinner,
+  config,
 }

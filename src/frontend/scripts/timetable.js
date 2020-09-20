@@ -7,7 +7,7 @@ const {
   makeDropDownOptions,
   makeScheduleTable,
 } = require("./components/exerciseTable/exerciseTable")
-const { getStore, saveStore } = require("./utils")
+const { getStore, saveStore, spinner, config } = require("./utils")
 
 //similar to App.js
 const schedule = (function () {

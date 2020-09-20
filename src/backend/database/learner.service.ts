@@ -84,8 +84,8 @@ export class LearnerService {
   }
 
   async updatePbs(req: Request, res: Response, next: NextFunction) {
-    console.log("Received", req.body)
     const { token, newPbs } = req.body
+    console.log("Received", token, newPbs)
     if (!newPbs) {
       throw new httpError(400, "Missing new personal bests to update!")
     }

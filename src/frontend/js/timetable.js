@@ -11004,6 +11004,8 @@ const { pbsForm } = require("./pbsForm")
 module.exports = { getPbs, savePbs, pbsForm }
 
 },{"./pbsData":10,"./pbsForm":11}],10:[function(require,module,exports){
+const { spinner, config } = require("../../utils")
+
 const savePbs = ({ pbs, token }) => {
   spinner.show(true)
   console.log("Saving", JSON.stringify({ newPbs: pbs }))
@@ -11031,7 +11033,7 @@ const savePbs = ({ pbs, token }) => {
 
 module.exports = { savePbs }
 
-},{}],11:[function(require,module,exports){
+},{"../../utils":14}],11:[function(require,module,exports){
 const { camelCaseToNormal } = require("../../utils")
 
 const inputField = ([key, value]) => {
@@ -11189,7 +11191,7 @@ const {
   makeDropDownOptions,
   makeScheduleTable,
 } = require("./components/exerciseTable/exerciseTable")
-const { getStore, saveStore } = require("./utils")
+const { getStore, saveStore, spinner, config } = require("./utils")
 
 //similar to App.js
 const schedule = (function () {
@@ -11392,6 +11394,28 @@ function saveStore(payload) {
   sessionStorage.setItem("payload", JSON.stringify(payload))
 }
 
+const spinner = (function () {
+  function show(status) {
+    if (status === true) {
+      console.log("Show spinner now!")
+      document.querySelector("#spinner").style.display = "block"
+    } else {
+      document.querySelector("#spinner").style.display = "none"
+      console.log("Hide spinner")
+    }
+  }
+  return { show }
+})()
+
+const config = (function () {
+  "use strict"
+
+  const PROD = "https://lifting-schedule-v2.herokuapp.com"
+  const DEV = "http://localhost:3000"
+
+  return { URL: location.href.split(".").includes("herokuapp") ? PROD : DEV }
+})()
+
 module.exports = {
   appendContent,
   fetchData,
@@ -11399,6 +11423,8 @@ module.exports = {
   isMatched,
   getStore,
   saveStore,
+  spinner,
+  config,
 }
 
 },{"jquery":1}]},{},[13]);

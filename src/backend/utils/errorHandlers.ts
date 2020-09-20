@@ -43,7 +43,7 @@ export const extractHeaderAuthToken = async (
       )
 
       console.log(`The decoded token is ${JSON.stringify(token)}`)
-      //req.body = { ...req.body, token }
+      req.body = { ...req.body, token }
       next()
     } catch (error) {
       console.error(error)

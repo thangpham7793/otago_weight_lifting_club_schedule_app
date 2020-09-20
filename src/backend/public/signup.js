@@ -1,5 +1,27 @@
 //https://stackoverflow.com/questions/40484355/browserify-multiple-files-into-a-single-bundle (does it work if each script works on different page?)
 
+const config = (function () {
+  "use strict"
+
+  const PROD = "https://lifting-schedule-v2.herokuapp.com"
+  const DEV = "http://localhost:3000"
+
+  return { URL: location.href.split(".").includes("herokuapp") ? PROD : DEV }
+})()
+
+const spinner = (function () {
+  function show(status) {
+    if (status === true) {
+      console.log("Show spinner now!")
+      document.querySelector("#spinner").style.display = "block"
+    } else {
+      document.querySelector("#spinner").style.display = "none"
+      console.log("Hide spinner")
+    }
+  }
+  return { show }
+})()
+
 const signup = (function () {
   "use strict"
 
