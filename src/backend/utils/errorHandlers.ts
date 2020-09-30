@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken"
 import path from "path"
 import { config } from "dotenv"
 import { NextFunction, Request, RequestHandler, Response } from "express"
@@ -26,34 +25,6 @@ export class httpError extends Error {
 
 config({ path: path.resolve(__dirname, "../.env") })
 
-export const extractHeaderAuthToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  console.log(`Receiving Auth Header as ${req.headers.authorization}`)
-
-  const bearerToken = req.headers.authorization
-
-  if (bearerToken && bearerToken.toLowerCase().startsWith("bearer ")) {
-    try {
-      const token = await jwt.verify(
-        bearerToken.substring(7),
-        process.env.SECRET
-      )
-
-      console.log(`The decoded token is ${JSON.stringify(token)}`)
-      req.body = { ...req.body, token }
-      next()
-    } catch (error) {
-      console.error(error)
-      throw new httpError(500, `Error decoding verifying jwt token ${error}`)
-    }
-  } else {
-    return res.status(401).json({ message: "Invalid or missing credentials!" })
-  }
-}
-
 export const unknownEndpoint = (
   req: Request,
   res: Response,
@@ -63,12 +34,11 @@ export const unknownEndpoint = (
 }
 
 export const serverError = (
-  err: httpError, //need to make a custom error handling class
+  err: httpError,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  //console.log(err)
   //handle custom errors
   if (err.status) {
     return res.status(err.status).json({ message: err.message })

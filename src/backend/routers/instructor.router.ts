@@ -1,16 +1,16 @@
 import { catchAsync, extractHeaderAuthToken } from "./../utils/register"
-import { InstructorService, ScheduleService } from "./../database/register"
+import { InstructorService, ProgrammeService } from "./../database/register"
 import { Router, Application } from "express"
 
 export class InstructorRouter {
   private instructorRouter: Router
   private instructorService: InstructorService
-  private scheduleService: ScheduleService
+  private scheduleService: ProgrammeService
   private extractHeaderAuthToken: typeof extractHeaderAuthToken
 
   constructor(private app: Application) {
     this.instructorService = new InstructorService()
-    this.scheduleService = new ScheduleService()
+    this.scheduleService = new ProgrammeService()
     this.instructorRouter = Router()
     this.extractHeaderAuthToken = extractHeaderAuthToken
     this.addRoutes(this.instructorRouter)

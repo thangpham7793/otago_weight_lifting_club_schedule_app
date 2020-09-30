@@ -1,10 +1,9 @@
 import { hash } from "bcrypt"
-
 import { Request, Response } from "express"
 import { PoolClient } from "pg"
 import { pool } from "./pool"
 
-export class ScheduleService {
+export class ProgrammeService {
   async getAllProgrammes(req: Request, res: Response) {
     const statement = `SELECT "programmeName", "programmeId", "scheduleIds" FROM programme;`
     const client: PoolClient = await pool.connect()
@@ -66,17 +65,6 @@ export class ScheduleService {
       return { ...schedule, programmeName }
     })
 
-    // //add token to cookie
-    // res.cookie("jwt", token, {
-    //   expires: new Date(Number(new Date()) + 315360000000),
-    //   httpOnly: true,
-    // })
-
-    // console.log(
-    //   `Sending ${token} ${JSON.stringify(schedules)} ${JSON.stringify(
-    //     pbs
-    //   )} to client!`
-    // )
     //send back pbs, token and programmeInfo
     res.status(200).send({ pbs, schedules, token })
     return client.release()
@@ -84,7 +72,9 @@ export class ScheduleService {
 
   async getWeeklySchedule(req: Request, res: Response) {
     const { scheduleId, week } = req.params
-    //console.log(programmeId, scheduleId, week)
+
+    console.log(scheduleId, week)
+
     const params = [scheduleId, week].map((ele) => parseInt(ele))
     const statement = `
     SELECT timetable[$2] as week_${week} FROM schedule WHERE "scheduleId" = $1;`

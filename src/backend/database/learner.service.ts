@@ -1,13 +1,19 @@
 import { compare } from "bcrypt"
-import { httpError } from "./../utils/errorHandlers"
-import { makeToken } from "./../utils/jwtHelpers"
+import { httpError, makeToken } from "./../utils/register"
 import { Request, Response, NextFunction } from "express"
+
+//using connection pool to support concurrent connection (caching conns)
 import { PoolClient } from "pg"
 import { pool } from "./pool"
 
 export class LearnerService {
+  redirectToSignupPage(req: Request, res: Response) {
+    res.redirect("../signup.html")
+  }
+
   async createLearner(req: Request, res: Response, next: NextFunction) {
     const newLearnerInfo = req.body
+    console.log(req.body)
     const statement = `
     INSERT INTO learner ("firstName", "lastName", "email", "programmeId")
     VALUES ($1, $2, $3, $4) RETURNING "firstName", "lastName", "email", "programmeId"`
@@ -58,7 +64,7 @@ export class LearnerService {
   }
 
   async getPbs(req: Request, res: Response, next: NextFunction) {
-    const { learnerId } = req.body.token
+    const { learnerId } = req.body.token.data
     console.log(`Receiving credentials from Auth Header as ${learnerId}`)
     const params = [learnerId]
     const statement = `
@@ -85,14 +91,20 @@ export class LearnerService {
 
   async updatePbs(req: Request, res: Response, next: NextFunction) {
     const { token, newPbs } = req.body
+
     console.log("Received", token, newPbs)
+
     if (!newPbs) {
       throw new httpError(400, "Missing new personal bests to update!")
     }
+
     const params = [
       ...Object.values(newPbs),
       token.data.learnerId,
     ].map((ele: string) => parseFloat(ele))
+
+    console.log(params)
+
     const statement = `
     UPDATE learner SET
     snatch = $1,
@@ -104,7 +116,6 @@ export class LearnerService {
     "pushPress" = $7
     WHERE "learnerId" = $8;
     `
-    console.log(params)
     const client: PoolClient = await pool.connect()
     await client.query(statement, params)
     res.status(204).send()

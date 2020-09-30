@@ -8,7 +8,7 @@ var InstructorRouter = (function () {
     function InstructorRouter(app) {
         this.app = app;
         this.instructorService = new register_2.InstructorService();
-        this.scheduleService = new register_2.ScheduleService();
+        this.scheduleService = new register_2.ProgrammeService();
         this.instructorRouter = express_1.Router();
         this.extractHeaderAuthToken = register_1.extractHeaderAuthToken;
         this.addRoutes(this.instructorRouter);

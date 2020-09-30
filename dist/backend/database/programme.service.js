@@ -47,13 +47,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScheduleService = void 0;
+exports.ProgrammeService = void 0;
 var bcrypt_1 = require("bcrypt");
 var pool_1 = require("./pool");
-var ScheduleService = (function () {
-    function ScheduleService() {
+var ProgrammeService = (function () {
+    function ProgrammeService() {
     }
-    ScheduleService.prototype.getAllProgrammes = function (req, res) {
+    ProgrammeService.prototype.getAllProgrammes = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var statement, client, rows;
             return __generator(this, function (_a) {
@@ -77,7 +77,7 @@ var ScheduleService = (function () {
             });
         });
     };
-    ScheduleService.prototype.getAllSchedules = function (req, res) {
+    ProgrammeService.prototype.getAllSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var client, _a, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules;
             return __generator(this, function (_b) {
@@ -116,7 +116,7 @@ var ScheduleService = (function () {
             });
         });
     };
-    ScheduleService.prototype.getWeeklySchedule = function (req, res) {
+    ProgrammeService.prototype.getWeeklySchedule = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, scheduleId, week, params, statement, client, result;
             return __generator(this, function (_b) {
@@ -141,7 +141,7 @@ var ScheduleService = (function () {
             });
         });
     };
-    ScheduleService.prototype.changeProgrammePassword = function (req, res) {
+    ProgrammeService.prototype.changeProgrammePassword = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var newPassword, programmeId, hashedPassword, params, statement, client;
             return __generator(this, function (_a) {
@@ -165,7 +165,7 @@ var ScheduleService = (function () {
             });
         });
     };
-    ScheduleService.prototype.endPool = function () {
+    ProgrammeService.prototype.endPool = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -177,6 +177,6 @@ var ScheduleService = (function () {
             });
         });
     };
-    return ScheduleService;
+    return ProgrammeService;
 }());
-exports.ScheduleService = ScheduleService;
+exports.ProgrammeService = ProgrammeService;

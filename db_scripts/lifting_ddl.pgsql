@@ -94,3 +94,4 @@ INSERT INTO learner ("firstName", "lastName", email, "programmeId") VALUES ('Tha
 
 
 
+SELECT timetable[1] as week_5 FROM schedule WHERE "scheduleId" = 6;

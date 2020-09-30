@@ -11193,6 +11193,15 @@ const {
 } = require("./components/exerciseTable/exerciseTable")
 const { getStore, saveStore, spinner, config } = require("./utils")
 
+// const config = (function () {
+//   "use strict"
+
+//   const PROD = "https://lifting-schedule-v2.herokuapp.com"
+//   const DEV = "http://localhost:3000"
+
+//   return { URL: location.href.split(".").includes("herokuapp") ? PROD : DEV }
+// })()
+
 //similar to App.js
 const schedule = (function () {
   //global state like Redux or component state like React...
@@ -11202,7 +11211,7 @@ const schedule = (function () {
     sessionStorage.getItem("weeklySchedule")
   )
 
-  const dataURL = `${config.URL}/programmes/schedules/${scheduleId}/weeks/${week}`
+  const dataURL = `${config.URL}/schedules/${scheduleId}/weeks/${week}`
 
   function pbsSubmitHandler(e) {
     e.preventDefault()

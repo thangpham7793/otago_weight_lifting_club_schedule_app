@@ -18,7 +18,7 @@ const schedule = (function () {
     sessionStorage.getItem("weeklySchedule")
   )
 
-  const dataURL = `${config.URL}/schedules/${scheduleId}/weeks/${week}`
+  const dataURL = `${config.URL}/programmes/schedules/${scheduleId}/weeks/${week}`
 
   function pbsSubmitHandler(e) {
     e.preventDefault()

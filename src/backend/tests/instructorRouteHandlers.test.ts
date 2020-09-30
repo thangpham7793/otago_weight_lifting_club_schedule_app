@@ -1,14 +1,11 @@
 import { api } from "./testHelper"
 import { pool } from "../database/register"
-
-const TEST_TOKEN = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDI4ODY2NzQsImRhdGEiOnsiaW5zdHJ1Y3RvcklkIjoxfSwiaWF0IjoxNjAwNDY3NDc3fQ.pgIZk4FLVH3-LAT3GM8XnSEmJ0y31fXb5DiuPkjT0rk`
+import { appConfig } from "../utils/register"
 
 describe("API Integration Tests - Instructor Service", () => {
   describe("POST /instructor/login", () => {
     it("should return all programmeIds, programmeNames, and scheduleIds when credentials are correct", async () => {
-      const result = await api
-        .post("/instructor/login")
-        .send({ email: "callanhelms@gmail.com", password: "admin" })
+      //SECTION: ARRANGE
       const expected = [
         {
           programmeId: 1,
@@ -16,15 +13,21 @@ describe("API Integration Tests - Instructor Service", () => {
           scheduleIds: [6],
         },
       ]
-      console.log(result.body.token)
+
+      //SECTION: ACT
+      const result = await api
+        .post("/instructor/login")
+        .send({ email: "callanhelms@gmail.com", password: "admin" })
+
+      //SECTION: ASSERT
       expect(result.body).toHaveProperty("token")
       expect(result.body).toHaveProperty("programmes")
       expect(result.body.programmes).toEqual(expected)
     })
   })
   //this should get receive token
-  describe.only("POST instructor/password", () => {
-    it("should update the instructor password after hashing", async () => {
+  describe("POST instructor/password", () => {
+    it("should update the instructor password after hashing", () => {
       return api
         .post("/instructor/password")
         .send({
@@ -32,9 +35,9 @@ describe("API Integration Tests - Instructor Service", () => {
           email: "callanhelms@gmail.com",
         })
         .set("Content-Type", "application/json")
-        .set("Authorization", `Bearer ${TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
         .expect(204)
-        .then((res) => console.log(res))
+        .then(() => {})
         .catch((err) => console.error(err))
     })
   })

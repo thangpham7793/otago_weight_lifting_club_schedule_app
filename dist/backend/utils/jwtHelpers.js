@@ -51,7 +51,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyToken = exports.makeToken = void 0;
-var errorHandlers_1 = require("./errorHandlers");
+var register_1 = require("./register");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var path_1 = __importDefault(require("path"));
 var dotenv_1 = require("dotenv");
@@ -76,7 +76,7 @@ exports.makeToken = function (userId) { return __awaiter(void 0, void 0, void 0,
                 return [2, token];
             case 3:
                 error_1 = _a.sent();
-                throw new errorHandlers_1.httpError(500, "Error signing token " + error_1);
+                throw new register_1.httpError(500, "Error signing token " + error_1);
             case 4: return [2];
         }
     });
