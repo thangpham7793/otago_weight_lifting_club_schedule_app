@@ -16,7 +16,9 @@ export class LearnerRouter {
     this.learnerService = new LearnerService()
     this.scheduleService = new ProgrammeService()
     this.learnerRouter = Router()
+
     this.extractHeaderAuthToken = extractHeaderAuthToken
+
     this.app.use("/learners", this.learnerRouter)
     this.addRoutes(this.learnerRouter)
   }

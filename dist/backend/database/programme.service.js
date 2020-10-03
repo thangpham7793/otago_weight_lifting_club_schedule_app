@@ -103,7 +103,7 @@ var ProgrammeService = (function () {
                         pbs.frontSquat = parseFloat(pbs.frontSquat);
                         pbs.pushPress = parseFloat(pbs.pushPress);
                         params = [programmeId];
-                        statement = "\n    SELECT \n    \"scheduleId\", \"scheduleName\", \"weekCount\" \n    FROM schedule \n    WHERE \"scheduleId\" = ANY(ARRAY(SELECT \"scheduleIds\" FROM programme WHERE \"programmeId\" = $1)); \n    ";
+                        statement = "\n    SELECT \n    s.\"scheduleId\", s.\"scheduleName\", s.\"weekCount\" \n    FROM programme p\n    JOIN programme_schedule ps\n    ON ps.\"programmeId\" = p.\"programmeId\"\n    JOIN schedule s\n    ON ps.\"scheduleId\" = s.\"scheduleId\"\n    WHERE p.\"programmeId\" = $1;\n    ";
                         return [4, client.query(statement, params)];
                     case 2:
                         rows = (_b.sent()).rows;

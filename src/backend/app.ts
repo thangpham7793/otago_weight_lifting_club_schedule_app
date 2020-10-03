@@ -1,5 +1,5 @@
 import { serverError, unknownEndpoint } from "./utils/register"
-import { Controller } from "./controllers/main.controller"
+import { Controller } from "./controllers/register"
 
 //native or 3rd party modules
 import express, { Application } from "express"
@@ -9,7 +9,7 @@ import path from "path"
 import cookieParser from "cookie-parser"
 import morgan from "morgan"
 
-//TODO: learn from this lady :D https://dev.to/nyagarcia/pokeapi-rest-in-nodejs-with-express-typescript-mongodb-and-docker-part-1-5f8g
+//TODO: modelled after https://dev.to/nyagarcia/pokeapi-rest-in-nodejs-with-express-typescript-mongodb-and-docker-part-1-5f8g
 
 class App {
   app: Application

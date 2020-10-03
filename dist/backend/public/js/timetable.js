@@ -11196,8 +11196,8 @@ const { getStore, saveStore, spinner, config } = require("./utils")
 //similar to App.js
 const schedule = (function () {
   //global state like Redux or component state like React...
-
   const store = getStore()
+
   const { scheduleId, week } = JSON.parse(
     sessionStorage.getItem("weeklySchedule")
   )

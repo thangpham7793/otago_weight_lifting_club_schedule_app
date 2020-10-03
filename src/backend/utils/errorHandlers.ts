@@ -25,14 +25,6 @@ export class httpError extends Error {
 
 config({ path: path.resolve(__dirname, "../.env") })
 
-export const unknownEndpoint = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  res.status(404).json({ message: "Unable to locate the requested resource" })
-}
-
 export const serverError = (
   err: httpError,
   req: Request,
@@ -61,4 +53,12 @@ export const serverError = (
     res.status(500).json({ errorMessage: `Something wrong happen ${err}` })
   }
   return
+}
+
+export const unknownEndpoint = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.status(404).json({ message: "Unable to locate the requested resource" })
 }

@@ -54,9 +54,13 @@ export class ProgrammeService {
     const params = [programmeId]
     const statement = `
     SELECT 
-    "scheduleId", "scheduleName", "weekCount" 
-    FROM schedule 
-    WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = $1)); 
+    s."scheduleId", s."scheduleName", s."weekCount" 
+    FROM programme p
+    JOIN programme_schedule ps
+    ON ps."programmeId" = p."programmeId"
+    JOIN schedule s
+    ON ps."scheduleId" = s."scheduleId"
+    WHERE p."programmeId" = $1;
     `
 
     const { rows } = await client.query(statement, params)

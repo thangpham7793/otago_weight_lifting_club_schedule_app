@@ -92,6 +92,19 @@ CREATE TABLE instructor (
 
 INSERT INTO learner ("firstName", "lastName", email, "programmeId") VALUES ('Thang', 'Pham', 'thangnus@gmail.com', 1);
 
-
-
 SELECT timetable[1] as week_5 FROM schedule WHERE "scheduleId" = 6;
+
+-- old way
+ SELECT 
+    "scheduleId", "scheduleName", "weekCount" 
+    FROM schedule 
+    WHERE "scheduleId" = ANY(ARRAY(SELECT "scheduleIds" FROM programme WHERE "programmeId" = $1)); 
+
+SELECT 
+s."scheduleId", s."scheduleName", s."weekCount" 
+FROM programme p
+JOIN programme_schedule ps
+ON ps."programmeId" = p."programmeId"
+JOIN schedule s
+ON ps."scheduleId" = s."scheduleId"
+WHERE p."programmeId" = $1;

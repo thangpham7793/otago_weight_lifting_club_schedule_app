@@ -16,7 +16,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.serverError = exports.unknownEndpoint = exports.httpError = exports.catchAsync = void 0;
+exports.unknownEndpoint = exports.serverError = exports.httpError = exports.catchAsync = void 0;
 var path_1 = __importDefault(require("path"));
 var dotenv_1 = require("dotenv");
 exports.catchAsync = function (handler) { return function () {
@@ -39,9 +39,6 @@ var httpError = (function (_super) {
 }(Error));
 exports.httpError = httpError;
 dotenv_1.config({ path: path_1.default.resolve(__dirname, "../.env") });
-exports.unknownEndpoint = function (req, res, next) {
-    res.status(404).json({ message: "Unable to locate the requested resource" });
-};
 exports.serverError = function (err, req, res, next) {
     if (err.status) {
         return res.status(err.status).json({ message: err.message });
@@ -61,4 +58,7 @@ exports.serverError = function (err, req, res, next) {
         res.status(500).json({ errorMessage: "Something wrong happen " + err });
     }
     return;
+};
+exports.unknownEndpoint = function (req, res, next) {
+    res.status(404).json({ message: "Unable to locate the requested resource" });
 };
