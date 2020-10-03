@@ -18,17 +18,21 @@
 
 ### Tickets
 
-- [  ] fix 400 error can't update pbs when deployed
-- [  ] Should alert user when CAPLOCK is on
-- [  ] Handle errors on both sides
-- [  ] Refactor client-side scripts
-- [  ] Create store procedures for each service
+- [  ] Write tests and code instructor routes
+- [  ] Create store procedures for certain services (like publishing/depublishing schedules)
 - [  ] Use a framework to make instructor's UI (React/Vue)
+- [  ] Pick a state-management library for the front-end
 - [  ] Figure out Callan's use patterns and write tests
 - [  ] Auto-suggest when making new schedules
 - [  ] Refactor schedule services to instructor/learner routes
 - [  ] Replace JQuery with native functions
 
+- [ x ] Handle errors on both sides
+- [ x ] Fix CORS issue so that the v2 app can be used
+- [ x ] Refactor client-side scripts
+- [ x ] Create bridge table in DB to handle programme and schedule M-M relationship
+- [ x ] Should alert user when CAPLOCK is on
+- [ x ] fix 400 error can't update pbs when deployed
 - [ x ] Add spinning icon during network calls
 - [ x ] rewrite fetch requests on client side to user Bearer Auth Header
 - [ x ] Need to switch to bearer authorization scheme to avoid TypeError with fetch requests

@@ -1,4 +1,4 @@
-import { httpError } from "./errorHandlers"
+import { httpError } from "./register"
 import { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
 import path from "path"
@@ -28,7 +28,6 @@ export const verifyToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  next()
   //disable cookie check for now (problem on mobile)
   console.log("Verifying JWT")
   const token = req.cookies["jwt"]

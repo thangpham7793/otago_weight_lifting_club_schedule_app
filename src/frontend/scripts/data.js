@@ -42,6 +42,7 @@ const pbsToExercises = {
     "Snatch + Overhead Squat",
     "Snatch Push Press + Overhead Squat",
     "Deficit Snatch Pull",
+    "Snatch Panda Pull",
   ],
   clean: [
     "Clean",
@@ -68,6 +69,7 @@ const pbsToExercises = {
     "Clean Pull + Clean",
     "Clean + Front Squat",
     "Deficit Clean Pull",
+    "Power Clean + Push Press",
   ],
   jerk: [
     "Jerk",

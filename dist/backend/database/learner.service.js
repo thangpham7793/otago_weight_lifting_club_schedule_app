@@ -53,18 +53,17 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LearnerService = void 0;
 var bcrypt_1 = require("bcrypt");
-var errorHandlers_1 = require("./../utils/errorHandlers");
-var jwtHelpers_1 = require("./../utils/jwtHelpers");
-var pool_1 = __importDefault(require("./pool"));
+var register_1 = require("./../utils/register");
+var pool_1 = require("./pool");
 var LearnerService = (function () {
     function LearnerService() {
     }
+    LearnerService.prototype.redirectToSignupPage = function (req, res) {
+        res.redirect("../signup.html");
+    };
     LearnerService.prototype.createLearner = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
             var newLearnerInfo, statement, params, client, result;
@@ -72,10 +71,11 @@ var LearnerService = (function () {
                 switch (_a.label) {
                     case 0:
                         newLearnerInfo = req.body;
+                        console.log(req.body);
                         statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\")\n    VALUES ($1, $2, $3, $4) RETURNING \"firstName\", \"lastName\", \"email\", \"programmeId\"";
                         params = Object.values(newLearnerInfo);
                         console.log(params);
-                        return [4, pool_1.default.connect()];
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _a.sent();
                         return [4, client.query(statement, params)];
@@ -97,27 +97,27 @@ var LearnerService = (function () {
                         console.log(email, password);
                         params = [email];
                         statement = "    \n      SELECT \n      p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n      l.\"learnerId\", l.snatch, l.clean, l.jerk, \n      l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n      FROM learner l\n      JOIN programme p \n      USING (\"programmeId\")\n      WHERE email = $1;";
-                        return [4, pool_1.default.connect()];
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _c.sent();
                         return [4, client.query(statement, params)];
                     case 2:
                         rows = (_c.sent()).rows;
                         if (rows.length === 0) {
-                            throw new errorHandlers_1.httpError(401, "unknown email");
+                            throw new register_1.httpError(401, "unknown email");
                         }
                         _b = rows[0], hashedPassword = _b.hashedPassword, learnerId = _b.learnerId;
                         return [4, bcrypt_1.compare(password, hashedPassword)];
                     case 3:
                         isValidPassword = _c.sent();
                         if (!isValidPassword) return [3, 5];
-                        return [4, jwtHelpers_1.makeToken({ learnerId: learnerId })];
+                        return [4, register_1.makeToken({ learnerId: learnerId })];
                     case 4:
                         token = _c.sent();
                         req.body = __assign(__assign(__assign({}, req.body), rows[0]), { token: token });
                         next();
                         return [3, 6];
-                    case 5: throw new errorHandlers_1.httpError(401, "wrong password");
+                    case 5: throw new register_1.httpError(401, "wrong password");
                     case 6: return [2, client.release()];
                 }
             });
@@ -129,11 +129,11 @@ var LearnerService = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        learnerId = req.body.token.learnerId;
+                        learnerId = req.body.token.data.learnerId;
                         console.log("Receiving credentials from Auth Header as " + learnerId);
                         params = [learnerId];
                         statement = "\n    SELECT\n    snatch,\n    clean,\n    jerk,\n    \"cleanAndJerk\",\n    \"backSquat\",\n    \"frontSquat\",\n    \"pushPress\" \n    FROM learner\n    WHERE \"learnerId\" = $1;\n    ";
-                        return [4, pool_1.default.connect()];
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _a.sent();
                         return [4, client.query(statement, params)];
@@ -155,17 +155,17 @@ var LearnerService = (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log("Received", req.body);
                         _a = req.body, token = _a.token, newPbs = _a.newPbs;
+                        console.log("Received", token, newPbs);
                         if (!newPbs) {
-                            throw new errorHandlers_1.httpError(400, "Missing new personal bests to update!");
+                            throw new register_1.httpError(400, "Missing new personal bests to update!");
                         }
                         params = __spreadArrays(Object.values(newPbs), [
                             token.data.learnerId,
                         ]).map(function (ele) { return parseFloat(ele); });
-                        statement = "\n    UPDATE learner SET\n    snatch = $1,\n    clean = $2,\n    jerk = $3,\n    \"cleanAndJerk\" = $4,\n    \"backSquat\" = $5,\n    \"frontSquat\" = $6,\n    \"pushPress\" = $7\n    WHERE \"learnerId\" = $8;\n    ";
                         console.log(params);
-                        return [4, pool_1.default.connect()];
+                        statement = "\n    UPDATE learner SET\n    snatch = $1,\n    clean = $2,\n    jerk = $3,\n    \"cleanAndJerk\" = $4,\n    \"backSquat\" = $5,\n    \"frontSquat\" = $6,\n    \"pushPress\" = $7\n    WHERE \"learnerId\" = $8;\n    ";
+                        return [4, pool_1.pool.connect()];
                     case 1:
                         client = _b.sent();
                         return [4, client.query(statement, params)];

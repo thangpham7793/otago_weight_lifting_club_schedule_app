@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var register_1 = require("./utils/register");
-var main_controller_1 = require("./controllers/main.controller");
+var register_2 = require("./controllers/register");
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var cors_1 = __importDefault(require("cors"));
@@ -16,7 +16,7 @@ var App = (function () {
         this.app = express_1.default();
         this.setConfig();
         this.useStatic();
-        this.controller = new main_controller_1.Controller(this.app);
+        this.controller = new register_2.Controller(this.app);
         this.useErrorHandlers();
     }
     App.prototype.setConfig = function () {

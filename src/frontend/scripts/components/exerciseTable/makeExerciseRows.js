@@ -7,7 +7,7 @@ const getMatchedPbValue = (exerciseName) => {
     //console.log(exercise)
     return pbsToExercises[k]
       .map((exerciseName) => exerciseName.toLowerCase())
-      .includes(exerciseName.toLowerCase())
+      .includes(exerciseName.toLowerCase().replace("optional: ", ""))
   })[0]
   return getStore().pbs[matchedPb]
 }

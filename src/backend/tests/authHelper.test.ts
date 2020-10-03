@@ -1,4 +1,5 @@
-import { isEmail } from "./../utils/auth"
+import { isEmail } from "./../utils/register"
+
 describe("Client Input Validators Test", () => {
   describe("Email Validator", () => {
     it("should return TRUE for valid emails", () => {
