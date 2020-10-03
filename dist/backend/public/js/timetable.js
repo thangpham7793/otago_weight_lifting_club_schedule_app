@@ -10944,7 +10944,7 @@ const getMatchedPbValue = (exerciseName) => {
     //console.log(exercise)
     return pbsToExercises[k]
       .map((exerciseName) => exerciseName.toLowerCase())
-      .includes(exerciseName.toLowerCase())
+      .includes(exerciseName.toLowerCase().replace("optional: ", ""))
   })[0]
   return getStore().pbs[matchedPb]
 }
@@ -11105,6 +11105,7 @@ const pbsToExercises = {
     "Snatch + Overhead Squat",
     "Snatch Push Press + Overhead Squat",
     "Deficit Snatch Pull",
+    "Snatch Panda Pull",
   ],
   clean: [
     "Clean",
@@ -11131,6 +11132,7 @@ const pbsToExercises = {
     "Clean Pull + Clean",
     "Clean + Front Squat",
     "Deficit Clean Pull",
+    "Power Clean + Push Press",
   ],
   jerk: [
     "Jerk",

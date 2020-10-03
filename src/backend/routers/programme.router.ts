@@ -36,5 +36,15 @@ export class ProgrammeRouter {
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.programmeService.changeProgrammePassword)
     )
+
+    programmeRouter.post(
+      "/schedules",
+      catchAsync(this.programmeService.createWeeklySchedules)
+    )
+
+    programmeRouter.put(
+      "/schedules",
+      catchAsync(this.programmeService.updateWeeklySchedules)
+    )
   }
 }

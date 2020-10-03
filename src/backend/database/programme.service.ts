@@ -1,3 +1,4 @@
+import { schedules } from "../data/octoberSchedule"
 import { hash } from "bcrypt"
 import { Request, Response } from "express"
 import { PoolClient } from "pg"
@@ -60,7 +61,8 @@ export class ProgrammeService {
     ON ps."programmeId" = p."programmeId"
     JOIN schedule s
     ON ps."scheduleId" = s."scheduleId"
-    WHERE p."programmeId" = $1;
+    WHERE p."programmeId" = $1 
+    ORDER BY s."scheduleId" DESC;
     `
 
     const { rows } = await client.query(statement, params)
@@ -110,6 +112,66 @@ export class ProgrammeService {
     await client.query(statement, params)
 
     return res.status(204)
+  }
+
+  async createWeeklySchedules(req: Request, res: Response) {
+    req.body = {
+      scheduleName: "Testing",
+      weekCount: 5,
+      timetable: schedules,
+    }
+
+    const weeklySchedules = Object.values(req.body.timetable).reduce(
+      (acc: string, week: string, index: number) => {
+        if (index === 0) {
+          return `'${JSON.stringify(week)}'`
+        } else {
+          return `${acc}, '${JSON.stringify(week)}'`
+        }
+      },
+      ""
+    )
+
+    const params = ["Testing", 5]
+    const statement = `
+    INSERT INTO schedule ("scheduleName", "weekCount", timetable)
+    VALUES ($1, $2, ARRAY[${weeklySchedules}])
+    `
+    const client: PoolClient = await pool.connect()
+    await client.query(statement, params)
+
+    return res.status(201).json()
+  }
+
+  async updateWeeklySchedules(req: Request, res: Response) {
+    req.body = {
+      scheduleId: 12,
+      timetable: schedules,
+    }
+
+    const weeklySchedules = Object.values(req.body.timetable).reduce(
+      (acc: string, week: string, index: number) => {
+        if (index === 0) {
+          return `'${JSON.stringify(week)}'`
+        } else {
+          return `${acc}, '${JSON.stringify(week)}'`
+        }
+      },
+      ""
+    )
+
+    const params = [req.body.scheduleId]
+    const statement = `
+    
+    UPDATE schedule
+    SET timetable = ARRAY[${weeklySchedules}]
+    WHERE "scheduleId" = $1;
+    `
+
+    const client: PoolClient = await pool.connect()
+    await client.query(statement, params)
+
+    return res.status(204).json()
   }
 
   async endPool() {
