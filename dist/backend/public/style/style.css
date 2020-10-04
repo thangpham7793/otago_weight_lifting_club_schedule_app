@@ -38,13 +38,9 @@ body {
 }
 
 
-h1 {
+h1, h2, h3 {
   font-weight: var(--fw-md);
-  font-size: calc(var(--fs-md) * 0.75);
-}
-
-h2, h3 {
-  font-weight: calc(var(--fw-md));
+  font-size: calc(var(--fs-md) * 0.5);
 }
 
 button {
