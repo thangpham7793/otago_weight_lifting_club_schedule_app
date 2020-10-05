@@ -2,7 +2,7 @@ import { serverError, unknownEndpoint } from "./utils/register"
 import { Controller } from "./controllers/register"
 
 //native or 3rd party modules
-import express, { Application } from "express"
+import express, { Application, Request, Response } from "express"
 import bodyParser from "body-parser"
 import cors from "cors"
 import path from "path"

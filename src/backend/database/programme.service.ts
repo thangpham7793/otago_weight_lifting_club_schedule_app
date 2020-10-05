@@ -3,6 +3,8 @@ import { hash } from "bcrypt"
 import { Request, Response } from "express"
 import { PoolClient } from "pg"
 import { pool } from "./pool"
+import util from "util"
+import { TimeTable } from "../types"
 
 export class ProgrammeService {
   async getAllProgrammes(req: Request, res: Response) {
@@ -114,25 +116,25 @@ export class ProgrammeService {
     return res.status(204)
   }
 
-  async createWeeklySchedules(req: Request, res: Response) {
-    req.body = {
-      scheduleName: "Testing",
-      weekCount: 5,
-      timetable: schedules,
-    }
+  //TODO: need unit testing for this
+  static makeWeeklySchedulesString(weeklySchedules: TimeTable) {
+    return Object.values(weeklySchedules).reduce((acc, week, index: number) => {
+      if (index === 0) {
+        return `'${JSON.stringify(week)}'`
+      } else {
+        return `${acc}, '${JSON.stringify(week)}'`
+      }
+    }, "")
+  }
 
-    const weeklySchedules = Object.values(req.body.timetable).reduce(
-      (acc: string, week: string, index: number) => {
-        if (index === 0) {
-          return `'${JSON.stringify(week)}'`
-        } else {
-          return `${acc}, '${JSON.stringify(week)}'`
-        }
-      },
-      ""
+  async createWeeklySchedules(req: Request, res: Response) {
+    const { timetable, scheduleName, weekCount } = req.body
+
+    const weeklySchedules = ProgrammeService.makeWeeklySchedulesString(
+      timetable
     )
 
-    const params = ["Testing", 5]
+    const params = [scheduleName, 2]
     const statement = `
     INSERT INTO schedule ("scheduleName", "weekCount", timetable)
     VALUES ($1, $2, ARRAY[${weeklySchedules}])
@@ -140,34 +142,28 @@ export class ProgrammeService {
     const client: PoolClient = await pool.connect()
     await client.query(statement, params)
 
-    return res.status(201).json()
+    console.log(
+      util.inspect(weeklySchedules, { showHidden: false, depth: null })
+    )
+
+    return res.status(204).send()
   }
 
   async updateWeeklySchedules(req: Request, res: Response) {
-    req.body = {
-      scheduleId: 12,
-      timetable: schedules,
-    }
+    const { timetable, scheduleId } = req.body
 
-    const weeklySchedules = Object.values(req.body.timetable).reduce(
-      (acc: string, week: string, index: number) => {
-        if (index === 0) {
-          return `'${JSON.stringify(week)}'`
-        } else {
-          return `${acc}, '${JSON.stringify(week)}'`
-        }
-      },
-      ""
+    const weeklySchedules = ProgrammeService.makeWeeklySchedulesString(
+      timetable
     )
 
-    const params = [req.body.scheduleId]
+    const params = [scheduleId]
     const statement = `
     
     UPDATE schedule
     SET timetable = ARRAY[${weeklySchedules}]
     WHERE "scheduleId" = $1;
     `
-
+    //TODO: can abstract this into a class (function)
     const client: PoolClient = await pool.connect()
     await client.query(statement, params)
 
