@@ -11,6 +11,16 @@ export class LearnerService {
     res.redirect("../signup.html")
   }
 
+  async getAllLearners(req: Request, res: Response, next: NextFunction) {
+    const client: PoolClient = await pool.connect()
+    const result = await client.query(
+      `SELECT "learnerId", "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner LIMIT 1`
+    )
+
+    res.status(201).json(result.rows)
+    return client.release()
+  }
+
   async createLearner(req: Request, res: Response, next: NextFunction) {
     const newLearnerInfo = req.body
     console.log(req.body)

@@ -134,13 +134,13 @@ export class ProgrammeService {
       timetable
     )
 
-    const params = [scheduleName, 2]
-    const statement = `
-    INSERT INTO schedule ("scheduleName", "weekCount", timetable)
-    VALUES ($1, $2, ARRAY[${weeklySchedules}])
-    `
-    const client: PoolClient = await pool.connect()
-    await client.query(statement, params)
+    // const params = [scheduleName, 2]
+    // const statement = `
+    // INSERT INTO schedule ("scheduleName", "weekCount", timetable)
+    // VALUES ($1, $2, ARRAY[${weeklySchedules}])
+    // `
+    // const client: PoolClient = await pool.connect()
+    // await client.query(statement, params)
 
     console.log(
       util.inspect(weeklySchedules, { showHidden: false, depth: null })

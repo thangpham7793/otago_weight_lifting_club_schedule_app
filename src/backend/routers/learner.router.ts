@@ -24,6 +24,8 @@ export class LearnerRouter {
   }
 
   addRoutes(learnerRouter: Router) {
+    learnerRouter.get("/", catchAsync(this.learnerService.getAllLearners))
+
     learnerRouter.get("/signup", this.learnerService.redirectToSignupPage)
 
     learnerRouter.post(
