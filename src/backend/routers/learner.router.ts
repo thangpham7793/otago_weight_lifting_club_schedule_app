@@ -56,5 +56,11 @@ export class LearnerRouter {
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.learnerService.updatePbs)
     )
+
+    learnerRouter.put(
+      "/details",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.updateLearnerDetail)
+    )
   }
 }
