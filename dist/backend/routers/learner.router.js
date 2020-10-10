@@ -15,6 +15,7 @@ var LearnerRouter = (function () {
         this.addRoutes(this.learnerRouter);
     }
     LearnerRouter.prototype.addRoutes = function (learnerRouter) {
+        learnerRouter.get("/", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.getAllLearners));
         learnerRouter.get("/signup", this.learnerService.redirectToSignupPage);
         learnerRouter.post("/signup", register_1.checkEmail, register_1.catchAsync(this.learnerService.createLearner));
         learnerRouter.post("/login", register_1.checkEmail, register_1.catchAsync(this.learnerService.checkCredentials), register_1.catchAsync(this.scheduleService.getAllSchedules));

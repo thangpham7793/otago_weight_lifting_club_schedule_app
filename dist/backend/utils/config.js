@@ -21,7 +21,7 @@ var herokuConfig = {
     },
 };
 exports.appConfig = {
-    PORT: process.env.PORT || 3000,
+    PORT: process.env.PORT || 5000,
     DB_CONFIG: herokuConfig,
     TEST_TOKEN: process.env.TEST_TOKEN,
 };

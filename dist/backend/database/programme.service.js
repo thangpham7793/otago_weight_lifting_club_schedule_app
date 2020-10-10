@@ -46,11 +46,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProgrammeService = void 0;
-var octoberSchedule_1 = require("../data/octoberSchedule");
 var bcrypt_1 = require("bcrypt");
 var pool_1 = require("./pool");
+var util_1 = __importDefault(require("util"));
 var ProgrammeService = (function () {
     function ProgrammeService() {
     }
@@ -166,64 +169,44 @@ var ProgrammeService = (function () {
             });
         });
     };
+    ProgrammeService.makeWeeklySchedulesString = function (weeklySchedules) {
+        return Object.values(weeklySchedules).reduce(function (acc, week, index) {
+            if (index === 0) {
+                return "'" + JSON.stringify(week) + "'";
+            }
+            else {
+                return acc + ", '" + JSON.stringify(week) + "'";
+            }
+        }, "");
+    };
     ProgrammeService.prototype.createWeeklySchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var weeklySchedules, params, statement, client;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        req.body = {
-                            scheduleName: "Testing",
-                            weekCount: 5,
-                            timetable: octoberSchedule_1.schedules,
-                        };
-                        weeklySchedules = Object.values(req.body.timetable).reduce(function (acc, week, index) {
-                            if (index === 0) {
-                                return "'" + JSON.stringify(week) + "'";
-                            }
-                            else {
-                                return acc + ", '" + JSON.stringify(week) + "'";
-                            }
-                        }, "");
-                        params = ["Testing", 5];
-                        statement = "\n    INSERT INTO schedule (\"scheduleName\", \"weekCount\", timetable)\n    VALUES ($1, $2, ARRAY[" + weeklySchedules + "])\n    ";
-                        return [4, pool_1.pool.connect()];
-                    case 1:
-                        client = _a.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
-                        _a.sent();
-                        return [2, res.status(201).json()];
-                }
+            var _a, timetable, scheduleName, weekCount, programmeId, weeklySchedules;
+            return __generator(this, function (_b) {
+                _a = req.body, timetable = _a.timetable, scheduleName = _a.scheduleName, weekCount = _a.weekCount, programmeId = _a.programmeId;
+                weeklySchedules = ProgrammeService.makeWeeklySchedulesString(timetable);
+                console.log({ scheduleName: scheduleName, weekCount: weekCount, programmeId: programmeId });
+                console.log(util_1.default.inspect(weeklySchedules, { showHidden: false, depth: null }));
+                return [2, res.status(204).send()];
             });
         });
     };
     ProgrammeService.prototype.updateWeeklySchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var weeklySchedules, params, statement, client;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, timetable, scheduleId, weeklySchedules, params, statement, client;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        req.body = {
-                            scheduleId: 12,
-                            timetable: octoberSchedule_1.schedules,
-                        };
-                        weeklySchedules = Object.values(req.body.timetable).reduce(function (acc, week, index) {
-                            if (index === 0) {
-                                return "'" + JSON.stringify(week) + "'";
-                            }
-                            else {
-                                return acc + ", '" + JSON.stringify(week) + "'";
-                            }
-                        }, "");
-                        params = [req.body.scheduleId];
+                        _a = req.body, timetable = _a.timetable, scheduleId = _a.scheduleId;
+                        weeklySchedules = ProgrammeService.makeWeeklySchedulesString(timetable);
+                        params = [scheduleId];
                         statement = "\n    \n    UPDATE schedule\n    SET timetable = ARRAY[" + weeklySchedules + "]\n    WHERE \"scheduleId\" = $1;\n    ";
                         return [4, pool_1.pool.connect()];
                     case 1:
-                        client = _a.sent();
+                        client = _b.sent();
                         return [4, client.query(statement, params)];
                     case 2:
-                        _a.sent();
+                        _b.sent();
                         return [2, res.status(204).json()];
                 }
             });

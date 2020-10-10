@@ -64,6 +64,23 @@ var LearnerService = (function () {
     LearnerService.prototype.redirectToSignupPage = function (req, res) {
         res.redirect("../signup.html");
     };
+    LearnerService.prototype.getAllLearners = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var client, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, pool_1.pool.connect()];
+                    case 1:
+                        client = _a.sent();
+                        return [4, client.query("SELECT \"learnerId\", \"firstName\", \"lastName\", \"snatch\", clean, jerk, \"cleanAndJerk\", \"backSquat\", \"frontSquat\", \"pushPress\" FROM learner LIMIT 10")];
+                    case 2:
+                        result = _a.sent();
+                        res.status(200).json(result.rows);
+                        return [2, client.release()];
+                }
+            });
+        });
+    };
     LearnerService.prototype.createLearner = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
             var newLearnerInfo, statement, params, client, result;
