@@ -62,5 +62,11 @@ export class LearnerRouter {
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.learnerService.updateLearnerDetail)
     )
+
+    learnerRouter.delete(
+      "/:learnerId",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.deleteLearner)
+    )
   }
 }

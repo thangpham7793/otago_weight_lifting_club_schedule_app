@@ -171,4 +171,23 @@ export class LearnerService {
     res.status(204).send()
     return client.release()
   }
+
+  async deleteLearner(req: Request, res: Response, next: NextFunction) {
+    const { learnerId } = req.params
+
+    if (!learnerId) {
+      throw new httpError(400, "Missing LearnerId!")
+    }
+
+    const params = [parseInt(learnerId)]
+
+    const statement = `
+    DELETE FROM learner
+    WHERE "learnerId" = $1;
+    `
+    const client: PoolClient = await pool.connect()
+    await client.query(statement, params)
+    res.status(204).send()
+    return client.release()
+  }
 }
