@@ -2,6 +2,7 @@ import { api } from "./testHelper"
 import { pool } from "../database/register"
 import { appConfig } from "../utils/register"
 
+//TODO: may need to change this
 describe("API Integration Tests - Instructor Service", () => {
   describe("POST /instructor/login", () => {
     it("should return all programmeIds, programmeNames, and scheduleIds when credentials are correct", async () => {

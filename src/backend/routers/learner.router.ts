@@ -24,7 +24,11 @@ export class LearnerRouter {
   }
 
   addRoutes(learnerRouter: Router) {
-    learnerRouter.get("/", catchAsync(this.learnerService.getAllLearners))
+    learnerRouter.get(
+      "/",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.getAllLearners)
+    )
 
     learnerRouter.get("/signup", this.learnerService.redirectToSignupPage)
 

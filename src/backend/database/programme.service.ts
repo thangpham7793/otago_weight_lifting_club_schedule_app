@@ -128,11 +128,13 @@ export class ProgrammeService {
   }
 
   async createWeeklySchedules(req: Request, res: Response) {
-    const { timetable, scheduleName, weekCount } = req.body
+    const { timetable, scheduleName, weekCount, programmeId } = req.body
 
     const weeklySchedules = ProgrammeService.makeWeeklySchedulesString(
       timetable
     )
+
+    console.log({ scheduleName, weekCount, programmeId })
 
     // const params = [scheduleName, 2]
     // const statement = `

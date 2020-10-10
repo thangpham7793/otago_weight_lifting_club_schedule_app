@@ -14,10 +14,10 @@ export class LearnerService {
   async getAllLearners(req: Request, res: Response, next: NextFunction) {
     const client: PoolClient = await pool.connect()
     const result = await client.query(
-      `SELECT "learnerId", "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner LIMIT 1`
+      `SELECT "learnerId", "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner LIMIT 10`
     )
 
-    res.status(201).json(result.rows)
+    res.status(200).json(result.rows)
     return client.release()
   }
 
@@ -99,6 +99,7 @@ export class LearnerService {
     return client.release()
   }
 
+  //FIXME: this will need to reflect update on other fields as well. May need a diff function to only update selected field
   async updatePbs(req: Request, res: Response, next: NextFunction) {
     const { token, newPbs } = req.body
 
