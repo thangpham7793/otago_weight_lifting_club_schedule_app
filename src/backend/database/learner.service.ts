@@ -14,7 +14,7 @@ export class LearnerService {
   async getAllLearners(req: Request, res: Response, next: NextFunction) {
     const client: PoolClient = await pool.connect()
     const result = await client.query(
-      `SELECT "learnerId", email, "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner LIMIT 10`
+      `SELECT "learnerId", email, "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner ORDER BY "firstName"`
     )
 
     res.status(200).json(result.rows)

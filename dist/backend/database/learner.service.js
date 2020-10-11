@@ -72,7 +72,7 @@ var LearnerService = (function () {
                     case 0: return [4, pool_1.pool.connect()];
                     case 1:
                         client = _a.sent();
-                        return [4, client.query("SELECT \"learnerId\", \"firstName\", \"lastName\", \"snatch\", clean, jerk, \"cleanAndJerk\", \"backSquat\", \"frontSquat\", \"pushPress\" FROM learner LIMIT 10")];
+                        return [4, client.query("SELECT \"learnerId\", email, \"firstName\", \"lastName\", \"snatch\", clean, jerk, \"cleanAndJerk\", \"backSquat\", \"frontSquat\", \"pushPress\" FROM learner ORDER BY \"firstName\"")];
                     case 2:
                         result = _a.sent();
                         res.status(200).json(result.rows);
@@ -188,6 +188,63 @@ var LearnerService = (function () {
                         return [4, client.query(statement, params)];
                     case 2:
                         _b.sent();
+                        res.status(204).send();
+                        return [2, client.release()];
+                }
+            });
+        });
+    };
+    LearnerService.prototype.updateLearnerDetail = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, token, learner, params, statement, client;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, token = _a.token, learner = _a.learner;
+                        console.log("Received", token, learner);
+                        if (!learner) {
+                            throw new register_1.httpError(400, "Missing Learner Detail!");
+                        }
+                        params = __spreadArrays(Object.keys(learner)).map(function (k) {
+                            if (!["firstName", "lastName", "email"].includes(k)) {
+                                return parseFloat(learner[k]);
+                            }
+                            else {
+                                return learner[k];
+                            }
+                        });
+                        console.log(params);
+                        statement = "\n    UPDATE learner SET\n    email = $2,\n    \"firstName\" = $3,\n    \"lastName\" = $4,\n    snatch = $5,\n    clean = $6,\n    jerk = $7,\n    \"cleanAndJerk\" = $8,\n    \"backSquat\" = $9,\n    \"frontSquat\" = $10,\n    \"pushPress\" = $11\n    WHERE \"learnerId\" = $1;\n    ";
+                        return [4, pool_1.pool.connect()];
+                    case 1:
+                        client = _b.sent();
+                        return [4, client.query(statement, params)];
+                    case 2:
+                        _b.sent();
+                        res.status(204).send();
+                        return [2, client.release()];
+                }
+            });
+        });
+    };
+    LearnerService.prototype.deleteLearner = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var learnerId, params, statement, client;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        learnerId = req.params.learnerId;
+                        if (!learnerId) {
+                            throw new register_1.httpError(400, "Missing LearnerId!");
+                        }
+                        params = [parseInt(learnerId)];
+                        statement = "\n    DELETE FROM learner\n    WHERE \"learnerId\" = $1;\n    ";
+                        return [4, pool_1.pool.connect()];
+                    case 1:
+                        client = _a.sent();
+                        return [4, client.query(statement, params)];
+                    case 2:
+                        _a.sent();
                         res.status(204).send();
                         return [2, client.release()];
                 }
