@@ -39,11 +39,13 @@ export class ProgrammeRouter {
 
     programmeRouter.post(
       "/schedules",
+      catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.programmeService.createWeeklySchedules)
     )
 
     programmeRouter.put(
       "/schedules",
+      catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.programmeService.updateWeeklySchedules)
     )
   }

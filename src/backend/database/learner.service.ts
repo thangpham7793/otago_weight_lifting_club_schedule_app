@@ -11,6 +11,16 @@ export class LearnerService {
     res.redirect("../signup.html")
   }
 
+  async getAllLearners(req: Request, res: Response, next: NextFunction) {
+    const client: PoolClient = await pool.connect()
+    const result = await client.query(
+      `SELECT "learnerId", email, "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner ORDER BY "firstName"`
+    )
+
+    res.status(200).json(result.rows)
+    return client.release()
+  }
+
   async createLearner(req: Request, res: Response, next: NextFunction) {
     const newLearnerInfo = req.body
     console.log(req.body)
@@ -89,6 +99,7 @@ export class LearnerService {
     return client.release()
   }
 
+  //FIXME: this will need to reflect update on other fields as well. May need a diff function to only update selected field
   async updatePbs(req: Request, res: Response, next: NextFunction) {
     const { token, newPbs } = req.body
 
@@ -115,6 +126,64 @@ export class LearnerService {
     "frontSquat" = $6,
     "pushPress" = $7
     WHERE "learnerId" = $8;
+    `
+    const client: PoolClient = await pool.connect()
+    await client.query(statement, params)
+    res.status(204).send()
+    return client.release()
+  }
+
+  async updateLearnerDetail(req: Request, res: Response, next: NextFunction) {
+    const { token, learner } = req.body
+
+    console.log("Received", token, learner)
+
+    if (!learner) {
+      throw new httpError(400, "Missing Learner Detail!")
+    }
+
+    const params = [...Object.keys(learner)].map((k: string) => {
+      if (!["firstName", "lastName", "email"].includes(k)) {
+        return parseFloat(learner[k])
+      } else {
+        return learner[k]
+      }
+    })
+
+    console.log(params)
+
+    const statement = `
+    UPDATE learner SET
+    email = $2,
+    "firstName" = $3,
+    "lastName" = $4,
+    snatch = $5,
+    clean = $6,
+    jerk = $7,
+    "cleanAndJerk" = $8,
+    "backSquat" = $9,
+    "frontSquat" = $10,
+    "pushPress" = $11
+    WHERE "learnerId" = $1;
+    `
+    const client: PoolClient = await pool.connect()
+    await client.query(statement, params)
+    res.status(204).send()
+    return client.release()
+  }
+
+  async deleteLearner(req: Request, res: Response, next: NextFunction) {
+    const { learnerId } = req.params
+
+    if (!learnerId) {
+      throw new httpError(400, "Missing LearnerId!")
+    }
+
+    const params = [parseInt(learnerId)]
+
+    const statement = `
+    DELETE FROM learner
+    WHERE "learnerId" = $1;
     `
     const client: PoolClient = await pool.connect()
     await client.query(statement, params)

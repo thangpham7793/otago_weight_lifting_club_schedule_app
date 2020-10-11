@@ -18,8 +18,8 @@ var ProgrammeRouter = (function () {
         programmeRouter.get("/:programmeId/schedules", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.getAllSchedules));
         programmeRouter.get("/schedules/:scheduleId/weeks/:week", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.getWeeklySchedule));
         programmeRouter.put("/:programmeId/password", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.changeProgrammePassword));
-        programmeRouter.post("/schedules", register_1.catchAsync(this.programmeService.createWeeklySchedules));
-        programmeRouter.put("/schedules", register_1.catchAsync(this.programmeService.updateWeeklySchedules));
+        programmeRouter.post("/schedules", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.createWeeklySchedules));
+        programmeRouter.put("/schedules", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.updateWeeklySchedules));
     };
     return ProgrammeRouter;
 }());

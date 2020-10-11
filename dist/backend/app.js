@@ -38,6 +38,7 @@ var App = (function () {
     };
     App.prototype.useStatic = function () {
         this.app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
+        this.app.use(express_1.default.static(path_1.default.join(__dirname, "public/instructor")));
     };
     return App;
 }());

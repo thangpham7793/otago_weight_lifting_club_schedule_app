@@ -24,6 +24,12 @@ export class LearnerRouter {
   }
 
   addRoutes(learnerRouter: Router) {
+    learnerRouter.get(
+      "/",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.getAllLearners)
+    )
+
     learnerRouter.get("/signup", this.learnerService.redirectToSignupPage)
 
     learnerRouter.post(
@@ -49,6 +55,18 @@ export class LearnerRouter {
       "/pbs",
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.learnerService.updatePbs)
+    )
+
+    learnerRouter.put(
+      "/details",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.updateLearnerDetail)
+    )
+
+    learnerRouter.delete(
+      "/:learnerId",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.deleteLearner)
     )
   }
 }

@@ -24,7 +24,7 @@ const herokuConfig: ClientConfig = {
 //DATABASE_URL=$(heroku config:get DATABASE_URL -a your-app) your_process (probably need to use this in a procfile)
 
 export const appConfig = {
-  PORT: process.env.PORT || 3000,
+  PORT: process.env.PORT || 5000,
   DB_CONFIG: herokuConfig,
   TEST_TOKEN: process.env.TEST_TOKEN,
 }
