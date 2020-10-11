@@ -1,5 +1,14 @@
-CREATE OR REPLACE PROCEDURE get_all(table_name TEXT)
-LANGUAGE SQL
-AS $$
-SELECT * FROM table_name;
-$$;
+CREATE OR REPLACE FUNCTION instructor_login(given_email TEXT)
+RETURNS TEXT 
+LANGUAGE plpgsql
+AS
+$$
+DECLARE 
+    result TEXT;
+BEGIN
+    SELECT i.email INTO result
+    FROM instructor i;
+    
+    RETURN result;
+END;
+$$; 
