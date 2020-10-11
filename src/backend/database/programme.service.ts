@@ -1,9 +1,7 @@
-import { schedules } from "../data/octoberSchedule"
 import { hash } from "bcrypt"
 import { Request, Response } from "express"
 import { PoolClient } from "pg"
 import { pool } from "./pool"
-import util from "util"
 import { TimeTable } from "../types"
 
 export class ProgrammeService {
@@ -136,17 +134,22 @@ export class ProgrammeService {
 
     console.log({ scheduleName, weekCount, programmeId })
 
-    // const params = [scheduleName, 2]
-    // const statement = `
-    // INSERT INTO schedule ("scheduleName", "weekCount", timetable)
-    // VALUES ($1, $2, ARRAY[${weeklySchedules}])
-    // `
-    // const client: PoolClient = await pool.connect()
-    // await client.query(statement, params)
+    let params = [scheduleName, weekCount]
+    let statement = `
+    INSERT INTO schedule ("scheduleName", "weekCount", timetable)
+    VALUES ($1, $2, ARRAY[${weeklySchedules}]) RETURNING "scheduleId"
+    `
+    const client: PoolClient = await pool.connect()
+    const { rows } = await client.query(statement, params)
 
-    console.log(
-      util.inspect(weeklySchedules, { showHidden: false, depth: null })
-    )
+    if (programmeId > 0) {
+      params = [programmeId, rows[0].scheduleId]
+      statement = `
+        INSERT INTO programme_schedule ("programmeId", "scheduleId") 
+        VALUES ($1, $2)
+      `
+      await client.query(statement, params)
+    }
 
     return res.status(204).send()
   }
