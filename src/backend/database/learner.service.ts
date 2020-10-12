@@ -14,7 +14,7 @@ export class LearnerService {
   async getAllLearners(req: Request, res: Response, next: NextFunction) {
     const client: PoolClient = await pool.connect()
     const result = await client.query(
-      `SELECT "learnerId", email, "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner ORDER BY "firstName"`
+      `SELECT "learnerId", username, email, "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner ORDER BY "firstName"`
     )
 
     res.status(200).json(result.rows)
@@ -24,11 +24,21 @@ export class LearnerService {
   async createLearner(req: Request, res: Response, next: NextFunction) {
     const newLearnerInfo = req.body
     console.log(req.body)
-    const statement = `
-    INSERT INTO learner ("firstName", "lastName", "email", "programmeId")
-    VALUES ($1, $2, $3, $4) RETURNING "firstName", "lastName", "email", "programmeId"`
 
-    const params = Object.values(newLearnerInfo)
+    //added username based on lastName + 1st letter of firstName
+    newLearnerInfo.username = `${
+      newLearnerInfo.lastName
+    }${newLearnerInfo.firstName.substring(0, 1)}`
+
+    const statement = `
+    INSERT INTO learner ("firstName", "lastName", "email", "programmeId", "username")
+    VALUES ($1, $2, $3, $4, $5) RETURNING "firstName", "lastName", "email", "programmeId", "username"`
+
+    //make sure only lowercase is inserted as well
+    const params = Object.values(newLearnerInfo).map((val) =>
+      typeof val === "string" ? val.toLowerCase() : val
+    )
+
     console.log(params)
     const client: PoolClient = await pool.connect()
     const result = await client.query(statement, params)
