@@ -160,7 +160,7 @@ var ProgrammeService = (function () {
                         return [4, client.query(statement, params)];
                     case 3:
                         _a.sent();
-                        return [2, res.status(204)];
+                        return [2, res.status(204).send()];
                 }
             });
         });
