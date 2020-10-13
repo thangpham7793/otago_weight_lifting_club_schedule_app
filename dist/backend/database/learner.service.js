@@ -83,14 +83,14 @@ var LearnerService = (function () {
     };
     LearnerService.prototype.createLearner = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var newLearnerInfo, statement, params, client, result;
+            var newLearnerInfo, partialUsername, statement, params, client, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         newLearnerInfo = req.body;
                         console.log(req.body);
-                        newLearnerInfo.username = "" + newLearnerInfo.lastName + newLearnerInfo.firstName.substring(0, 1);
-                        statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\", \"username\")\n    VALUES ($1, $2, $3, $4, $5) RETURNING \"firstName\", \"lastName\", \"email\", \"programmeId\", \"username\"";
+                        partialUsername = "" + newLearnerInfo.lastName + newLearnerInfo.firstName.substring(0, 1);
+                        statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\", \"username\")\n    VALUES ($1, $2, $3, $4, concat('" + partialUsername + "', (select currval('\"learner_learnerId_seq\"')))) RETURNING username, \"learnerId\";";
                         params = Object.values(newLearnerInfo).map(function (val) {
                             return typeof val === "string" ? val.toLowerCase() : val;
                         });
@@ -101,6 +101,7 @@ var LearnerService = (function () {
                         return [4, client.query(statement, params)];
                     case 2:
                         result = _a.sent();
+                        console.log(result.rows[0]);
                         res.status(201).send(result.rows[0]);
                         return [2, client.release()];
                 }

@@ -54,7 +54,7 @@ export class LearnerService {
     const { username, password } = req.body
     console.log(username, password)
 
-    const params = [username]
+    const params = [username.toLowerCase()]
     const statement = `    
       SELECT 
       p."hashedPassword", p."programmeId", p."programmeName", 
@@ -75,7 +75,10 @@ export class LearnerService {
 
     const { hashedPassword, learnerId } = rows[0]
     //TODO: check password here using jwt and bcrypt
-    const isValidPassword = await compare(password, hashedPassword)
+    const isValidPassword = await compare(
+      password.toLowerCase(),
+      hashedPassword
+    )
     if (isValidPassword) {
       //send programmeId to scheduleService.getAllProgrammes
       const token = await makeToken({ learnerId })
