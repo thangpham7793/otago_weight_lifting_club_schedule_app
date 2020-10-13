@@ -111,7 +111,7 @@ export class ProgrammeService {
     const client: PoolClient = await pool.connect()
     await client.query(statement, params)
 
-    return res.status(204)
+    return res.status(204).send()
   }
 
   //TODO: need unit testing for this
