@@ -5,7 +5,7 @@ import { appConfig } from "../utils/register"
 jest.setTimeout(30000)
 
 describe("API Integration Tests - Learner Service", () => {
-  describe.only("POST /learners/signup", () => {
+  describe("POST /learners/signup", () => {
     it("should create a new user in the database and initialise their personal bests", async () => {
       //SECTION: arrange
       const newLearnerInfo = {
@@ -84,29 +84,42 @@ describe("API Integration Tests - Learner Service", () => {
     it("should return all the learner's pbs, schedule_names, schedule_ids, and their week_counts if credentials are correct", async () => {
       //SECTION: ARRANGE
       const loginCredentials = {
-        email: "thangnus@gmail.com",
+        username: "phamt1",
         password: "password",
       }
 
       const expected = {
-        learnerId: 1,
         pbs: {
           snatch: 120.35,
           clean: 30.87,
           jerk: 40.21,
-          cleanAndJerk: 60.0,
+          cleanAndJerk: 60,
           backSquat: 70.74,
           frontSquat: 90.89,
           pushPress: 100.15,
         },
         schedules: [
           {
+            scheduleId: 56,
+            scheduleName: "Test_Schedule",
+            weekCount: 2,
             programmeName: "Youth and Junior",
+          },
+          {
+            scheduleId: 12,
+            scheduleName: "October 2020 Peaking Cycle",
+            weekCount: 6,
+            programmeName: "Youth and Junior",
+          },
+          {
+            scheduleId: 6,
             scheduleName: "September 2020 Strength",
             weekCount: 5,
-            scheduleId: 6,
+            programmeName: "Youth and Junior",
           },
         ],
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDQ5NjY2MDYsImRhdGEiOnsibGVhcm5lcklkIjoxfSwiaWF0IjoxNjAyNTQ3NDEzfQ.s-KnNdfS7GartJNERJYQdbRCIVc_1j9AuRgjdmgW3Qk",
       }
 
       //SECTION: ACT

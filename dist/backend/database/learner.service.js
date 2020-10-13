@@ -72,7 +72,7 @@ var LearnerService = (function () {
                     case 0: return [4, pool_1.pool.connect()];
                     case 1:
                         client = _a.sent();
-                        return [4, client.query("SELECT \"learnerId\", email, \"firstName\", \"lastName\", \"snatch\", clean, jerk, \"cleanAndJerk\", \"backSquat\", \"frontSquat\", \"pushPress\" FROM learner ORDER BY \"firstName\"")];
+                        return [4, client.query("SELECT \"learnerId\", username, email, \"firstName\", \"lastName\", \"snatch\", clean, jerk, \"cleanAndJerk\", \"backSquat\", \"frontSquat\", \"pushPress\" FROM learner ORDER BY \"firstName\"")];
                     case 2:
                         result = _a.sent();
                         res.status(200).json(result.rows);
@@ -89,8 +89,11 @@ var LearnerService = (function () {
                     case 0:
                         newLearnerInfo = req.body;
                         console.log(req.body);
-                        statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\")\n    VALUES ($1, $2, $3, $4) RETURNING \"firstName\", \"lastName\", \"email\", \"programmeId\"";
-                        params = Object.values(newLearnerInfo);
+                        newLearnerInfo.username = "" + newLearnerInfo.lastName + newLearnerInfo.firstName.substring(0, 1);
+                        statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\", \"username\")\n    VALUES ($1, $2, $3, $4, $5) RETURNING \"firstName\", \"lastName\", \"email\", \"programmeId\", \"username\"";
+                        params = Object.values(newLearnerInfo).map(function (val) {
+                            return typeof val === "string" ? val.toLowerCase() : val;
+                        });
                         console.log(params);
                         return [4, pool_1.pool.connect()];
                     case 1:
@@ -106,14 +109,14 @@ var LearnerService = (function () {
     };
     LearnerService.prototype.checkCredentials = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, email, password, params, statement, client, rows, _b, hashedPassword, learnerId, isValidPassword, token;
+            var _a, username, password, params, statement, client, rows, _b, hashedPassword, learnerId, isValidPassword, token;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _a = req.body, email = _a.email, password = _a.password;
-                        console.log(email, password);
-                        params = [email];
-                        statement = "    \n      SELECT \n      p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n      l.\"learnerId\", l.snatch, l.clean, l.jerk, \n      l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n      FROM learner l\n      JOIN programme p \n      USING (\"programmeId\")\n      WHERE email = $1;";
+                        _a = req.body, username = _a.username, password = _a.password;
+                        console.log(username, password);
+                        params = [username];
+                        statement = "    \n      SELECT \n      p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n      l.\"learnerId\", l.snatch, l.clean, l.jerk, \n      l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n      FROM learner l\n      JOIN programme p \n      USING (\"programmeId\")\n      WHERE username = $1;";
                         return [4, pool_1.pool.connect()];
                     case 1:
                         client = _c.sent();
@@ -121,7 +124,7 @@ var LearnerService = (function () {
                     case 2:
                         rows = (_c.sent()).rows;
                         if (rows.length === 0) {
-                            throw new register_1.httpError(401, "unknown email");
+                            throw new register_1.httpError(401, "unknown username");
                         }
                         _b = rows[0], hashedPassword = _b.hashedPassword, learnerId = _b.learnerId;
                         return [4, bcrypt_1.compare(password, hashedPassword)];

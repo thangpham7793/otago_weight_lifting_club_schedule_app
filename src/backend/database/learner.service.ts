@@ -47,10 +47,10 @@ export class LearnerService {
   }
 
   async checkCredentials(req: Request, res: Response, next: NextFunction) {
-    const { email, password } = req.body
-    console.log(email, password)
+    const { username, password } = req.body
+    console.log(username, password)
 
-    const params = [email]
+    const params = [username]
     const statement = `    
       SELECT 
       p."hashedPassword", p."programmeId", p."programmeName", 
@@ -59,14 +59,14 @@ export class LearnerService {
       FROM learner l
       JOIN programme p 
       USING ("programmeId")
-      WHERE email = $1;`
+      WHERE username = $1;`
 
     const client: PoolClient = await pool.connect()
     const { rows } = await client.query(statement, params)
 
     //console.log(result.rows)
     if (rows.length === 0) {
-      throw new httpError(401, "unknown email")
+      throw new httpError(401, "unknown username")
     }
 
     const { hashedPassword, learnerId } = rows[0]

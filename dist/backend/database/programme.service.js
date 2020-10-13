@@ -46,14 +46,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProgrammeService = void 0;
 var bcrypt_1 = require("bcrypt");
 var pool_1 = require("./pool");
-var util_1 = __importDefault(require("util"));
 var ProgrammeService = (function () {
     function ProgrammeService() {
     }
@@ -181,13 +177,30 @@ var ProgrammeService = (function () {
     };
     ProgrammeService.prototype.createWeeklySchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, timetable, scheduleName, weekCount, programmeId, weeklySchedules;
+            var _a, timetable, scheduleName, weekCount, programmeId, weeklySchedules, params, statement, client, rows;
             return __generator(this, function (_b) {
-                _a = req.body, timetable = _a.timetable, scheduleName = _a.scheduleName, weekCount = _a.weekCount, programmeId = _a.programmeId;
-                weeklySchedules = ProgrammeService.makeWeeklySchedulesString(timetable);
-                console.log({ scheduleName: scheduleName, weekCount: weekCount, programmeId: programmeId });
-                console.log(util_1.default.inspect(weeklySchedules, { showHidden: false, depth: null }));
-                return [2, res.status(204).send()];
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, timetable = _a.timetable, scheduleName = _a.scheduleName, weekCount = _a.weekCount, programmeId = _a.programmeId;
+                        weeklySchedules = ProgrammeService.makeWeeklySchedulesString(timetable);
+                        console.log({ scheduleName: scheduleName, weekCount: weekCount, programmeId: programmeId });
+                        params = [scheduleName, weekCount];
+                        statement = "\n    INSERT INTO schedule (\"scheduleName\", \"weekCount\", timetable)\n    VALUES ($1, $2, ARRAY[" + weeklySchedules + "]) RETURNING \"scheduleId\"\n    ";
+                        return [4, pool_1.pool.connect()];
+                    case 1:
+                        client = _b.sent();
+                        return [4, client.query(statement, params)];
+                    case 2:
+                        rows = (_b.sent()).rows;
+                        if (!(programmeId > 0)) return [3, 4];
+                        params = [programmeId, rows[0].scheduleId];
+                        statement = "\n        INSERT INTO programme_schedule (\"programmeId\", \"scheduleId\") \n        VALUES ($1, $2)\n      ";
+                        return [4, client.query(statement, params)];
+                    case 3:
+                        _b.sent();
+                        _b.label = 4;
+                    case 4: return [2, res.status(204).send()];
+                }
             });
         });
     };

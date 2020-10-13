@@ -207,7 +207,7 @@ const searchForm = (function () {
   function makeLoginForm() {
     return `<div class='search-form-wrapper form-wrapper search-form'>
     <form class='login-form'>
-      ${makeTextInput("email")}
+      ${makeTextInput("username")}
       ${makeTextInput("password")}
       ${makeErrorMessage("some error")}
       <div class="submit-btn-container">
@@ -218,24 +218,25 @@ const searchForm = (function () {
     </div>`
   }
 
-  const tempCredentials = { email: "", password: "" }
+  const tempCredentials = { username: "", password: "" }
 
-  function isEmail(email) {
-    const pattern = /^([\w_-]+|[\w_-]+(.[\w_-]+)+?)@([\w_-]+|[\w_-]+(.[\w_-]+)+?)$/
-    return pattern.test(email)
-  }
+  // function isEmail(email) {
+  //   const pattern = /^([\w_-]+|[\w_-]+(.[\w_-]+)+?)@([\w_-]+|[\w_-]+(.[\w_-]+)+?)$/
+  //   return pattern.test(email)
+  // }
 
   function isEmpty(str) {
     return str.trim().length === 0
   }
 
-  function areCredentialsValid({ email, password }) {
-    if (isEmpty(email)) {
-      return { errorMessage: "Missing Email!" }
+  function areCredentialsValid({ username, password }) {
+    if (isEmpty(username)) {
+      return { errorMessage: "Missing Username!" }
     } else if (isEmpty(password)) {
       return { errorMessage: "Missing Password!" }
-    } else if (!isEmail(email)) {
-      return { errorMessage: "Invalid Email Format!" }
+      // } else if (!isEmail(email)) {
+      //   return { errorMessage: "Invalid Email Format!" }
+      // }
     }
     return { errorMessage: null }
   }
@@ -255,7 +256,7 @@ const searchForm = (function () {
   function displayLoginForm() {
     const loginForm = makeLogo() + makeLoginForm()
     document.querySelector(".main.index").innerHTML = loginForm
-    document.querySelector("#email").onchange = onTextInputChangeHander
+    document.querySelector("#username").onchange = onTextInputChangeHander
     document.querySelector("#password").onchange = onTextInputChangeHander
   }
 

@@ -40,7 +40,6 @@ export class LearnerRouter {
 
     learnerRouter.post(
       "/login",
-      checkEmail,
       catchAsync(this.learnerService.checkCredentials),
       catchAsync(this.scheduleService.getAllSchedules)
     )

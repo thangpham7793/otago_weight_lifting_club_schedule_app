@@ -181,6 +181,7 @@ a.logo {
 }
 
 .field-container.email,
+.field-container.username,
 .field-container.password {
   display: flex;
   align-items: center;
@@ -189,13 +190,14 @@ a.logo {
 }
 
 .search-form-label.email,
+.search-form-label.username,
 .search-form-label.password {
   text-align: left;
   display: inline-block;
   width: 30vw;
 }
 
-#email, #password {
+#email, #password, #username {
   width: 50vw;
   height: 5vh;
 }
@@ -217,6 +219,7 @@ a.logo {
 
 @media only screen and (min-width: 450px) {
   .search-form-label.email,
+  .search-form-label.username,
   .search-form-label.password {
     width: 20vw;
   }
@@ -225,19 +228,20 @@ a.logo {
     margin-top: var(--mg-md);
   }
   
-  #email, #password {
-    width: 35vw
+  #email, #password, #username {
+    width: 35vw;
     height: 6vh;
   }
 }
 
 @media only screen and (min-width: 768px) {
   .search-form-label.email,
+  .search-form-label.username,
   .search-form-label.password {
     width: 15vw;
   }
   
-  #email, #password {
+  #email, #password, #username {
     width: 30vw;
     height: 6vh;
   }
@@ -250,11 +254,12 @@ a.logo {
 
 @media only screen and (min-width: 900px) {
   .search-form-label.email,
+  .search-form-label.username,
   .search-form-label.password {
     width: 13vw;
   }
   
-  #email, #password {
+  #email, #password, #username {
     width: 20vw;
     height: 3vw;
   }
@@ -626,18 +631,9 @@ a.logo {
     width: 5vw;
   }
   
-  #email, #password {
-/*     width: 10vw; */
-  }
-  
   .modal-content {
     width: 60vw;
     margin-top: 2vh;
-  }
-  
-  .pbs-field > input {
-/*     width: 10vw; */
-/*     margin-right: 15vw;     */
   }
 
   button, .pbs-btn {
