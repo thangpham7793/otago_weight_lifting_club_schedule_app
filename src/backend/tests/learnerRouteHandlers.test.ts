@@ -5,7 +5,7 @@ import { appConfig } from "../utils/register"
 jest.setTimeout(30000)
 
 describe("API Integration Tests - Learner Service", () => {
-  describe("POST /learners/signup", () => {
+  describe.only("POST /learners/signup", () => {
     it("should create a new user in the database and initialise their personal bests", async () => {
       //SECTION: arrange
       const newLearnerInfo = {
@@ -21,9 +21,7 @@ describe("API Integration Tests - Learner Service", () => {
       //SECTION: assert
       expect(result.status).toEqual(201)
       expect(result.body).toHaveProperty("username")
-      expect(result.body.username).toEqual("doej")
-      delete result.body.username
-      expect(result.body).toEqual(newLearnerInfo)
+      expect(result.body.username).toEqual(`doej${result.body.learnerId}`)
 
       //SECTION: clean up
       try {
