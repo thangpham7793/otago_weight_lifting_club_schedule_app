@@ -160,7 +160,7 @@ export class LearnerService {
     }
 
     const params = [...Object.keys(learner)].map((k: string) => {
-      if (!["firstName", "lastName", "email"].includes(k)) {
+      if (!["firstName", "lastName", "email", "username"].includes(k)) {
         return parseFloat(learner[k])
       } else {
         return learner[k]
@@ -171,16 +171,17 @@ export class LearnerService {
 
     const statement = `
     UPDATE learner SET
-    email = $2,
-    "firstName" = $3,
-    "lastName" = $4,
-    snatch = $5,
-    clean = $6,
-    jerk = $7,
-    "cleanAndJerk" = $8,
-    "backSquat" = $9,
-    "frontSquat" = $10,
-    "pushPress" = $11
+    username = $2,
+    email = $3,
+    "firstName" = $4,
+    "lastName" = $5,
+    snatch = $6,
+    clean = $7,
+    jerk = $8,
+    "cleanAndJerk" = $9,
+    "backSquat" = $10,
+    "frontSquat" = $11,
+    "pushPress" = $12
     WHERE "learnerId" = $1;
     `
     const client: PoolClient = await pool.connect()
