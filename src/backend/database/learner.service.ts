@@ -26,14 +26,14 @@ export class LearnerService {
     console.log(req.body)
 
     //added username based on lastName + 1st letter of firstName
-    const partialUsername = `${
+    newLearnerInfo.username = `${
       newLearnerInfo.lastName
     }${newLearnerInfo.firstName.substring(0, 1)}`
 
     //use select currval since nextval is called on insert and before the concat takes place so currval would get the id of the new learner
     const statement = `
     INSERT INTO learner ("firstName", "lastName", "email", "programmeId", "username")
-    VALUES ($1, $2, $3, $4, concat('${partialUsername}', (select currval('"learner_learnerId_seq"')))) RETURNING username, "learnerId";`
+    VALUES ($1, $2, $3, $4, $5) RETURNING username, "learnerId";`
 
     //make sure only lowercase is inserted as well
     const params = Object.values(newLearnerInfo).map((val) =>

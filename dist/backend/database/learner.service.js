@@ -83,14 +83,14 @@ var LearnerService = (function () {
     };
     LearnerService.prototype.createLearner = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var newLearnerInfo, partialUsername, statement, params, client, result;
+            var newLearnerInfo, statement, params, client, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         newLearnerInfo = req.body;
                         console.log(req.body);
-                        partialUsername = "" + newLearnerInfo.lastName + newLearnerInfo.firstName.substring(0, 1);
-                        statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\", \"username\")\n    VALUES ($1, $2, $3, $4, concat('" + partialUsername + "', (select currval('\"learner_learnerId_seq\"')))) RETURNING username, \"learnerId\";";
+                        newLearnerInfo.username = "" + newLearnerInfo.lastName + newLearnerInfo.firstName.substring(0, 1);
+                        statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\", \"username\")\n    VALUES ($1, $2, $3, $4, $5) RETURNING username, \"learnerId\";";
                         params = Object.values(newLearnerInfo).map(function (val) {
                             return typeof val === "string" ? val.toLowerCase() : val;
                         });
@@ -116,7 +116,7 @@ var LearnerService = (function () {
                     case 0:
                         _a = req.body, username = _a.username, password = _a.password;
                         console.log(username, password);
-                        params = [username];
+                        params = [username.toLowerCase()];
                         statement = "    \n      SELECT \n      p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n      l.\"learnerId\", l.snatch, l.clean, l.jerk, \n      l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n      FROM learner l\n      JOIN programme p \n      USING (\"programmeId\")\n      WHERE username = $1;";
                         return [4, pool_1.pool.connect()];
                     case 1:
@@ -128,7 +128,7 @@ var LearnerService = (function () {
                             throw new register_1.httpError(401, "unknown username");
                         }
                         _b = rows[0], hashedPassword = _b.hashedPassword, learnerId = _b.learnerId;
-                        return [4, bcrypt_1.compare(password, hashedPassword)];
+                        return [4, bcrypt_1.compare(password.toLowerCase(), hashedPassword)];
                     case 3:
                         isValidPassword = _c.sent();
                         if (!isValidPassword) return [3, 5];
@@ -210,7 +210,7 @@ var LearnerService = (function () {
                             throw new register_1.httpError(400, "Missing Learner Detail!");
                         }
                         params = __spreadArrays(Object.keys(learner)).map(function (k) {
-                            if (!["firstName", "lastName", "email"].includes(k)) {
+                            if (!["firstName", "lastName", "email", "username"].includes(k)) {
                                 return parseFloat(learner[k]);
                             }
                             else {
@@ -218,7 +218,7 @@ var LearnerService = (function () {
                             }
                         });
                         console.log(params);
-                        statement = "\n    UPDATE learner SET\n    email = $2,\n    \"firstName\" = $3,\n    \"lastName\" = $4,\n    snatch = $5,\n    clean = $6,\n    jerk = $7,\n    \"cleanAndJerk\" = $8,\n    \"backSquat\" = $9,\n    \"frontSquat\" = $10,\n    \"pushPress\" = $11\n    WHERE \"learnerId\" = $1;\n    ";
+                        statement = "\n    UPDATE learner SET\n    username = $2,\n    email = $3,\n    \"firstName\" = $4,\n    \"lastName\" = $5,\n    snatch = $6,\n    clean = $7,\n    jerk = $8,\n    \"cleanAndJerk\" = $9,\n    \"backSquat\" = $10,\n    \"frontSquat\" = $11,\n    \"pushPress\" = $12\n    WHERE \"learnerId\" = $1;\n    ";
                         return [4, pool_1.pool.connect()];
                     case 1:
                         client = _b.sent();

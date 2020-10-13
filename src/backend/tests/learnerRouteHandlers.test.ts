@@ -21,7 +21,7 @@ describe("API Integration Tests - Learner Service", () => {
       //SECTION: assert
       expect(result.status).toEqual(201)
       expect(result.body).toHaveProperty("username")
-      expect(result.body.username).toEqual(`doej${result.body.learnerId}`)
+      expect(result.body.username).toEqual(`doej`)
 
       //SECTION: clean up
       try {
@@ -82,7 +82,7 @@ describe("API Integration Tests - Learner Service", () => {
     it("should return all the learner's pbs, schedule_names, schedule_ids, and their week_counts if credentials are correct", async () => {
       //SECTION: ARRANGE
       const loginCredentials = {
-        username: "phamt1",
+        username: "phamt",
         password: "password",
       }
 
