@@ -37,6 +37,12 @@ export class ProgrammeRouter {
       catchAsync(this.programmeService.changeProgrammePassword)
     )
 
+    programmeRouter.get(
+      "/schedules/info",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.getAllSchedulesInfo)
+    )
+
     programmeRouter.post(
       "/schedules",
       catchAsync(this.extractHeaderAuthToken),
@@ -47,6 +53,26 @@ export class ProgrammeRouter {
       "/schedules",
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.programmeService.updateWeeklySchedules)
+    )
+
+    programmeRouter.delete(
+      "/schedules/:scheduleId",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.deleteSchedule)
+    )
+
+    programmeRouter.post(
+      //recieves an array of programmeIds in req.body
+      "/schedules/:scheduleId/publish/",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.publishSchedule)
+    )
+
+    programmeRouter.delete(
+      //recieves an array of programmeIds in req.body
+      "/schedules/:scheduleId/unpublish/",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.publishSchedule)
     )
   }
 }

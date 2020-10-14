@@ -97,6 +97,35 @@ export class ProgrammeService {
     return client.release()
   }
 
+  async deleteSchedule(req: Request, res: Response) {
+    const { scheduleId } = req.params
+    console.log(`Received schedule Id ${scheduleId}`)
+
+    const params = [parseInt(scheduleId)]
+    const statement = `DELETE FROM schedule WHERE "scheduleId" = $1;`
+
+    const client: PoolClient = await pool.connect()
+    await client.query(statement, params)
+    res.status(204).send()
+
+    return client.release()
+  }
+
+  async getAllSchedulesInfo(req: Request, res: Response) {
+    const statement = `
+    SELECT "scheduleId", "scheduleName", "weekCount" FROM schedule;`
+
+    const client: PoolClient = await pool.connect()
+    const result = await client.query(statement)
+
+    if (!result.rows) {
+      res.status(404).json({ message: "no schedule found" })
+    }
+
+    res.status(200).json(result.rows)
+    return client.release()
+  }
+
   async changeProgrammePassword(req: Request, res: Response) {
     const { newPassword } = req.body
     const { programmeId } = req.params
@@ -116,13 +145,16 @@ export class ProgrammeService {
 
   //TODO: need unit testing for this
   static makeWeeklySchedulesString(weeklySchedules: TimeTable) {
-    return Object.values(weeklySchedules).reduce((acc, week, index: number) => {
-      if (index === 0) {
-        return `'${JSON.stringify(week)}'`
-      } else {
-        return `${acc}, '${JSON.stringify(week)}'`
-      }
-    }, "")
+    return Object.values(weeklySchedules).reduce(
+      (acc: string, week, index: number) => {
+        if (index === 0) {
+          return `'${JSON.stringify(week)}'`
+        } else {
+          return `${acc}, '${JSON.stringify(week)}'`
+        }
+      },
+      ""
+    )
   }
 
   async createWeeklySchedules(req: Request, res: Response) {
@@ -132,24 +164,24 @@ export class ProgrammeService {
       timetable
     )
 
-    console.log({ scheduleName, weekCount, programmeId })
+    // console.log({ scheduleName, weekCount, programmeId })
 
-    let params = [scheduleName, weekCount]
-    let statement = `
-    INSERT INTO schedule ("scheduleName", "weekCount", timetable)
-    VALUES ($1, $2, ARRAY[${weeklySchedules}]) RETURNING "scheduleId"
-    `
-    const client: PoolClient = await pool.connect()
-    const { rows } = await client.query(statement, params)
+    // let params = [scheduleName, weekCount]
+    // let statement = `
+    // INSERT INTO schedule ("scheduleName", "weekCount", timetable)
+    // VALUES ($1, $2, ARRAY[${weeklySchedules}]) RETURNING "scheduleId"
+    // `
+    // const client: PoolClient = await pool.connect()
+    // const { rows } = await client.query(statement, params)
 
-    if (programmeId > 0) {
-      params = [programmeId, rows[0].scheduleId]
-      statement = `
-        INSERT INTO programme_schedule ("programmeId", "scheduleId") 
-        VALUES ($1, $2)
-      `
-      await client.query(statement, params)
-    }
+    // if (programmeId > 0) {
+    //   params = [programmeId, rows[0].scheduleId]
+    //   statement = `
+    //     INSERT INTO programme_schedule ("programmeId", "scheduleId")
+    //     VALUES ($1, $2)
+    //   `
+    //   await client.query(statement, params)
+    // }
 
     return res.status(204).send()
   }
@@ -172,6 +204,50 @@ export class ProgrammeService {
     const client: PoolClient = await pool.connect()
     await client.query(statement, params)
 
+    return res.status(204).json()
+  }
+
+  async unpublishSchedule(req: Request, res: Response) {
+    //remove one schedule from one programme
+
+    const { scheduleId } = req.params
+    const { programmeIds } = req.body
+
+    const client: PoolClient = await pool.connect()
+    let params, statement
+
+    const tasks = programmeIds.map(async (programmeId: number) => {
+      params = [scheduleId, programmeId]
+      statement = `
+      DELETE FROM programme_schedule
+      WHERE "scheduleId" = $1 
+      AND "programmeId" = $2
+      `
+      return await client.query(statement, params)
+    })
+
+    await Promise.all(tasks)
+    return res.status(204).json()
+  }
+
+  async publishSchedule(req: Request, res: Response) {
+    //can be multiple programmes
+    const { programmeIds } = req.body
+    const { scheduleId } = req.params
+
+    const client: PoolClient = await pool.connect()
+    let params, statement
+
+    const tasks = programmeIds.map(async (programmeId: number) => {
+      params = [scheduleId, programmeId]
+      statement = `
+      INSERT INTO programme_schedule ("scheduleId", "programmeId")
+      VALUES ($1, $2);
+      `
+      return await client.query(statement, params)
+    })
+
+    await Promise.all(tasks)
     return res.status(204).json()
   }
 
