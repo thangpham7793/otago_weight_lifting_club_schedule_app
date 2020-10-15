@@ -39,7 +39,7 @@ export class ProgrammeRouter {
 
     programmeRouter.get(
       "/schedules/info",
-      catchAsync(this.extractHeaderAuthToken),
+      //catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.programmeService.getAllSchedulesInfo)
     )
 

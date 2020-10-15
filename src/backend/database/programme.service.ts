@@ -3,6 +3,7 @@ import { Request, Response } from "express"
 import { PoolClient } from "pg"
 import { pool } from "./pool"
 import { TimeTable } from "../types"
+import { scheduleInfoJsonFormatter } from "../utils/programmeServiceHelpers"
 
 export class ProgrammeService {
   async getAllProgrammes(req: Request, res: Response) {
@@ -113,7 +114,14 @@ export class ProgrammeService {
 
   async getAllSchedulesInfo(req: Request, res: Response) {
     const statement = `
-    SELECT "scheduleId", "scheduleName", "weekCount" FROM schedule;`
+    SELECT 
+    s."scheduleId", s."scheduleName", s."weekCount",
+    p."programmeId", p."programmeName"
+    FROM schedule s
+    LEFT JOIN programme_schedule ps
+    ON s."scheduleId" = ps."scheduleId"
+    LEFT JOIN programme p
+    ON ps."programmeId" = p."programmeId";`
 
     const client: PoolClient = await pool.connect()
     const result = await client.query(statement)
@@ -122,7 +130,7 @@ export class ProgrammeService {
       res.status(404).json({ message: "no schedule found" })
     }
 
-    res.status(200).json(result.rows)
+    res.status(200).json(scheduleInfoJsonFormatter(result.rows))
     return client.release()
   }
 
