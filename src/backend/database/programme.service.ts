@@ -166,46 +166,53 @@ export class ProgrammeService {
   }
 
   async createWeeklySchedules(req: Request, res: Response) {
-    const { timetable, scheduleName, weekCount, programmeId } = req.body
+    const { timetable, scheduleName, weekCount, programmeIds } = req.body
 
     const weeklySchedules = ProgrammeService.makeWeeklySchedulesString(
       timetable
     )
 
-    // console.log({ scheduleName, weekCount, programmeId })
+    console.log({ scheduleName, weekCount, programmeIds })
 
-    // let params = [scheduleName, weekCount]
-    // let statement = `
-    // INSERT INTO schedule ("scheduleName", "weekCount", timetable)
-    // VALUES ($1, $2, ARRAY[${weeklySchedules}]) RETURNING "scheduleId"
-    // `
-    // const client: PoolClient = await pool.connect()
-    // const { rows } = await client.query(statement, params)
+    let params = [scheduleName, weekCount]
+    let statement = `
+    INSERT INTO schedule ("scheduleName", "weekCount", timetable)
+    VALUES ($1, $2, ARRAY[${weeklySchedules}]) RETURNING "scheduleId"
+    `
+    const client: PoolClient = await pool.connect()
+    const { rows } = await client.query(statement, params)
 
-    // if (programmeId > 0) {
-    //   params = [programmeId, rows[0].scheduleId]
-    //   statement = `
-    //     INSERT INTO programme_schedule ("programmeId", "scheduleId")
-    //     VALUES ($1, $2)
-    //   `
-    //   await client.query(statement, params)
-    // }
+    const newScheduleId = rows[0].scheduleId
+
+    if (programmeIds.length > 0) {
+      const tasks = programmeIds.map(async (programmeId: number) => {
+        params = [newScheduleId, programmeId]
+        statement = `
+        INSERT INTO programme_schedule ("scheduleId", "programmeId")
+        VALUES ($1, $2);
+        `
+        return await client.query(statement, params)
+      })
+      await Promise.all(tasks)
+      return res.status(204).json()
+    }
 
     return res.status(204).send()
   }
 
   async updateWeeklySchedules(req: Request, res: Response) {
-    const { timetable, scheduleId } = req.body
+    const { timetable, scheduleId, weekCount } = req.body
 
     const weeklySchedules = ProgrammeService.makeWeeklySchedulesString(
       timetable
     )
 
-    const params = [scheduleId]
+    const params = [scheduleId, weekCount]
     const statement = `
-    
+
     UPDATE schedule
-    SET timetable = ARRAY[${weeklySchedules}]
+    SET timetable = ARRAY[${weeklySchedules}], 
+    "weekCount" = $2
     WHERE "scheduleId" = $1;
     `
     //TODO: can abstract this into a class (function)
