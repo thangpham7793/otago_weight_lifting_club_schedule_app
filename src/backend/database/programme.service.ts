@@ -277,6 +277,12 @@ export class ProgrammeService {
     const { programmeIds } = req.body
     const { scheduleId } = req.params
 
+    console.log(
+      `Publish schedule ${scheduleId} to programmes ${JSON.stringify(
+        programmeIds
+      )}`
+    )
+
     const client: PoolClient = await pool.connect()
     let params, statement
 
