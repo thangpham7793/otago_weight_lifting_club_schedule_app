@@ -112,6 +112,33 @@ export class ProgrammeService {
     return client.release()
   }
 
+  async getAvailableProgrammesToPublish(req: Request, res: Response) {
+    const { scheduleId } = req.params
+
+    //2 steps: find ids of all programmes a schedule belongs to, then only get the ids and names of those that are not in the prev result
+    const statement = `
+    SELECT p."programmeId", p."programmeName" 
+    FROM programme p 
+    WHERE p."programmeId" NOT IN (
+      SELECT ps."programmeId" 
+      FROM programme_schedule ps 
+      WHERE ps."scheduleId" = $1
+    );
+    `
+
+    const params = [parseInt(scheduleId)]
+
+    const client: PoolClient = await pool.connect()
+    const result = await client.query(statement, params)
+
+    if (!result.rows) {
+      res.status(404).json({ message: "no schedule found" })
+    }
+
+    res.status(200).json(result.rows)
+    return client.release()
+  }
+
   async getAllSchedulesInfo(req: Request, res: Response) {
     const statement = `
     SELECT 

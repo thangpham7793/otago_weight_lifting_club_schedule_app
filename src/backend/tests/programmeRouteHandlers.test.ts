@@ -1,3 +1,4 @@
+import { ProgrammeInfo } from "./../types.d"
 import { appConfig } from "../utils/config"
 import { api } from "./testHelper"
 import { pool } from "../database/register"
@@ -57,7 +58,7 @@ describe("API Integration Tests - Schedule Service", () => {
 
   //IN DEVELOPMENT INSTRUCTOR PART
   describe("GET /programmes/:programmeId/schedules", () => {
-    it.only("should return all schedule names, week counts, and ids of a programme as an array of objects", async () => {
+    it("should return all schedule names, week counts, and ids of a programme as an array of objects", async () => {
       //SECTION: ARRANGE
       const expected = [
         {
@@ -96,6 +97,73 @@ describe("API Integration Tests - Schedule Service", () => {
         .end((err, res) => {
           if (err) throw err
         })
+    })
+  })
+
+  describe.only("GET /programmes/schedules/:scheduleId/publish/available.programmes", () => {
+    it("should return all the programmes and ids when the target schedule has not been published", async () => {
+      //SECTION: ARRANGE
+      const expected: ProgrammeInfo[] = [
+        {
+          programmeName: "testing",
+          programmeId: 6,
+        },
+        {
+          programmeName: "Senior",
+          programmeId: 5,
+        },
+        {
+          programmeName: "Youth and Junior",
+          programmeId: 1,
+        },
+      ]
+
+      //SECTION: ACT
+      const response = await api
+        .get("/programmes/schedules/76/publish/available.programmes")
+        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+
+      //SECTION: ASSERT
+      expect(response.status).toEqual(200)
+      response.body.forEach((p: ProgrammeInfo) =>
+        expect(expected).toContainEqual(p)
+      )
+    })
+
+    it("should return all only programmes that do not already have the target schedule in its list", async () => {
+      //SECTION: ARRANGE
+      const expected: ProgrammeInfo[] = [
+        {
+          programmeName: "testing",
+          programmeId: 6,
+        },
+        {
+          programmeName: "Senior",
+          programmeId: 5,
+        },
+      ]
+
+      //SECTION: ACT
+      const response = await api
+        .get("/programmes/schedules/56/publish/available.programmes")
+        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+
+      //SECTION: ASSERT
+      expect(response.status).toEqual(200)
+      response.body.forEach((p: ProgrammeInfo) =>
+        expect(expected).toContainEqual(p)
+      )
+    })
+
+    it("should return an empty array if all programmes have the target schedule", async () => {
+      //SECTION: ACT
+      const response = await api
+        .get("/programmes/schedules/58/publish/available.programmes")
+        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+
+      //SECTION: ASSERT
+      expect(response.status).toEqual(200)
+      expect(response.body.length).toBe(0)
     })
   })
 

@@ -39,8 +39,15 @@ export class ProgrammeRouter {
 
     programmeRouter.get(
       "/schedules/info",
-      //catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.programmeService.getAllSchedulesInfo)
+    )
+
+    // get programmes that a shedule has been published to
+    programmeRouter.get(
+      "/schedules/:scheduleId/publish/available.programmes",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.getAvailableProgrammesToPublish)
     )
 
     programmeRouter.post(
