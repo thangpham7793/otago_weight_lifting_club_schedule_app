@@ -40,7 +40,7 @@ export const serverError = (
     console.log(err)
     switch (err.code) {
       case "23505":
-        return res.status(400).json({ message: "email already used" })
+        return res.status(400).json({ message: `${err.detail}` })
       //no schedule has been added to a programme yet
       case "22004":
         return res.status(404).json({ message: "no schedule found" })
@@ -50,7 +50,7 @@ export const serverError = (
   }
   //other errors
   else {
-    res.status(500).json({ errorMessage: `Something wrong happen ${err}` })
+    res.status(500).json({ message: `Something wrong happen ${err}` })
   }
   return
 }

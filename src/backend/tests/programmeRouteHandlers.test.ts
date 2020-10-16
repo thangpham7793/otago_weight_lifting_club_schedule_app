@@ -100,6 +100,7 @@ describe("API Integration Tests - Schedule Service", () => {
     })
   })
 
+  //FIXME: broken since test programmes are deleted
   describe.only("GET /programmes/schedules/:scheduleId/publish/available.programmes", () => {
     it("should return all the programmes and ids when the target schedule has not been published", async () => {
       //SECTION: ARRANGE

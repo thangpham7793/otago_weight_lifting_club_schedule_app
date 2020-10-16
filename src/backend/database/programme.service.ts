@@ -7,7 +7,7 @@ import { scheduleInfoJsonFormatter } from "../utils/programmeServiceHelpers"
 
 export class ProgrammeService {
   async getAllProgrammes(req: Request, res: Response) {
-    const statement = `SELECT "programmeName", "programmeId", "scheduleIds" FROM programme;`
+    const statement = `SELECT "programmeName", "programmeId" FROM programme;`
     const client: PoolClient = await pool.connect()
     const { rows } = await client.query(statement)
 
@@ -204,7 +204,8 @@ export class ProgrammeService {
     let params = [scheduleName, weekCount]
     let statement = `
     INSERT INTO schedule ("scheduleName", "weekCount", timetable)
-    VALUES ($1, $2, ARRAY[${weeklySchedules}]) RETURNING "scheduleId"
+    VALUES ($1, $2, ARRAY[${weeklySchedules}]) 
+    RETURNING "scheduleId", "scheduleName", "weekCount"
     `
     const client: PoolClient = await pool.connect()
     const { rows } = await client.query(statement, params)
@@ -221,10 +222,10 @@ export class ProgrammeService {
         return await client.query(statement, params)
       })
       await Promise.all(tasks)
-      return res.status(204).json()
+      return res.status(200).json(rows[0])
     }
 
-    return res.status(204).send()
+    return res.status(200).json(rows[0])
   }
 
   async updateWeeklySchedules(req: Request, res: Response) {
