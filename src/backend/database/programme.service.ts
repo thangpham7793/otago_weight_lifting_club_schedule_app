@@ -232,19 +232,29 @@ export class ProgrammeService {
   async updateWeeklySchedules(req: Request, res: Response) {
     const { scheduleName, timetable, scheduleId, weekCount } = req.body
 
-    const weeklySchedules = ProgrammeService.makeWeeklySchedulesString(
-      timetable
-    )
+    let statement, params
 
-    const params = [scheduleId, scheduleName, weekCount]
-    const statement = `
+    if (timetable) {
+      const weeklySchedules = ProgrammeService.makeWeeklySchedulesString(
+        timetable
+      )
+      params = [scheduleId, scheduleName, weekCount]
+      statement = `
+      UPDATE schedule
+      SET timetable = ARRAY[${weeklySchedules}], 
+      "scheduleName" = $2, 
+      "weekCount" = $3
+      WHERE "scheduleId" = $1;
+      `
+    } else {
+      params = [scheduleId, scheduleName]
+      statement = `
+      UPDATE schedule
+      SET "scheduleName" = $2
+      WHERE "scheduleId" = $1;
+      `
+    }
 
-    UPDATE schedule
-    SET timetable = ARRAY[${weeklySchedules}], 
-    "scheduleName" = $2, 
-    "weekCount" = $3
-    WHERE "scheduleId" = $1;
-    `
     //TODO: can abstract this into a class (function)
     const client: PoolClient = await pool.connect()
     await client.query(statement, params)
