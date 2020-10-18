@@ -4,6 +4,7 @@ import { PoolClient } from "pg"
 import { pool } from "./pool"
 import { TimeTable } from "../types"
 import { scheduleInfoJsonFormatter } from "../utils/programmeServiceHelpers"
+import { delay } from "../utils/register"
 
 export class ProgrammeService {
   async getAllProgrammes(req: Request, res: Response) {
@@ -229,18 +230,19 @@ export class ProgrammeService {
   }
 
   async updateWeeklySchedules(req: Request, res: Response) {
-    const { timetable, scheduleId, weekCount } = req.body
+    const { scheduleName, timetable, scheduleId, weekCount } = req.body
 
     const weeklySchedules = ProgrammeService.makeWeeklySchedulesString(
       timetable
     )
 
-    const params = [scheduleId, weekCount]
+    const params = [scheduleId, scheduleName, weekCount]
     const statement = `
 
     UPDATE schedule
     SET timetable = ARRAY[${weeklySchedules}], 
-    "weekCount" = $2
+    "scheduleName" = $2, 
+    "weekCount" = $3
     WHERE "scheduleId" = $1;
     `
     //TODO: can abstract this into a class (function)
@@ -253,23 +255,19 @@ export class ProgrammeService {
   async unpublishSchedule(req: Request, res: Response) {
     //remove one schedule from one programme
 
-    const { scheduleId } = req.params
-    const { programmeIds } = req.body
+    const { scheduleId, programmeId } = req.params
+    console.log(scheduleId, programmeId)
 
     const client: PoolClient = await pool.connect()
-    let params, statement
 
-    const tasks = programmeIds.map(async (programmeId: number) => {
-      params = [scheduleId, programmeId]
-      statement = `
+    const params = [parseInt(scheduleId), parseInt(programmeId)]
+    const statement = `
       DELETE FROM programme_schedule
-      WHERE "scheduleId" = $1 
+      WHERE "scheduleId" = $1
       AND "programmeId" = $2
       `
-      return await client.query(statement, params)
-    })
 
-    await Promise.all(tasks)
+    await client.query(statement, params)
     return res.status(204).json()
   }
 

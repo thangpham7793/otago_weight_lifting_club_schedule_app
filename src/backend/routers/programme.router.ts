@@ -76,10 +76,10 @@ export class ProgrammeRouter {
     )
 
     programmeRouter.delete(
-      //recieves an array of programmeIds in req.body
-      "/schedules/:scheduleId/unpublish/",
+      //DELETE req should not have a body
+      "/schedules/:scheduleId/unpublish/:programmeId",
       catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.publishSchedule)
+      catchAsync(this.programmeService.unpublishSchedule)
     )
   }
 }
