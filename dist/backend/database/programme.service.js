@@ -50,6 +50,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProgrammeService = void 0;
 var bcrypt_1 = require("bcrypt");
 var pool_1 = require("./pool");
+var programmeServiceHelpers_1 = require("../utils/programmeServiceHelpers");
 var ProgrammeService = (function () {
     function ProgrammeService() {
     }
@@ -59,7 +60,7 @@ var ProgrammeService = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        statement = "SELECT \"programmeName\", \"programmeId\", \"scheduleIds\" FROM programme;";
+                        statement = "SELECT \"programmeName\", \"programmeId\" FROM programme;";
                         return [4, pool_1.pool.connect()];
                     case 1:
                         client = _a.sent();
@@ -141,6 +142,74 @@ var ProgrammeService = (function () {
             });
         });
     };
+    ProgrammeService.prototype.deleteSchedule = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var scheduleId, params, statement, client;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        scheduleId = req.params.scheduleId;
+                        console.log("Received schedule Id " + scheduleId);
+                        params = [parseInt(scheduleId)];
+                        statement = "DELETE FROM schedule WHERE \"scheduleId\" = $1;";
+                        return [4, pool_1.pool.connect()];
+                    case 1:
+                        client = _a.sent();
+                        return [4, client.query(statement, params)];
+                    case 2:
+                        _a.sent();
+                        res.status(204).send();
+                        return [2, client.release()];
+                }
+            });
+        });
+    };
+    ProgrammeService.prototype.getAvailableProgrammesToPublish = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var scheduleId, statement, params, client, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        scheduleId = req.params.scheduleId;
+                        statement = "\n    SELECT p.\"programmeId\", p.\"programmeName\" \n    FROM programme p \n    WHERE p.\"programmeId\" NOT IN (\n      SELECT ps.\"programmeId\" \n      FROM programme_schedule ps \n      WHERE ps.\"scheduleId\" = $1\n    );\n    ";
+                        params = [parseInt(scheduleId)];
+                        return [4, pool_1.pool.connect()];
+                    case 1:
+                        client = _a.sent();
+                        return [4, client.query(statement, params)];
+                    case 2:
+                        result = _a.sent();
+                        if (!result.rows) {
+                            res.status(404).json({ message: "no schedule found" });
+                        }
+                        res.status(200).json(result.rows);
+                        return [2, client.release()];
+                }
+            });
+        });
+    };
+    ProgrammeService.prototype.getAllSchedulesInfo = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var statement, client, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        statement = "\n    SELECT \n    s.\"scheduleId\", s.\"scheduleName\", s.\"weekCount\",\n    p.\"programmeId\", p.\"programmeName\"\n    FROM schedule s\n    LEFT JOIN programme_schedule ps\n    ON s.\"scheduleId\" = ps.\"scheduleId\"\n    LEFT JOIN programme p\n    ON ps.\"programmeId\" = p.\"programmeId\";";
+                        return [4, pool_1.pool.connect()];
+                    case 1:
+                        client = _a.sent();
+                        return [4, client.query(statement)];
+                    case 2:
+                        result = _a.sent();
+                        if (!result.rows) {
+                            res.status(404).json({ message: "no schedule found" });
+                        }
+                        res.status(200).json(programmeServiceHelpers_1.scheduleInfoJsonFormatter(result.rows));
+                        return [2, client.release()];
+                }
+            });
+        });
+    };
     ProgrammeService.prototype.changeProgrammePassword = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var newPassword, programmeId, hashedPassword, params, statement, client;
@@ -177,49 +246,119 @@ var ProgrammeService = (function () {
     };
     ProgrammeService.prototype.createWeeklySchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, timetable, scheduleName, weekCount, programmeId, weeklySchedules, params, statement, client, rows;
+            var _a, timetable, scheduleName, weekCount, programmeIds, weeklySchedules, params, statement, client, rows, newScheduleId, tasks;
+            var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = req.body, timetable = _a.timetable, scheduleName = _a.scheduleName, weekCount = _a.weekCount, programmeId = _a.programmeId;
+                        _a = req.body, timetable = _a.timetable, scheduleName = _a.scheduleName, weekCount = _a.weekCount, programmeIds = _a.programmeIds;
                         weeklySchedules = ProgrammeService.makeWeeklySchedulesString(timetable);
-                        console.log({ scheduleName: scheduleName, weekCount: weekCount, programmeId: programmeId });
+                        console.log({ scheduleName: scheduleName, weekCount: weekCount, programmeIds: programmeIds });
                         params = [scheduleName, weekCount];
-                        statement = "\n    INSERT INTO schedule (\"scheduleName\", \"weekCount\", timetable)\n    VALUES ($1, $2, ARRAY[" + weeklySchedules + "]) RETURNING \"scheduleId\"\n    ";
+                        statement = "\n    INSERT INTO schedule (\"scheduleName\", \"weekCount\", timetable)\n    VALUES ($1, $2, ARRAY[" + weeklySchedules + "]) \n    RETURNING \"scheduleId\", \"scheduleName\", \"weekCount\"\n    ";
                         return [4, pool_1.pool.connect()];
                     case 1:
                         client = _b.sent();
                         return [4, client.query(statement, params)];
                     case 2:
                         rows = (_b.sent()).rows;
-                        if (!(programmeId > 0)) return [3, 4];
-                        params = [programmeId, rows[0].scheduleId];
-                        statement = "\n        INSERT INTO programme_schedule (\"programmeId\", \"scheduleId\") \n        VALUES ($1, $2)\n      ";
-                        return [4, client.query(statement, params)];
+                        newScheduleId = rows[0].scheduleId;
+                        if (!(programmeIds.length > 0)) return [3, 4];
+                        tasks = programmeIds.map(function (programmeId) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        params = [newScheduleId, programmeId];
+                                        statement = "\n        INSERT INTO programme_schedule (\"scheduleId\", \"programmeId\")\n        VALUES ($1, $2);\n        ";
+                                        return [4, client.query(statement, params)];
+                                    case 1: return [2, _a.sent()];
+                                }
+                            });
+                        }); });
+                        return [4, Promise.all(tasks)];
                     case 3:
                         _b.sent();
-                        _b.label = 4;
-                    case 4: return [2, res.status(204).send()];
+                        return [2, res.status(200).json(rows[0])];
+                    case 4: return [2, res.status(200).json(rows[0])];
                 }
             });
         });
     };
     ProgrammeService.prototype.updateWeeklySchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, timetable, scheduleId, weeklySchedules, params, statement, client;
+            var _a, scheduleName, timetable, scheduleId, weekCount, statement, params, weeklySchedules, client;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = req.body, timetable = _a.timetable, scheduleId = _a.scheduleId;
-                        weeklySchedules = ProgrammeService.makeWeeklySchedulesString(timetable);
-                        params = [scheduleId];
-                        statement = "\n    \n    UPDATE schedule\n    SET timetable = ARRAY[" + weeklySchedules + "]\n    WHERE \"scheduleId\" = $1;\n    ";
+                        _a = req.body, scheduleName = _a.scheduleName, timetable = _a.timetable, scheduleId = _a.scheduleId, weekCount = _a.weekCount;
+                        if (timetable) {
+                            weeklySchedules = ProgrammeService.makeWeeklySchedulesString(timetable);
+                            params = [scheduleId, scheduleName, weekCount];
+                            statement = "\n      UPDATE schedule\n      SET timetable = ARRAY[" + weeklySchedules + "], \n      \"scheduleName\" = $2, \n      \"weekCount\" = $3\n      WHERE \"scheduleId\" = $1;\n      ";
+                        }
+                        else {
+                            params = [scheduleId, scheduleName];
+                            statement = "\n      UPDATE schedule\n      SET \"scheduleName\" = $2\n      WHERE \"scheduleId\" = $1;\n      ";
+                        }
                         return [4, pool_1.pool.connect()];
                     case 1:
                         client = _b.sent();
                         return [4, client.query(statement, params)];
                     case 2:
                         _b.sent();
+                        return [2, res.status(204).json()];
+                }
+            });
+        });
+    };
+    ProgrammeService.prototype.unpublishSchedule = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, scheduleId, programmeId, client, params, statement;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.params, scheduleId = _a.scheduleId, programmeId = _a.programmeId;
+                        console.log(scheduleId, programmeId);
+                        return [4, pool_1.pool.connect()];
+                    case 1:
+                        client = _b.sent();
+                        params = [parseInt(scheduleId), parseInt(programmeId)];
+                        statement = "\n      DELETE FROM programme_schedule\n      WHERE \"scheduleId\" = $1\n      AND \"programmeId\" = $2\n      ";
+                        return [4, client.query(statement, params)];
+                    case 2:
+                        _b.sent();
+                        return [2, res.status(204).json()];
+                }
+            });
+        });
+    };
+    ProgrammeService.prototype.publishSchedule = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var programmeIds, scheduleId, client, params, statement, tasks;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        programmeIds = req.body.programmeIds;
+                        scheduleId = req.params.scheduleId;
+                        console.log("Publish schedule " + scheduleId + " to programmes " + JSON.stringify(programmeIds));
+                        return [4, pool_1.pool.connect()];
+                    case 1:
+                        client = _a.sent();
+                        tasks = programmeIds.map(function (programmeId) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        params = [scheduleId, programmeId];
+                                        statement = "\n      INSERT INTO programme_schedule (\"scheduleId\", \"programmeId\")\n      VALUES ($1, $2);\n      ";
+                                        return [4, client.query(statement, params)];
+                                    case 1: return [2, _a.sent()];
+                                }
+                            });
+                        }); });
+                        return [4, Promise.all(tasks)];
+                    case 2:
+                        _a.sent();
                         return [2, res.status(204).json()];
                 }
             });
