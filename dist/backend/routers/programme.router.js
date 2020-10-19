@@ -18,8 +18,13 @@ var ProgrammeRouter = (function () {
         programmeRouter.get("/:programmeId/schedules", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.getAllSchedules));
         programmeRouter.get("/schedules/:scheduleId/weeks/:week", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.getWeeklySchedule));
         programmeRouter.put("/:programmeId/password", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.changeProgrammePassword));
+        programmeRouter.get("/schedules/info", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.getAllSchedulesInfo));
+        programmeRouter.get("/schedules/:scheduleId/publish/available.programmes", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.getAvailableProgrammesToPublish));
         programmeRouter.post("/schedules", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.createWeeklySchedules));
         programmeRouter.put("/schedules", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.updateWeeklySchedules));
+        programmeRouter.delete("/schedules/:scheduleId", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.deleteSchedule));
+        programmeRouter.post("/schedules/:scheduleId/publish/", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.publishSchedule));
+        programmeRouter.delete("/schedules/:scheduleId/unpublish/:programmeId", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.unpublishSchedule));
     };
     return ProgrammeRouter;
 }());

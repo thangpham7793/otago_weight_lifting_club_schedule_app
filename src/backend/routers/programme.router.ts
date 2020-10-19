@@ -37,6 +37,19 @@ export class ProgrammeRouter {
       catchAsync(this.programmeService.changeProgrammePassword)
     )
 
+    programmeRouter.get(
+      "/schedules/info",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.getAllSchedulesInfo)
+    )
+
+    // get programmes that a shedule has been published to
+    programmeRouter.get(
+      "/schedules/:scheduleId/publish/available.programmes",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.getAvailableProgrammesToPublish)
+    )
+
     programmeRouter.post(
       "/schedules",
       catchAsync(this.extractHeaderAuthToken),
@@ -47,6 +60,26 @@ export class ProgrammeRouter {
       "/schedules",
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.programmeService.updateWeeklySchedules)
+    )
+
+    programmeRouter.delete(
+      "/schedules/:scheduleId",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.deleteSchedule)
+    )
+
+    programmeRouter.post(
+      //recieves an array of programmeIds in req.body
+      "/schedules/:scheduleId/publish/",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.publishSchedule)
+    )
+
+    programmeRouter.delete(
+      //DELETE req should not have a body
+      "/schedules/:scheduleId/unpublish/:programmeId",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.unpublishSchedule)
     )
   }
 }

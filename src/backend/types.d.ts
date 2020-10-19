@@ -28,3 +28,20 @@ export interface TimeTable {
   "week 7"?: WeeklyExercises
   "week 8"?: WeeklyExercises
 }
+
+export interface ScheduleInfoRow {
+  scheduleId: number
+  scheduleName: string
+  weekCount: number
+  programmeId?: number
+  programmeName?: string
+}
+
+export interface ProgrammeInfo {
+  programmeId: number
+  programmeName: string
+}
+
+export interface ScheduleInfo extends ScheduleInfoRow {
+  programmes: Array<ProgrammeInfo>
+}
