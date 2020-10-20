@@ -122,9 +122,9 @@ describe("API Integration Tests - Learner Service", () => {
 
       //SECTION: ACT
       const result = await api.post("/learners/login").send(loginCredentials)
-      expect(result.status).toEqual(200)
 
       //SECTION: ASSERT
+      expect(result.status).toEqual(200)
       expect(result.body).toHaveProperty("pbs")
       expect(result.body).toHaveProperty("schedules")
       expect(result.body).toHaveProperty("token")
@@ -137,7 +137,117 @@ describe("API Integration Tests - Learner Service", () => {
     it("should get all learners names, ids and the programmes they're following", async () => {})
   })
 
-  afterAll(async () => {
-    await pool.end()
+  describe("PUT /learners/practice.bests", () => {
+    it("should update a practice best of a learner", async () => {
+      const payload = {
+        pbId: 1,
+        weight: 200,
+      }
+
+      const result = await api
+        .put("/learners/practice.bests")
+        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .send(payload)
+
+      const { rows } = await pool.query(
+        `SELECT weight, CAST("lastEdited" AS TEXT) FROM practice_bests WHERE "pbId" = 1`
+      )
+
+      expect(result.status).toEqual(204)
+      expect(parseFloat(rows[0].weight)).toEqual(200)
+      expect(rows[0].lastEdited).toEqual(
+        new Date().toISOString().substring(0, 10)
+      )
+    })
   })
+
+  describe("GET /learners/practice.bests/:exerciseName", () => {
+    it("should get all the available records of an exercise", async () => {
+      const expected = [
+        {
+          pbId: 7,
+          learnerId: 1,
+          exerciseName: "clean and jerk",
+          repMax: "x4",
+          weight: "100.00",
+          lastEdited: "2020-10-20",
+        },
+        {
+          pbId: 8,
+          learnerId: 1,
+          exerciseName: "clean and jerk",
+          repMax: "x5",
+          weight: "100.00",
+          lastEdited: "2020-10-20",
+        },
+        {
+          pbId: 9,
+          learnerId: 1,
+          exerciseName: "clean and jerk",
+          repMax: "x7",
+          weight: "100.00",
+          lastEdited: "2020-10-20",
+        },
+        {
+          pbId: 10,
+          learnerId: 1,
+          exerciseName: "clean and jerk",
+          repMax: "x8",
+          weight: "100.00",
+          lastEdited: "2020-10-15",
+        },
+      ]
+
+      const result = await api
+        .get("/learners/1/practice.bests/clean%20and%20jerk")
+        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+
+      expect(result.status).toEqual(200)
+      expect(result.body.length).toEqual(4)
+      expect(result.body).toEqual(expected)
+    })
+  })
+
+  describe.only("POST /learners/practice.bests", () => {
+    it("should return all the posted info plus the pbId", async () => {
+      //SECTION: ARRANGE
+      const payload = {
+        exerciseName: "power jerk",
+        repMax: "x3",
+        weight: "120.00",
+      }
+
+      const expected = {
+        exerciseName: "power jerk",
+        repMax: "x3",
+        weight: "120.00",
+        lastEdited: new Date().toISOString().substr(0, 10),
+      }
+
+      //SECTION: ACT
+      const result = await api
+        .post("/learners/practice.bests")
+        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .send(payload)
+
+      //SECTION: ASSERT
+      expect(result.status).toEqual(201)
+      expect(result.body).toHaveProperty("pbId")
+      const { pbId } = result.body
+      delete result.body.pbId
+      expect(result.body).toEqual(expected)
+
+      //SECTION: clean up
+      try {
+        await pool.query(`DELETE FROM practice_bests WHERE "pbId" = $1`, [pbId])
+      } catch (error) {
+        console.error(error)
+      }
+    })
+  })
+
+  // afterAll(async () => {
+  //   await pool.end()
+  //   //process.exit(1)
+  // })
 })

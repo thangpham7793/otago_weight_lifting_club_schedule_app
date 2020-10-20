@@ -101,7 +101,7 @@ describe("API Integration Tests - Schedule Service", () => {
   })
 
   //FIXME: broken since test programmes are deleted
-  describe.only("GET /programmes/schedules/:scheduleId/publish/available.programmes", () => {
+  describe("GET /programmes/schedules/:scheduleId/publish/available.programmes", () => {
     it("should return all the programmes and ids when the target schedule has not been published", async () => {
       //SECTION: ARRANGE
       const expected: ProgrammeInfo[] = [
@@ -182,6 +182,20 @@ describe("API Integration Tests - Schedule Service", () => {
 
   describe.skip("DELETE /schedules/:scheduleId", () => {
     it("should delete a schedule and remove it from all programmes", async () => {})
+  })
+
+  describe.only("GET /programmes/exercises", () => {
+    it("should return all 28 exercises as an array", async () => {
+      //SECTION: ACT
+      const response = await api
+        .get("/programmes/exercises")
+        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+
+      //SECTION: ASSERT
+      expect(response.status).toEqual(200)
+      expect(response.body).toHaveProperty("exercises")
+      expect(response.body.exercises.length).toBe(28)
+    })
   })
 
   afterAll(async () => {

@@ -23,8 +23,11 @@ CREATE TABLE IF NOT EXISTS practice_bests (
 -- first update
 INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight") VALUES (1, 'snatch', 'x1', 100);
 
--- update using "pbId"
-UPDATE practice_bests SET weight = 120 WHERE "pbId" = 1;
+-- update using "pbId" (simple) and user doesn't need to pick the date 
+UPDATE practice_bests 
+SET weight = 120, 
+"lastEdited" = CURRENT_DATE 
+WHERE "pbId" = 1;
 
 -- insert with date
 INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean', 'x4', 100, '2020-10-20');
@@ -33,8 +36,18 @@ INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "la
 
 INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean', 'x7', 100, '2020-10-20');
 
--- get all of a learner practice_bests;
-SELECT l."username", pb.* FROM practice_bests pb JOIN learner l USING("learnerId") WHERE l."learnerId" = 1;
+INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean', 'x8', 100, '2020-10-15');
 
--- get records of one exercise (order by rep max)
-SELECT l."username", pb.* FROM practice_bests pb JOIN learner l USING("learnerId") WHERE l."learnerId" = 1 AND pb."exerciseName" = 'clean' ORDER BY pb."repMax";
+INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean and jerk', 'x4', 100, '2020-10-20');
+
+INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean and jerk', 'x5', 100, '2020-10-20');
+
+INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean and jerk', 'x7', 100, '2020-10-20');
+
+INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean and jerk', 'x8', 100, '2020-10-15');
+
+
+-- get records of one exercise (order by rep max) (when user choose an exercise)
+SELECT "pbId", "learnerId", "exerciseName", "repMax", "weight", CAST("lastEdited" as TEXT) FROM practice_bests WHERE "learnerId" = 1 AND "exerciseName" = 'clean and jerk' ORDER BY "repMax";
+
+

@@ -67,5 +67,23 @@ export class LearnerRouter {
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.learnerService.deleteLearner)
     )
+
+    learnerRouter.put(
+      "/practice.bests",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.updatePracticeBest)
+    )
+
+    learnerRouter.get(
+      "/:learnerId/practice.bests/:exerciseName",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.getPracticeBestsByExerciseName)
+    )
+
+    learnerRouter.post(
+      "/practice.bests",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.postNewPracticeBest)
+    )
   }
 }

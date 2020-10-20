@@ -4,6 +4,7 @@ import { PoolClient } from "pg"
 import { pool } from "./pool"
 import { TimeTable } from "../types"
 import { scheduleInfoJsonFormatter } from "../utils/programmeServiceHelpers"
+import { execute } from "./register"
 import { delay } from "../utils/register"
 
 export class ProgrammeService {
@@ -306,6 +307,15 @@ export class ProgrammeService {
 
     await Promise.all(tasks)
     return res.status(204).json()
+  }
+
+  async getAllExercises(req: Request, res: Response) {
+    const statement = `SELECT * FROM exercise`
+    const { rows } = await execute(statement)
+    const exercises = rows.reduce((acc, exercise) => {
+      return [...acc, exercise.exerciseName]
+    }, [])
+    return res.status(200).json({ exercises })
   }
 
   async endPool() {

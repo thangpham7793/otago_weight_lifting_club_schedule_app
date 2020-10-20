@@ -1,6 +1,7 @@
 import { compare } from "bcrypt"
 import { httpError, makeToken } from "./../utils/register"
 import { Request, Response, NextFunction } from "express"
+import { execute } from "./register"
 
 //using connection pool to support concurrent connection (caching conns)
 import { PoolClient } from "pg"
@@ -207,5 +208,53 @@ export class LearnerService {
     await client.query(statement, params)
     res.status(204).send()
     return client.release()
+  }
+
+  async updatePracticeBest(req: Request, res: Response) {
+    const { pbId, weight } = req.body
+    console.log("received", pbId, weight)
+    const statement = `
+      UPDATE practice_bests 
+      SET weight = $2, 
+      "lastEdited" = CURRENT_DATE 
+      WHERE "pbId" = $1;`
+
+    const params = [pbId, weight]
+    await execute(statement, params)
+
+    return res.status(204).send()
+  }
+
+  async getPracticeBestsByExerciseName(req: Request, res: Response) {
+    const { learnerId, exerciseName } = req.params
+    console.log("Received", learnerId, exerciseName)
+    const statement = `
+      SELECT "pbId", "learnerId", "exerciseName", 
+      "repMax", "weight", "lastEdited"::TEXT 
+      FROM practice_bests 
+      WHERE "learnerId" = $1 
+      AND "exerciseName" = $2 
+      ORDER BY "repMax";`
+    const params = [learnerId, exerciseName]
+    const { rows } = await execute(statement, params)
+    return res.status(200).json(rows)
+  }
+
+  async postNewPracticeBest(req: Request, res: Response) {
+    const { exerciseName, repMax, weight } = req.body
+    const { learnerId } = req.body.token.data
+    console.log("Received", learnerId, exerciseName, repMax, weight)
+    const statement = `
+    INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES ($1, $2, $3, $4, $5) RETURNING "pbId", "exerciseName", "repMax", "weight", "lastEdited"::TEXT;
+    `
+    const params = [
+      learnerId,
+      exerciseName,
+      repMax,
+      weight,
+      new Date().toISOString().substring(0, 10),
+    ]
+    const { rows } = await execute(statement, params)
+    return res.status(201).json(rows[0])
   }
 }

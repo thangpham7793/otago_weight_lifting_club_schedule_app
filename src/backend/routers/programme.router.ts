@@ -81,5 +81,11 @@ export class ProgrammeRouter {
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.programmeService.unpublishSchedule)
     )
+
+    programmeRouter.get(
+      "/exercises",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.programmeService.getAllExercises)
+    )
   }
 }
