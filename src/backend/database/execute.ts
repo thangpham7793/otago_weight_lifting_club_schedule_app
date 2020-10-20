@@ -8,7 +8,10 @@ export async function execute(
 ) {
   const client: PoolClient = await pool.connect()
 
-  return params
+  const res = params
     ? await client.query(statement, params)
     : await client.query(statement)
+
+  client.release()
+  return res
 }

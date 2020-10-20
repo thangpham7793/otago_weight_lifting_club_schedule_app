@@ -98,12 +98,6 @@ describe("API Integration Tests - Learner Service", () => {
         },
         schedules: [
           {
-            scheduleId: 56,
-            scheduleName: "Test_Schedule",
-            weekCount: 2,
-            programmeName: "Youth and Junior",
-          },
-          {
             scheduleId: 12,
             scheduleName: "October 2020 Peaking Cycle",
             weekCount: 6,
@@ -208,7 +202,7 @@ describe("API Integration Tests - Learner Service", () => {
     })
   })
 
-  describe.only("POST /learners/practice.bests", () => {
+  describe("POST /learners/practice.bests", () => {
     it("should return all the posted info plus the pbId", async () => {
       //SECTION: ARRANGE
       const payload = {
@@ -246,8 +240,7 @@ describe("API Integration Tests - Learner Service", () => {
     })
   })
 
-  // afterAll(async () => {
-  //   await pool.end()
-  //   //process.exit(1)
-  // })
+  afterAll(async () => {
+    await pool.end()
+  })
 })

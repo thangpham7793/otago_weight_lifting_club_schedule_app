@@ -10,8 +10,7 @@ import { delay } from "../utils/register"
 export class ProgrammeService {
   async getAllProgrammes(req: Request, res: Response) {
     const statement = `SELECT "programmeName", "programmeId" FROM programme;`
-    const client: PoolClient = await pool.connect()
-    const { rows } = await client.query(statement)
+    const { rows } = await execute(statement)
 
     if (rows.length === 0) {
       res.status(404).json({ message: "no programme found" })
@@ -19,11 +18,9 @@ export class ProgrammeService {
       //return array of object with programmeName and Id
       res.status(200).json({ programmes: rows, token: req.body.token })
     }
-    return client.release()
   }
 
   async getAllSchedules(req: Request, res: Response) {
-    const client: PoolClient = await pool.connect()
     const {
       programmeId,
       programmeName,
@@ -68,7 +65,7 @@ export class ProgrammeService {
     ORDER BY s."scheduleId" DESC;
     `
 
-    const { rows } = await client.query(statement, params)
+    const { rows } = await execute(statement, params)
 
     const schedules = rows.map((schedule) => {
       return { ...schedule, programmeName }
@@ -76,7 +73,6 @@ export class ProgrammeService {
 
     //send back pbs, token and programmeInfo
     res.status(200).send({ pbs, schedules, token })
-    return client.release()
   }
 
   async getWeeklySchedule(req: Request, res: Response) {
@@ -88,16 +84,13 @@ export class ProgrammeService {
     const statement = `
     SELECT timetable[$2] as week_${week} FROM schedule WHERE "scheduleId" = $1;`
 
-    const client: PoolClient = await pool.connect()
-    const result = await client.query(statement, params)
+    const { rows } = await execute(statement, params)
 
-    if (!result.rows) {
+    if (!rows) {
       res.status(404).json({ message: "no weekly schedule found" })
     }
 
-    res.status(200).json(result.rows[0][`week_${week}`])
-
-    return client.release()
+    res.status(200).json(rows[0][`week_${week}`])
   }
 
   async deleteSchedule(req: Request, res: Response) {
@@ -107,11 +100,8 @@ export class ProgrammeService {
     const params = [parseInt(scheduleId)]
     const statement = `DELETE FROM schedule WHERE "scheduleId" = $1;`
 
-    const client: PoolClient = await pool.connect()
-    await client.query(statement, params)
+    await execute(statement, params)
     res.status(204).send()
-
-    return client.release()
   }
 
   async getAvailableProgrammesToPublish(req: Request, res: Response) {
@@ -130,15 +120,13 @@ export class ProgrammeService {
 
     const params = [parseInt(scheduleId)]
 
-    const client: PoolClient = await pool.connect()
-    const result = await client.query(statement, params)
+    const { rows } = await execute(statement, params)
 
-    if (!result.rows) {
+    if (!rows) {
       res.status(404).json({ message: "no schedule found" })
     }
 
-    res.status(200).json(result.rows)
-    return client.release()
+    res.status(200).json(rows)
   }
 
   async getAllSchedulesInfo(req: Request, res: Response) {
@@ -152,15 +140,13 @@ export class ProgrammeService {
     LEFT JOIN programme p
     ON ps."programmeId" = p."programmeId";`
 
-    const client: PoolClient = await pool.connect()
-    const result = await client.query(statement)
+    const { rows } = await execute(statement)
 
-    if (!result.rows) {
+    if (!rows) {
       res.status(404).json({ message: "no schedule found" })
     }
 
-    res.status(200).json(scheduleInfoJsonFormatter(result.rows))
-    return client.release()
+    res.status(200).json(scheduleInfoJsonFormatter(rows))
   }
 
   async changeProgrammePassword(req: Request, res: Response) {
@@ -174,10 +160,9 @@ export class ProgrammeService {
       SET "hashedPassword" = $1 
       WHERE "programmeId" = $2`
 
-    const client: PoolClient = await pool.connect()
-    await client.query(statement, params)
+    await execute(statement, params)
 
-    return res.status(204).send()
+    res.status(204).send()
   }
 
   //TODO: need unit testing for this
@@ -209,6 +194,7 @@ export class ProgrammeService {
     VALUES ($1, $2, ARRAY[${weeklySchedules}]) 
     RETURNING "scheduleId", "scheduleName", "weekCount"
     `
+    //don't use execute here to maintain connection
     const client: PoolClient = await pool.connect()
     const { rows } = await client.query(statement, params)
 
@@ -224,10 +210,11 @@ export class ProgrammeService {
         return await client.query(statement, params)
       })
       await Promise.all(tasks)
-      return res.status(200).json(rows[0])
+      res.status(200).json(rows[0])
     }
 
-    return res.status(200).json(rows[0])
+    res.status(200).json(rows[0])
+    return client.release()
   }
 
   async updateWeeklySchedules(req: Request, res: Response) {
@@ -257,10 +244,9 @@ export class ProgrammeService {
     }
 
     //TODO: can abstract this into a class (function)
-    const client: PoolClient = await pool.connect()
-    await client.query(statement, params)
 
-    return res.status(204).json()
+    await execute(statement, params)
+    res.status(204).send()
   }
 
   async unpublishSchedule(req: Request, res: Response) {
@@ -269,8 +255,6 @@ export class ProgrammeService {
     const { scheduleId, programmeId } = req.params
     console.log(scheduleId, programmeId)
 
-    const client: PoolClient = await pool.connect()
-
     const params = [parseInt(scheduleId), parseInt(programmeId)]
     const statement = `
       DELETE FROM programme_schedule
@@ -278,8 +262,8 @@ export class ProgrammeService {
       AND "programmeId" = $2
       `
 
-    await client.query(statement, params)
-    return res.status(204).json()
+    await execute(statement, params)
+    res.status(204).send()
   }
 
   async publishSchedule(req: Request, res: Response) {
@@ -306,7 +290,8 @@ export class ProgrammeService {
     })
 
     await Promise.all(tasks)
-    return res.status(204).json()
+    res.status(204).send()
+    client.release()
   }
 
   async getAllExercises(req: Request, res: Response) {
@@ -315,7 +300,7 @@ export class ProgrammeService {
     const exercises = rows.reduce((acc, exercise) => {
       return [...acc, exercise.exerciseName]
     }, [])
-    return res.status(200).json({ exercises })
+    res.status(200).json({ exercises })
   }
 
   async endPool() {

@@ -3,23 +3,17 @@ import { httpError, makeToken } from "./../utils/register"
 import { Request, Response, NextFunction } from "express"
 import { execute } from "./register"
 
-//using connection pool to support concurrent connection (caching conns)
-import { PoolClient } from "pg"
-import { pool } from "./pool"
-
 export class LearnerService {
   redirectToSignupPage(req: Request, res: Response) {
     res.redirect("../signup.html")
   }
 
   async getAllLearners(req: Request, res: Response, next: NextFunction) {
-    const client: PoolClient = await pool.connect()
-    const result = await client.query(
+    const result = await execute(
       `SELECT "learnerId", username, email, "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner ORDER BY "firstName"`
     )
 
     res.status(200).json(result.rows)
-    return client.release()
   }
 
   async createLearner(req: Request, res: Response, next: NextFunction) {
@@ -41,14 +35,8 @@ export class LearnerService {
       typeof val === "string" ? val.toLowerCase() : val
     )
 
-    console.log(params)
-    const client: PoolClient = await pool.connect()
-    const result = await client.query(statement, params)
-
-    console.log(result.rows[0])
-
+    const result = await execute(statement, params)
     res.status(201).send(result.rows[0])
-    return client.release()
   }
 
   async checkCredentials(req: Request, res: Response, next: NextFunction) {
@@ -66,8 +54,7 @@ export class LearnerService {
       USING ("programmeId")
       WHERE username = $1;`
 
-    const client: PoolClient = await pool.connect()
-    const { rows } = await client.query(statement, params)
+    const { rows } = await execute(statement, params)
 
     //console.log(result.rows)
     if (rows.length === 0) {
@@ -88,7 +75,6 @@ export class LearnerService {
     } else {
       throw new httpError(401, "wrong password")
     }
-    return client.release()
   }
 
   async getPbs(req: Request, res: Response, next: NextFunction) {
@@ -107,14 +93,12 @@ export class LearnerService {
     FROM learner
     WHERE "learnerId" = $1;
     `
-    const client: PoolClient = await pool.connect()
-    const { rows } = await client.query(statement, params)
+    const { rows } = await execute(statement, params)
     const pbs = { ...rows[0] }
     Object.keys(rows[0]).forEach((k) => {
       pbs[k] = parseFloat(rows[0][k])
     })
     res.status(200).json(pbs)
-    return client.release()
   }
 
   //FIXME: this will need to reflect update on other fields as well. May need a diff function to only update selected field
@@ -145,10 +129,9 @@ export class LearnerService {
     "pushPress" = $7
     WHERE "learnerId" = $8;
     `
-    const client: PoolClient = await pool.connect()
-    await client.query(statement, params)
+
+    await execute(statement, params)
     res.status(204).send()
-    return client.release()
   }
 
   async updateLearnerDetail(req: Request, res: Response, next: NextFunction) {
@@ -185,10 +168,9 @@ export class LearnerService {
     "pushPress" = $12
     WHERE "learnerId" = $1;
     `
-    const client: PoolClient = await pool.connect()
-    await client.query(statement, params)
+
+    await execute(statement, params)
     res.status(204).send()
-    return client.release()
   }
 
   async deleteLearner(req: Request, res: Response, next: NextFunction) {
@@ -204,10 +186,8 @@ export class LearnerService {
     DELETE FROM learner
     WHERE "learnerId" = $1;
     `
-    const client: PoolClient = await pool.connect()
-    await client.query(statement, params)
+    await execute(statement, params)
     res.status(204).send()
-    return client.release()
   }
 
   async updatePracticeBest(req: Request, res: Response) {
@@ -221,8 +201,7 @@ export class LearnerService {
 
     const params = [pbId, weight]
     await execute(statement, params)
-
-    return res.status(204).send()
+    res.status(204).send()
   }
 
   async getPracticeBestsByExerciseName(req: Request, res: Response) {
@@ -237,7 +216,7 @@ export class LearnerService {
       ORDER BY "repMax";`
     const params = [learnerId, exerciseName]
     const { rows } = await execute(statement, params)
-    return res.status(200).json(rows)
+    res.status(200).json(rows)
   }
 
   async postNewPracticeBest(req: Request, res: Response) {
@@ -255,6 +234,6 @@ export class LearnerService {
       new Date().toISOString().substring(0, 10),
     ]
     const { rows } = await execute(statement, params)
-    return res.status(201).json(rows[0])
+    res.status(201).json(rows[0])
   }
 }

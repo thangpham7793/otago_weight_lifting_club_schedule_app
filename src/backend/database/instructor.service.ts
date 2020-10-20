@@ -1,8 +1,7 @@
-import { pool } from "./pool"
 import { makeToken, httpError } from "./../utils/register"
 import { compare, hash } from "bcrypt"
-import { PoolClient } from "pg"
 import { NextFunction, Request, Response } from "express"
+import { execute } from "./register"
 
 export class InstructorService {
   async checkCredentials(req: Request, res: Response, next: NextFunction) {
@@ -15,8 +14,7 @@ export class InstructorService {
           FROM instructor
           WHERE email = $1`
 
-    const client: PoolClient = await pool.connect()
-    const { rows } = await client.query(statement, params)
+    const { rows } = await execute(statement, params)
 
     //console.log(result.rows)
     if (rows.length === 0) {
@@ -34,7 +32,6 @@ export class InstructorService {
     } else {
       throw new httpError(401, "wrong password")
     }
-    return client.release()
   }
 
   async changeInstructorPassword(req: Request, res: Response) {
@@ -48,9 +45,8 @@ export class InstructorService {
       SET "hashedPassword" = $1 
       WHERE "email" = $2`
 
-    const client: PoolClient = await pool.connect()
-    await client.query(statement, params)
+    await execute(statement, params)
 
-    return res.status(204).send()
+    res.status(204).send()
   }
 }
