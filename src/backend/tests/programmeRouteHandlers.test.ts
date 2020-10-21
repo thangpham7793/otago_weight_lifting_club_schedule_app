@@ -193,7 +193,7 @@ describe("API Integration Tests - Schedule Service", () => {
 
       //SECTION: ASSERT
       expect(response.status).toEqual(200)
-      expect(response.body).toHaveProperty("exercises")
+      expect(response.body).toHaveProperty("exerciseNames")
       expect(response.body.exercises.length).toBe(28)
     })
   })

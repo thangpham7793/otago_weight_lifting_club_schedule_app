@@ -214,7 +214,7 @@ export class LearnerService {
       WHERE "learnerId" = $1 
       AND "exerciseName" = $2 
       ORDER BY "repMax";`
-    const params = [learnerId, exerciseName]
+    const params = [parseInt(learnerId), exerciseName]
     const { rows } = await execute(statement, params)
     res.status(200).json(rows)
   }
@@ -222,7 +222,7 @@ export class LearnerService {
   async postNewPracticeBest(req: Request, res: Response) {
     const { exerciseName, repMax, weight } = req.body
     const { learnerId } = req.body.token.data
-    console.log("Received", learnerId, exerciseName, repMax, weight)
+    console.log("Received", learnerId, exerciseName, repMax, parseFloat(weight))
     const statement = `
     INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES ($1, $2, $3, $4, $5) RETURNING "pbId", "exerciseName", "repMax", "weight", "lastEdited"::TEXT;
     `

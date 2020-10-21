@@ -297,10 +297,10 @@ export class ProgrammeService {
   async getAllExercises(req: Request, res: Response) {
     const statement = `SELECT * FROM exercise`
     const { rows } = await execute(statement)
-    const exercises = rows.reduce((acc, exercise) => {
+    const exerciseNames = rows.reduce((acc, exercise) => {
       return [...acc, exercise.exerciseName]
     }, [])
-    res.status(200).json({ exercises })
+    res.status(200).json({ exerciseNames })
   }
 
   async endPool() {
