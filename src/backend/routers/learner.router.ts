@@ -85,5 +85,11 @@ export class LearnerRouter {
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.learnerService.postNewPracticeBest)
     )
+
+    learnerRouter.delete(
+      "/practice.bests/:pbId",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.deleteOnePracticeBest)
+    )
   }
 }

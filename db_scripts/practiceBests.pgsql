@@ -17,8 +17,10 @@ CREATE TABLE IF NOT EXISTS practice_bests (
     "repMax" VARCHAR(3) NOT NULL REFERENCES rep_max("repMax") ON DELETE CASCADE,
     "weight" NUMERIC(5,2) NOT NULL DEFAULT 0,
     "lastEdited" DATE NOT NULL DEFAULT CURRENT_DATE,
-    PRIMARY KEY("learnerId", "exerciseName", "repMax") -- this ensures uniqueness and "pbId" is just a proxy for updating
+    PRIMARY KEY("pbId") -- this ensures uniqueness and "pbId" makes updating and keeping historical record possible
 );
+
+-- , "learnerId", "exerciseName", "repMax"
 
 -- first update
 INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight") VALUES (1, 'snatch', 'x1', 100);
@@ -37,8 +39,6 @@ INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "la
 INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean', 'x7', 100, '2020-10-20');
 
 INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean', 'x8', 100, '2020-10-15');
-
-INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean and jerk', 'x4', 100, '2020-10-20');
 
 INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES (1, 'clean and jerk', 'x5', 100, '2020-10-20');
 

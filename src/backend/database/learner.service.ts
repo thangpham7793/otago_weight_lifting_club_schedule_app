@@ -238,4 +238,24 @@ export class LearnerService {
     const { rows } = await execute(statement, params)
     res.status(201).json(rows[0])
   }
+
+  async deleteOnePracticeBest(req: Request, res: Response, next: NextFunction) {
+    const { pbId } = req.params
+
+    if (!pbId) {
+      throw new httpError(400, "Missing Personal Best Id!")
+    }
+
+    console.log(`Received ${pbId}`)
+
+    const params = [parseInt(pbId)]
+
+    const statement = `
+    DELETE FROM practice_bests
+    WHERE "pbId" = $1;
+    `
+
+    await execute(statement, params)
+    res.status(204).send()
+  }
 }
