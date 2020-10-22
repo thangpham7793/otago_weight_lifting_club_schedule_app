@@ -75,7 +75,7 @@ export class LearnerRouter {
     )
 
     learnerRouter.get(
-      "/:learnerId/practice.bests/:exerciseName",
+      "/practice.bests/:exerciseName",
       catchAsync(this.extractHeaderAuthToken),
       catchAsync(this.learnerService.getPracticeBestsByExerciseName)
     )

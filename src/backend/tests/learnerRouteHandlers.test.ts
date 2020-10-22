@@ -193,7 +193,7 @@ describe("API Integration Tests - Learner Service", () => {
       ]
 
       const result = await api
-        .get("/learners/1/practice.bests/clean%20and%20jerk")
+        .get("/learners/practice.bests/clean%20and%20jerk")
         .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
 
       expect(result.status).toEqual(200)

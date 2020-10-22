@@ -205,7 +205,8 @@ export class LearnerService {
   }
 
   async getPracticeBestsByExerciseName(req: Request, res: Response) {
-    const { learnerId, exerciseName } = req.params
+    const { exerciseName } = req.params
+    const { learnerId } = req.body.token.data
     console.log("Received", learnerId, exerciseName)
     const statement = `
       SELECT "pbId", "learnerId", "exerciseName", 
