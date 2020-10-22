@@ -131,11 +131,12 @@ describe("API Integration Tests - Learner Service", () => {
     it("should get all learners names, ids and the programmes they're following", async () => {})
   })
 
-  describe("PUT /learners/practice.bests", () => {
+  describe.only("PUT /learners/practice.bests", () => {
     it("should update a practice best of a learner", async () => {
       const payload = {
         pbId: 1,
         weight: 200,
+        repMax: "x10",
       }
 
       const result = await api
@@ -144,11 +145,12 @@ describe("API Integration Tests - Learner Service", () => {
         .send(payload)
 
       const { rows } = await pool.query(
-        `SELECT weight, CAST("lastEdited" AS TEXT) FROM practice_bests WHERE "pbId" = 1`
+        `SELECT weight, "repMax", CAST("lastEdited" AS TEXT) FROM practice_bests WHERE "pbId" = 1`
       )
 
       expect(result.status).toEqual(204)
       expect(parseFloat(rows[0].weight)).toEqual(200)
+      expect(rows[0].repMax).toEqual("x10")
       expect(rows[0].lastEdited).toEqual(
         new Date().toISOString().substring(0, 10)
       )

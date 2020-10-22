@@ -191,15 +191,16 @@ export class LearnerService {
   }
 
   async updatePracticeBest(req: Request, res: Response) {
-    const { pbId, weight } = req.body
-    console.log("received", pbId, weight)
+    const { pbId, weight, repMax } = req.body
+    console.log("received", pbId, weight, repMax)
     const statement = `
       UPDATE practice_bests 
       SET weight = $2, 
+      "repMax" = $3,
       "lastEdited" = CURRENT_DATE 
       WHERE "pbId" = $1;`
 
-    const params = [pbId, weight]
+    const params = [pbId, weight, repMax]
     await execute(statement, params)
     res.status(204).send()
   }
