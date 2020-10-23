@@ -40,6 +40,12 @@ export const serverError = (
     console.log(err)
     switch (err.code) {
       case "23505":
+        if (
+          err.detail.includes("Key (email)") &&
+          err.detail.includes("already exists")
+        ) {
+          return res.status(400).json({ message: `Email Already Used!` })
+        }
         return res.status(400).json({ message: `${err.detail}` })
       //no schedule has been added to a programme yet
       case "22004":

@@ -14,16 +14,16 @@ export default class AppMailer {
   static transporter: Transporter = transporter
 
   constructor(
-    private recipientEmail: string,
-    private recipientUsername: string
+    private recipientUsername: string,
+    private recipientEmail: string
   ) {
     this.recipientEmail = recipientEmail
     this.recipientUsername = recipientUsername
   }
 
   static formatMailOptions(
-    recipientEmail: string,
-    recipientUsername: string
+    recipientUsername: string,
+    recipientEmail: string
   ): MailOptions {
     return {
       from: "thangnus@gmail.com",
@@ -35,9 +35,10 @@ export default class AppMailer {
 
   async sendAccountInfo() {
     try {
-      return await AppMailer.transporter.sendMail(
-        AppMailer.formatMailOptions(this.recipientEmail, this.recipientUsername)
+      const info = await AppMailer.transporter.sendMail(
+        AppMailer.formatMailOptions(this.recipientUsername, this.recipientEmail)
       )
+      return console.log(info)
     } catch (error) {
       console.error(error)
     }
