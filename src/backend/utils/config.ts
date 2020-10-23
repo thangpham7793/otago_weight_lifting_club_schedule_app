@@ -27,4 +27,6 @@ export const appConfig = {
   PORT: process.env.PORT || 5000,
   DB_CONFIG: herokuConfig,
   TEST_TOKEN: process.env.TEST_TOKEN,
+  GMAIL_USER: process.env.GMAIL_USER,
+  GMAIL_PW: process.env.GMAIL_PW,
 }

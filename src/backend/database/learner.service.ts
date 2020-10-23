@@ -2,6 +2,7 @@ import { compare } from "bcrypt"
 import { httpError, makeToken } from "./../utils/register"
 import { Request, Response, NextFunction } from "express"
 import { execute } from "./register"
+import AppMailer from "./AppMailer"
 
 export class LearnerService {
   redirectToSignupPage(req: Request, res: Response) {
@@ -28,15 +29,20 @@ export class LearnerService {
     //use select currval since nextval is called on insert and before the concat takes place so currval would get the id of the new learner
     const statement = `
     INSERT INTO learner ("firstName", "lastName", "email", "programmeId", "username")
-    VALUES ($1, $2, $3, $4, $5) RETURNING username, "learnerId";`
+    VALUES ($1, $2, $3, $4, $5) RETURNING username, "learnerId", "email";`
 
     //make sure only lowercase is inserted as well
     const params = Object.values(newLearnerInfo).map((val) =>
       typeof val === "string" ? val.toLowerCase() : val
     )
 
-    const result = await execute(statement, params)
-    res.status(201).send(result.rows[0])
+    const { rows } = await execute(statement, params)
+
+    const { username, learnerId, email } = rows[0]
+
+    res.status(201).send({ username, learnerId })
+
+    return await new AppMailer(username, email).sendAccountInfo()
   }
 
   async checkCredentials(req: Request, res: Response, next: NextFunction) {
