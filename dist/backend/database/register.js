@@ -14,3 +14,4 @@ __exportStar(require("./learner.service"), exports);
 __exportStar(require("./programme.service"), exports);
 __exportStar(require("./pool"), exports);
 __exportStar(require("./instructor.service"), exports);
+__exportStar(require("./execute"), exports);

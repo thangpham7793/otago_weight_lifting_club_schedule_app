@@ -53,11 +53,15 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LearnerService = void 0;
 var bcrypt_1 = require("bcrypt");
 var register_1 = require("./../utils/register");
-var pool_1 = require("./pool");
+var register_2 = require("./register");
+var AppMailer_1 = __importDefault(require("./AppMailer"));
 var LearnerService = (function () {
     function LearnerService() {
     }
@@ -66,51 +70,45 @@ var LearnerService = (function () {
     };
     LearnerService.prototype.getAllLearners = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var client, result;
+            var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, pool_1.pool.connect()];
+                    case 0: return [4, register_2.execute("SELECT \"learnerId\", username, email, \"firstName\", \"lastName\", \"snatch\", clean, jerk, \"cleanAndJerk\", \"backSquat\", \"frontSquat\", \"pushPress\" FROM learner ORDER BY \"firstName\"")];
                     case 1:
-                        client = _a.sent();
-                        return [4, client.query("SELECT \"learnerId\", username, email, \"firstName\", \"lastName\", \"snatch\", clean, jerk, \"cleanAndJerk\", \"backSquat\", \"frontSquat\", \"pushPress\" FROM learner ORDER BY \"firstName\"")];
-                    case 2:
                         result = _a.sent();
                         res.status(200).json(result.rows);
-                        return [2, client.release()];
+                        return [2];
                 }
             });
         });
     };
     LearnerService.prototype.createLearner = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var newLearnerInfo, statement, params, client, result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var newLearnerInfo, statement, params, rows, _a, username, learnerId, email;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         newLearnerInfo = req.body;
                         console.log(req.body);
                         newLearnerInfo.username = "" + newLearnerInfo.lastName + newLearnerInfo.firstName.substring(0, 1);
-                        statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\", \"username\")\n    VALUES ($1, $2, $3, $4, $5) RETURNING username, \"learnerId\";";
+                        statement = "\n    INSERT INTO learner (\"firstName\", \"lastName\", \"email\", \"programmeId\", \"username\")\n    VALUES ($1, $2, $3, $4, $5) RETURNING username, \"learnerId\", \"email\";";
                         params = Object.values(newLearnerInfo).map(function (val) {
                             return typeof val === "string" ? val.toLowerCase() : val;
                         });
-                        console.log(params);
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_2.execute(statement, params)];
                     case 1:
-                        client = _a.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
-                        result = _a.sent();
-                        console.log(result.rows[0]);
-                        res.status(201).send(result.rows[0]);
-                        return [2, client.release()];
+                        rows = (_b.sent()).rows;
+                        _a = rows[0], username = _a.username, learnerId = _a.learnerId, email = _a.email;
+                        res.status(201).send({ username: username, learnerId: learnerId });
+                        return [4, new AppMailer_1.default(username, email).sendAccountInfo()];
+                    case 2: return [2, _b.sent()];
                 }
             });
         });
     };
     LearnerService.prototype.checkCredentials = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, username, password, params, statement, client, rows, _b, hashedPassword, learnerId, isValidPassword, token;
+            var _a, username, password, params, statement, rows, _b, hashedPassword, learnerId, isValidPassword, token;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -118,35 +116,32 @@ var LearnerService = (function () {
                         console.log(username, password);
                         params = [username.toLowerCase()];
                         statement = "    \n      SELECT \n      p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n      l.\"learnerId\", l.snatch, l.clean, l.jerk, \n      l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n      FROM learner l\n      JOIN programme p \n      USING (\"programmeId\")\n      WHERE username = $1;";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_2.execute(statement, params)];
                     case 1:
-                        client = _c.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
                         rows = (_c.sent()).rows;
                         if (rows.length === 0) {
                             throw new register_1.httpError(401, "unknown username");
                         }
                         _b = rows[0], hashedPassword = _b.hashedPassword, learnerId = _b.learnerId;
                         return [4, bcrypt_1.compare(password.toLowerCase(), hashedPassword)];
-                    case 3:
+                    case 2:
                         isValidPassword = _c.sent();
-                        if (!isValidPassword) return [3, 5];
+                        if (!isValidPassword) return [3, 4];
                         return [4, register_1.makeToken({ learnerId: learnerId })];
-                    case 4:
+                    case 3:
                         token = _c.sent();
                         req.body = __assign(__assign(__assign({}, req.body), rows[0]), { token: token });
                         next();
-                        return [3, 6];
-                    case 5: throw new register_1.httpError(401, "wrong password");
-                    case 6: return [2, client.release()];
+                        return [3, 5];
+                    case 4: throw new register_1.httpError(401, "wrong password");
+                    case 5: return [2];
                 }
             });
         });
     };
     LearnerService.prototype.getPbs = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var learnerId, params, statement, client, rows, pbs;
+            var learnerId, params, statement, rows, pbs;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -154,25 +149,22 @@ var LearnerService = (function () {
                         console.log("Receiving credentials from Auth Header as " + learnerId);
                         params = [learnerId];
                         statement = "\n    SELECT\n    snatch,\n    clean,\n    jerk,\n    \"cleanAndJerk\",\n    \"backSquat\",\n    \"frontSquat\",\n    \"pushPress\" \n    FROM learner\n    WHERE \"learnerId\" = $1;\n    ";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_2.execute(statement, params)];
                     case 1:
-                        client = _a.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
                         rows = (_a.sent()).rows;
                         pbs = __assign({}, rows[0]);
                         Object.keys(rows[0]).forEach(function (k) {
                             pbs[k] = parseFloat(rows[0][k]);
                         });
                         res.status(200).json(pbs);
-                        return [2, client.release()];
+                        return [2];
                 }
             });
         });
     };
     LearnerService.prototype.updatePbs = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, token, newPbs, params, statement, client;
+            var _a, token, newPbs, params, statement;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -186,21 +178,18 @@ var LearnerService = (function () {
                         ]).map(function (ele) { return parseFloat(ele); });
                         console.log(params);
                         statement = "\n    UPDATE learner SET\n    snatch = $1,\n    clean = $2,\n    jerk = $3,\n    \"cleanAndJerk\" = $4,\n    \"backSquat\" = $5,\n    \"frontSquat\" = $6,\n    \"pushPress\" = $7\n    WHERE \"learnerId\" = $8;\n    ";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_2.execute(statement, params)];
                     case 1:
-                        client = _b.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
                         _b.sent();
                         res.status(204).send();
-                        return [2, client.release()];
+                        return [2];
                 }
             });
         });
     };
     LearnerService.prototype.updateLearnerDetail = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, token, learner, params, statement, client;
+            var _a, token, learner, params, statement;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -219,21 +208,18 @@ var LearnerService = (function () {
                         });
                         console.log(params);
                         statement = "\n    UPDATE learner SET\n    username = $2,\n    email = $3,\n    \"firstName\" = $4,\n    \"lastName\" = $5,\n    snatch = $6,\n    clean = $7,\n    jerk = $8,\n    \"cleanAndJerk\" = $9,\n    \"backSquat\" = $10,\n    \"frontSquat\" = $11,\n    \"pushPress\" = $12\n    WHERE \"learnerId\" = $1;\n    ";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_2.execute(statement, params)];
                     case 1:
-                        client = _b.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
                         _b.sent();
                         res.status(204).send();
-                        return [2, client.release()];
+                        return [2];
                 }
             });
         });
     };
     LearnerService.prototype.deleteLearner = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var learnerId, params, statement, client;
+            var learnerId, params, statement;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -243,14 +229,98 @@ var LearnerService = (function () {
                         }
                         params = [parseInt(learnerId)];
                         statement = "\n    DELETE FROM learner\n    WHERE \"learnerId\" = $1;\n    ";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_2.execute(statement, params)];
                     case 1:
-                        client = _a.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
                         _a.sent();
                         res.status(204).send();
-                        return [2, client.release()];
+                        return [2];
+                }
+            });
+        });
+    };
+    LearnerService.prototype.updatePracticeBest = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, pbId, weight, repMax, statement, params;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, pbId = _a.pbId, weight = _a.weight, repMax = _a.repMax;
+                        console.log("received", pbId, weight, repMax);
+                        statement = "\n      UPDATE practice_bests \n      SET weight = $2, \n      \"repMax\" = $3,\n      \"lastEdited\" = CURRENT_DATE \n      WHERE \"pbId\" = $1;";
+                        params = [pbId, weight, repMax];
+                        return [4, register_2.execute(statement, params)];
+                    case 1:
+                        _b.sent();
+                        res.status(204).send();
+                        return [2];
+                }
+            });
+        });
+    };
+    LearnerService.prototype.getPracticeBestsByExerciseName = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var exerciseName, learnerId, statement, params, rows;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        exerciseName = req.params.exerciseName;
+                        learnerId = req.body.token.data.learnerId;
+                        console.log("Received", learnerId, exerciseName);
+                        statement = "\n      SELECT \"pbId\", \"learnerId\", \"exerciseName\", \n      \"repMax\", \"weight\", \"lastEdited\"::TEXT \n      FROM practice_bests \n      WHERE \"learnerId\" = $1 \n      AND \"exerciseName\" = $2 \n      ORDER BY \"repMax\";";
+                        params = [parseInt(learnerId), exerciseName];
+                        return [4, register_2.execute(statement, params)];
+                    case 1:
+                        rows = (_a.sent()).rows;
+                        res.status(200).json(rows);
+                        return [2];
+                }
+            });
+        });
+    };
+    LearnerService.prototype.postNewPracticeBest = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, exerciseName, repMax, weight, learnerId, statement, params, rows;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, exerciseName = _a.exerciseName, repMax = _a.repMax, weight = _a.weight;
+                        learnerId = req.body.token.data.learnerId;
+                        console.log("Received", learnerId, exerciseName, repMax, parseFloat(weight));
+                        statement = "\n    INSERT INTO practice_bests (\"learnerId\", \"exerciseName\", \"repMax\", \"weight\", \"lastEdited\") VALUES ($1, $2, $3, $4, $5) RETURNING \"pbId\", \"exerciseName\", \"repMax\", \"weight\", \"lastEdited\"::TEXT;\n    ";
+                        params = [
+                            learnerId,
+                            exerciseName,
+                            repMax,
+                            weight,
+                            new Date().toISOString().substring(0, 10),
+                        ];
+                        return [4, register_2.execute(statement, params)];
+                    case 1:
+                        rows = (_b.sent()).rows;
+                        res.status(201).json(rows[0]);
+                        return [2];
+                }
+            });
+        });
+    };
+    LearnerService.prototype.deleteOnePracticeBest = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pbId, params, statement;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        pbId = req.params.pbId;
+                        if (!pbId) {
+                            throw new register_1.httpError(400, "Missing Personal Best Id!");
+                        }
+                        console.log("Received " + pbId);
+                        params = [parseInt(pbId)];
+                        statement = "\n    DELETE FROM practice_bests\n    WHERE \"pbId\" = $1;\n    ";
+                        return [4, register_2.execute(statement, params)];
+                    case 1:
+                        _a.sent();
+                        res.status(204).send();
+                        return [2];
                 }
             });
         });

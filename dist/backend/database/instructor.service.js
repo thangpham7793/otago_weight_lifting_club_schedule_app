@@ -48,15 +48,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InstructorService = void 0;
-var pool_1 = require("./pool");
 var register_1 = require("./../utils/register");
 var bcrypt_1 = require("bcrypt");
+var register_2 = require("./register");
 var InstructorService = (function () {
     function InstructorService() {
     }
     InstructorService.prototype.checkCredentials = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, email, password, params, statement, client, rows, _b, hashedPassword, instructorId, isValidPassword, token;
+            var _a, email, password, params, statement, rows, _b, hashedPassword, instructorId, isValidPassword, token;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -64,35 +64,32 @@ var InstructorService = (function () {
                         console.log(email, password);
                         params = [email];
                         statement = "    \n          SELECT \"instructorId\", \"email\", \"hashedPassword\"\n          FROM instructor\n          WHERE email = $1";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_2.execute(statement, params)];
                     case 1:
-                        client = _c.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
                         rows = (_c.sent()).rows;
                         if (rows.length === 0) {
                             throw new register_1.httpError(401, "unknown email");
                         }
                         _b = rows[0], hashedPassword = _b.hashedPassword, instructorId = _b.instructorId;
                         return [4, bcrypt_1.compare(password, hashedPassword)];
-                    case 3:
+                    case 2:
                         isValidPassword = _c.sent();
-                        if (!isValidPassword) return [3, 5];
+                        if (!isValidPassword) return [3, 4];
                         return [4, register_1.makeToken({ instructorId: instructorId })];
-                    case 4:
+                    case 3:
                         token = _c.sent();
                         req.body = __assign(__assign(__assign({}, req.body), rows[0]), { token: token });
                         next();
-                        return [3, 6];
-                    case 5: throw new register_1.httpError(401, "wrong password");
-                    case 6: return [2, client.release()];
+                        return [3, 5];
+                    case 4: throw new register_1.httpError(401, "wrong password");
+                    case 5: return [2];
                 }
             });
         });
     };
     InstructorService.prototype.changeInstructorPassword = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, newPassword, email, hashedPassword, params, statement, client;
+            var _a, newPassword, email, hashedPassword, params, statement;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -104,13 +101,11 @@ var InstructorService = (function () {
                         params = [hashedPassword, email];
                         console.log("Sending", params);
                         statement = "\n      UPDATE instructor \n      SET \"hashedPassword\" = $1 \n      WHERE \"email\" = $2";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_2.execute(statement, params)];
                     case 2:
-                        client = _b.sent();
-                        return [4, client.query(statement, params)];
-                    case 3:
                         _b.sent();
-                        return [2, res.status(204).send()];
+                        res.status(204).send();
+                        return [2];
                 }
             });
         });

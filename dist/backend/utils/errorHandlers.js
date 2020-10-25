@@ -47,6 +47,10 @@ exports.serverError = function (err, req, res, next) {
         console.log(err);
         switch (err.code) {
             case "23505":
+                if (err.detail.includes("Key (email)") &&
+                    err.detail.includes("already exists")) {
+                    return res.status(400).json({ message: "Email Already Used!" });
+                }
                 return res.status(400).json({ message: "" + err.detail });
             case "22004":
                 return res.status(404).json({ message: "no schedule found" });
@@ -60,5 +64,5 @@ exports.serverError = function (err, req, res, next) {
     return;
 };
 exports.unknownEndpoint = function (req, res, next) {
-    res.status(404).json({ message: "Unable to locate the requested resource" });
+    res.redirect("/", 301);
 };

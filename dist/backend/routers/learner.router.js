@@ -23,6 +23,10 @@ var LearnerRouter = (function () {
         learnerRouter.put("/pbs", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.updatePbs));
         learnerRouter.put("/details", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.updateLearnerDetail));
         learnerRouter.delete("/:learnerId", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.deleteLearner));
+        learnerRouter.put("/practice.bests", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.updatePracticeBest));
+        learnerRouter.get("/practice.bests/:exerciseName", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.getPracticeBestsByExerciseName));
+        learnerRouter.post("/practice.bests", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.postNewPracticeBest));
+        learnerRouter.delete("/practice.bests/:pbId", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.deleteOnePracticeBest));
     };
     return LearnerRouter;
 }());

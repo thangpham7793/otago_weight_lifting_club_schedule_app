@@ -46,26 +46,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProgrammeService = void 0;
 var bcrypt_1 = require("bcrypt");
 var pool_1 = require("./pool");
 var programmeServiceHelpers_1 = require("../utils/programmeServiceHelpers");
+var register_1 = require("./register");
 var ProgrammeService = (function () {
     function ProgrammeService() {
     }
     ProgrammeService.prototype.getAllProgrammes = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var statement, client, rows;
+            var statement, rows;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         statement = "SELECT \"programmeName\", \"programmeId\" FROM programme;";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_1.execute(statement)];
                     case 1:
-                        client = _a.sent();
-                        return [4, client.query(statement)];
-                    case 2:
                         rows = (_a.sent()).rows;
                         if (rows.length === 0) {
                             res.status(404).json({ message: "no programme found" });
@@ -73,19 +78,17 @@ var ProgrammeService = (function () {
                         else {
                             res.status(200).json({ programmes: rows, token: req.body.token });
                         }
-                        return [2, client.release()];
+                        return [2];
                 }
             });
         });
     };
     ProgrammeService.prototype.getAllSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var client, _a, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules;
+            var _a, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4, pool_1.pool.connect()];
-                    case 1:
-                        client = _b.sent();
+                    case 0:
                         _a = req.body, programmeId = _a.programmeId, programmeName = _a.programmeName, token = _a.token, snatch = _a.snatch, clean = _a.clean, jerk = _a.jerk, cleanAndJerk = _a.cleanAndJerk, backSquat = _a.backSquat, frontSquat = _a.frontSquat, pushPress = _a.pushPress;
                         pbs = {
                             snatch: snatch,
@@ -105,21 +108,21 @@ var ProgrammeService = (function () {
                         pbs.pushPress = parseFloat(pbs.pushPress);
                         params = [programmeId];
                         statement = "\n    SELECT \n    s.\"scheduleId\", s.\"scheduleName\", s.\"weekCount\" \n    FROM programme p\n    JOIN programme_schedule ps\n    ON ps.\"programmeId\" = p.\"programmeId\"\n    JOIN schedule s\n    ON ps.\"scheduleId\" = s.\"scheduleId\"\n    WHERE p.\"programmeId\" = $1 \n    ORDER BY s.\"scheduleId\" DESC;\n    ";
-                        return [4, client.query(statement, params)];
-                    case 2:
+                        return [4, register_1.execute(statement, params)];
+                    case 1:
                         rows = (_b.sent()).rows;
                         schedules = rows.map(function (schedule) {
                             return __assign(__assign({}, schedule), { programmeName: programmeName });
                         });
                         res.status(200).send({ pbs: pbs, schedules: schedules, token: token });
-                        return [2, client.release()];
+                        return [2];
                 }
             });
         });
     };
     ProgrammeService.prototype.getWeeklySchedule = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, scheduleId, week, params, statement, client, result;
+            var _a, scheduleId, week, params, statement, rows;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -127,24 +130,21 @@ var ProgrammeService = (function () {
                         console.log(scheduleId, week);
                         params = [scheduleId, week].map(function (ele) { return parseInt(ele); });
                         statement = "\n    SELECT timetable[$2] as week_" + week + " FROM schedule WHERE \"scheduleId\" = $1;";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_1.execute(statement, params)];
                     case 1:
-                        client = _b.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
-                        result = _b.sent();
-                        if (!result.rows) {
+                        rows = (_b.sent()).rows;
+                        if (!rows) {
                             res.status(404).json({ message: "no weekly schedule found" });
                         }
-                        res.status(200).json(result.rows[0]["week_" + week]);
-                        return [2, client.release()];
+                        res.status(200).json(rows[0]["week_" + week]);
+                        return [2];
                 }
             });
         });
     };
     ProgrammeService.prototype.deleteSchedule = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var scheduleId, params, statement, client;
+            var scheduleId, params, statement;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -152,67 +152,58 @@ var ProgrammeService = (function () {
                         console.log("Received schedule Id " + scheduleId);
                         params = [parseInt(scheduleId)];
                         statement = "DELETE FROM schedule WHERE \"scheduleId\" = $1;";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_1.execute(statement, params)];
                     case 1:
-                        client = _a.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
                         _a.sent();
                         res.status(204).send();
-                        return [2, client.release()];
+                        return [2];
                 }
             });
         });
     };
     ProgrammeService.prototype.getAvailableProgrammesToPublish = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var scheduleId, statement, params, client, result;
+            var scheduleId, statement, params, rows;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         scheduleId = req.params.scheduleId;
                         statement = "\n    SELECT p.\"programmeId\", p.\"programmeName\" \n    FROM programme p \n    WHERE p.\"programmeId\" NOT IN (\n      SELECT ps.\"programmeId\" \n      FROM programme_schedule ps \n      WHERE ps.\"scheduleId\" = $1\n    );\n    ";
                         params = [parseInt(scheduleId)];
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_1.execute(statement, params)];
                     case 1:
-                        client = _a.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
-                        result = _a.sent();
-                        if (!result.rows) {
+                        rows = (_a.sent()).rows;
+                        if (!rows) {
                             res.status(404).json({ message: "no schedule found" });
                         }
-                        res.status(200).json(result.rows);
-                        return [2, client.release()];
+                        res.status(200).json(rows);
+                        return [2];
                 }
             });
         });
     };
     ProgrammeService.prototype.getAllSchedulesInfo = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var statement, client, result;
+            var statement, rows;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         statement = "\n    SELECT \n    s.\"scheduleId\", s.\"scheduleName\", s.\"weekCount\",\n    p.\"programmeId\", p.\"programmeName\"\n    FROM schedule s\n    LEFT JOIN programme_schedule ps\n    ON s.\"scheduleId\" = ps.\"scheduleId\"\n    LEFT JOIN programme p\n    ON ps.\"programmeId\" = p.\"programmeId\";";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_1.execute(statement)];
                     case 1:
-                        client = _a.sent();
-                        return [4, client.query(statement)];
-                    case 2:
-                        result = _a.sent();
-                        if (!result.rows) {
+                        rows = (_a.sent()).rows;
+                        if (!rows) {
                             res.status(404).json({ message: "no schedule found" });
                         }
-                        res.status(200).json(programmeServiceHelpers_1.scheduleInfoJsonFormatter(result.rows));
-                        return [2, client.release()];
+                        res.status(200).json(programmeServiceHelpers_1.scheduleInfoJsonFormatter(rows));
+                        return [2];
                 }
             });
         });
     };
     ProgrammeService.prototype.changeProgrammePassword = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var newPassword, programmeId, hashedPassword, params, statement, client;
+            var newPassword, programmeId, hashedPassword, params, statement;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -223,13 +214,11 @@ var ProgrammeService = (function () {
                         hashedPassword = _a.sent();
                         params = [hashedPassword, programmeId];
                         statement = "\n      UPDATE programme \n      SET \"hashedPassword\" = $1 \n      WHERE \"programmeId\" = $2";
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_1.execute(statement, params)];
                     case 2:
-                        client = _a.sent();
-                        return [4, client.query(statement, params)];
-                    case 3:
                         _a.sent();
-                        return [2, res.status(204).send()];
+                        res.status(204).send();
+                        return [2];
                 }
             });
         });
@@ -278,15 +267,18 @@ var ProgrammeService = (function () {
                         return [4, Promise.all(tasks)];
                     case 3:
                         _b.sent();
-                        return [2, res.status(200).json(rows[0])];
-                    case 4: return [2, res.status(200).json(rows[0])];
+                        res.status(200).json(rows[0]);
+                        _b.label = 4;
+                    case 4:
+                        res.status(200).json(rows[0]);
+                        return [2, client.release()];
                 }
             });
         });
     };
     ProgrammeService.prototype.updateWeeklySchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, scheduleName, timetable, scheduleId, weekCount, statement, params, weeklySchedules, client;
+            var _a, scheduleName, timetable, scheduleId, weekCount, statement, params, weeklySchedules;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -300,34 +292,30 @@ var ProgrammeService = (function () {
                             params = [scheduleId, scheduleName];
                             statement = "\n      UPDATE schedule\n      SET \"scheduleName\" = $2\n      WHERE \"scheduleId\" = $1;\n      ";
                         }
-                        return [4, pool_1.pool.connect()];
+                        return [4, register_1.execute(statement, params)];
                     case 1:
-                        client = _b.sent();
-                        return [4, client.query(statement, params)];
-                    case 2:
                         _b.sent();
-                        return [2, res.status(204).json()];
+                        res.status(204).send();
+                        return [2];
                 }
             });
         });
     };
     ProgrammeService.prototype.unpublishSchedule = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, scheduleId, programmeId, client, params, statement;
+            var _a, scheduleId, programmeId, params, statement;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _a = req.params, scheduleId = _a.scheduleId, programmeId = _a.programmeId;
                         console.log(scheduleId, programmeId);
-                        return [4, pool_1.pool.connect()];
-                    case 1:
-                        client = _b.sent();
                         params = [parseInt(scheduleId), parseInt(programmeId)];
                         statement = "\n      DELETE FROM programme_schedule\n      WHERE \"scheduleId\" = $1\n      AND \"programmeId\" = $2\n      ";
-                        return [4, client.query(statement, params)];
-                    case 2:
+                        return [4, register_1.execute(statement, params)];
+                    case 1:
                         _b.sent();
-                        return [2, res.status(204).json()];
+                        res.status(204).send();
+                        return [2];
                 }
             });
         });
@@ -359,7 +347,28 @@ var ProgrammeService = (function () {
                         return [4, Promise.all(tasks)];
                     case 2:
                         _a.sent();
-                        return [2, res.status(204).json()];
+                        res.status(204).send();
+                        client.release();
+                        return [2];
+                }
+            });
+        });
+    };
+    ProgrammeService.prototype.getAllExercises = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var statement, rows, exerciseNames;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        statement = "SELECT * FROM exercise";
+                        return [4, register_1.execute(statement)];
+                    case 1:
+                        rows = (_a.sent()).rows;
+                        exerciseNames = rows.reduce(function (acc, exercise) {
+                            return __spreadArrays(acc, [exercise.exerciseName]);
+                        }, []);
+                        res.status(200).json({ exerciseNames: exerciseNames });
+                        return [2];
                 }
             });
         });

@@ -25,6 +25,7 @@ var ProgrammeRouter = (function () {
         programmeRouter.delete("/schedules/:scheduleId", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.deleteSchedule));
         programmeRouter.post("/schedules/:scheduleId/publish/", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.publishSchedule));
         programmeRouter.delete("/schedules/:scheduleId/unpublish/:programmeId", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.unpublishSchedule));
+        programmeRouter.get("/exercises", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.programmeService.getAllExercises));
     };
     return ProgrammeRouter;
 }());
