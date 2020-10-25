@@ -66,5 +66,6 @@ export const unknownEndpoint = (
   res: Response,
   next: NextFunction
 ) => {
-  res.status(404).json({ message: "Unable to locate the requested resource" })
+  //res.status(404).json({ message: "Unable to locate the requested resource" })
+  res.redirect("/", 301)
 }
