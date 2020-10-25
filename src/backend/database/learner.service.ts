@@ -264,4 +264,21 @@ export class LearnerService {
     await execute(statement, params)
     res.status(204).send()
   }
+
+  async getAllPracticeBestsOfOneLearner(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { learnerId } = req.params
+    console.log("Getting all practice bests of learner", learnerId)
+    const statement = `
+    SELECT "pbId", "exerciseName", "repMax", "weight", CAST("lastEdited" as TEXT) 
+    FROM practice_bests 
+    WHERE "learnerId" = $1 
+    ORDER BY "exerciseName" ASC, SUBSTRING("repMax", 2,2)::NUMERIC ASC, "lastEdited" DESC;`
+    const params = [parseInt(learnerId)]
+    const { rows } = await execute(statement, params)
+    res.status(200).json(rows)
+  }
 }

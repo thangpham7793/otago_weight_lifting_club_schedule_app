@@ -50,4 +50,8 @@ INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "la
 -- get records of one exercise (order by rep max) (when user choose an exercise)
 SELECT "pbId", "learnerId", "exerciseName", "repMax", "weight", CAST("lastEdited" as TEXT) FROM practice_bests WHERE "learnerId" = 1 AND "exerciseName" = 'clean and jerk' ORDER BY "repMax";
 
+-- get all records of a learner for instructor app
+SELECT "pbId", "exerciseName", "repMax", "weight", CAST("lastEdited" as TEXT) FROM practice_bests WHERE "learnerId" = 1 ORDER BY "exerciseName" ASC, SUBSTRING("repMax", 2,2)::NUMERIC ASC, "lastEdited" DESC;
+
+
 

@@ -131,7 +131,7 @@ describe("API Integration Tests - Learner Service", () => {
     it("should get all learners names, ids and the programmes they're following", async () => {})
   })
 
-  describe.only("PUT /learners/practice.bests", () => {
+  describe("PUT /learners/practice.bests", () => {
     it("should update a practice best of a learner", async () => {
       const payload = {
         pbId: 1,
@@ -239,6 +239,175 @@ describe("API Integration Tests - Learner Service", () => {
       } catch (error) {
         console.error(error)
       }
+    })
+  })
+
+  describe("GET /learners/:learnerId/practice.bests", () => {
+    it("should get all the available historical pbs of a learner", async () => {
+      const expected = [
+        {
+          pbId: 30,
+          exerciseName: "clean",
+          repMax: "x1",
+          weight: "120.45",
+          lastEdited: "2020-10-25",
+        },
+        {
+          pbId: 31,
+          exerciseName: "clean",
+          repMax: "x1",
+          weight: "100.00",
+          lastEdited: "2020-10-25",
+        },
+        {
+          pbId: 3,
+          exerciseName: "clean",
+          repMax: "x7",
+          weight: "100.00",
+          lastEdited: "2020-10-20",
+        },
+        {
+          pbId: 4,
+          exerciseName: "clean",
+          repMax: "x8",
+          weight: "100.00",
+          lastEdited: "2020-10-15",
+        },
+        {
+          pbId: 15,
+          exerciseName: "clean and jerk",
+          repMax: "x1",
+          weight: "110.00",
+          lastEdited: "2020-10-25",
+        },
+        {
+          pbId: 22,
+          exerciseName: "clean and jerk",
+          repMax: "x1",
+          weight: "120.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 26,
+          exerciseName: "clean and jerk",
+          repMax: "x1",
+          weight: "100.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 29,
+          exerciseName: "clean and jerk",
+          repMax: "x3",
+          weight: "100.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 11,
+          exerciseName: "clean and jerk",
+          repMax: "x3",
+          weight: "97.00",
+          lastEdited: "2020-10-23",
+        },
+        {
+          pbId: 21,
+          exerciseName: "clean and jerk",
+          repMax: "x4",
+          weight: "120.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 28,
+          exerciseName: "clean and jerk",
+          repMax: "x6",
+          weight: "100.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 7,
+          exerciseName: "clean and jerk",
+          repMax: "x7",
+          weight: "120.45",
+          lastEdited: "2020-10-25",
+        },
+        {
+          pbId: 24,
+          exerciseName: "clean and jerk",
+          repMax: "x7",
+          weight: "100.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 8,
+          exerciseName: "clean and jerk",
+          repMax: "x8",
+          weight: "120.45",
+          lastEdited: "2020-10-25",
+        },
+        {
+          pbId: 23,
+          exerciseName: "clean and jerk",
+          repMax: "x10",
+          weight: "100.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 20,
+          exerciseName: "snatch",
+          repMax: "x1",
+          weight: "100.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 16,
+          exerciseName: "snatch",
+          repMax: "x1",
+          weight: "230.00",
+          lastEdited: "2020-10-23",
+        },
+        {
+          pbId: 14,
+          exerciseName: "snatch",
+          repMax: "x4",
+          weight: "95.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 10,
+          exerciseName: "snatch",
+          repMax: "x5",
+          weight: "120.00",
+          lastEdited: "2020-10-23",
+        },
+        {
+          pbId: 27,
+          exerciseName: "snatch",
+          repMax: "x7",
+          weight: "100.00",
+          lastEdited: "2020-10-24",
+        },
+        {
+          pbId: 13,
+          exerciseName: "snatch",
+          repMax: "x10",
+          weight: "120.00",
+          lastEdited: "2020-10-23",
+        },
+        {
+          pbId: 32,
+          exerciseName: "split jerk",
+          repMax: "x1",
+          weight: "100.00",
+          lastEdited: "2020-10-25",
+        },
+      ]
+
+      const result = await api
+        .get("/learners/1/practice.bests")
+        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+
+      expect(result.status).toEqual(200)
+      expect(result.body.length).toEqual(22)
+      expect(result.body).toEqual(expected)
     })
   })
 

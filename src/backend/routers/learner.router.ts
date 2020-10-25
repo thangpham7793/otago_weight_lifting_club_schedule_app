@@ -80,6 +80,12 @@ export class LearnerRouter {
       catchAsync(this.learnerService.getPracticeBestsByExerciseName)
     )
 
+    learnerRouter.get(
+      "/:learnerId/practice.bests",
+      catchAsync(this.extractHeaderAuthToken),
+      catchAsync(this.learnerService.getAllPracticeBestsOfOneLearner)
+    )
+
     learnerRouter.post(
       "/practice.bests",
       catchAsync(this.extractHeaderAuthToken),
