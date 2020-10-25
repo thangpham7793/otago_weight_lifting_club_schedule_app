@@ -40,9 +40,9 @@ export class LearnerService {
 
     const { username, learnerId, email } = rows[0]
 
-    return res.status(201).send({ username, learnerId })
+    res.status(201).send({ username, learnerId })
 
-    //return await new AppMailer(username, email).sendAccountInfo()
+    return await new AppMailer(username, email).sendAccountInfo()
   }
 
   async checkCredentials(req: Request, res: Response, next: NextFunction) {
