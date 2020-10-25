@@ -29,4 +29,8 @@ export const appConfig = {
   TEST_TOKEN: process.env.TEST_TOKEN,
   GMAIL_USER: process.env.GMAIL_USER,
   GMAIL_PW: process.env.GMAIL_PW,
+  OAUTH_CLIENTID: process.env.OAUTH_CLIENTID,
+  OAUTH_CLIENTSECRET: process.env.OAUTH_CLIENTSECRET,
+  OAUTH_REFRESHTOKEN: process.env.OAUTH_REFRESHTOKEN,
+  OAUTH_ACCESSTOKEN: process.env.OAUTH_ACCESSTOKEN,
 }

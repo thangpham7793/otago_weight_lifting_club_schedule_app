@@ -3,11 +3,19 @@ import { appConfig } from "../utils/config"
 import nodemailer, { Transporter } from "nodemailer"
 import { MailOptions } from "nodemailer/lib/smtp-transport"
 
+//https://stackoverflow.com/questions/51933601/what-is-the-definitive-way-to-use-gmail-with-oauth-and-nodemailer
+
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: appConfig.GMAIL_USER,
     pass: appConfig.GMAIL_PW,
+    clientId: appConfig.OAUTH_CLIENTID,
+    clientSecret: appConfig.OAUTH_CLIENTSECRET,
+    refreshToken: appConfig.OAUTH_REFRESHTOKEN,
+    accessToken: appConfig.OAUTH_ACCESSTOKEN,
   },
 })
 
@@ -68,6 +76,8 @@ export default class AppMailer {
       return console.log(info)
     } catch (error) {
       console.error(error)
+    } finally {
+      return AppMailer.transporter.close()
     }
   }
 }
