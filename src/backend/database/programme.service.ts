@@ -24,6 +24,7 @@ export class ProgrammeService {
     const {
       programmeId,
       programmeName,
+      learnerName,
       token,
       snatch,
       clean,
@@ -72,7 +73,7 @@ export class ProgrammeService {
     })
 
     //send back pbs, token and programmeInfo
-    res.status(200).send({ pbs, schedules, token })
+    res.status(200).send({ pbs, schedules, learnerName, token })
   }
 
   async getWeeklySchedule(req: Request, res: Response) {

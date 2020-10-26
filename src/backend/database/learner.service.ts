@@ -53,7 +53,8 @@ export class LearnerService {
     const statement = `    
       SELECT 
       p."hashedPassword", p."programmeId", p."programmeName", 
-      l."learnerId", l.snatch, l.clean, l.jerk, 
+      l."learnerId", CONCAT(l."firstName",' ', l."lastName") as "learnerName", 
+      l.snatch, l.clean, l.jerk, 
       l."cleanAndJerk", l."backSquat", l."frontSquat", l."pushPress"
       FROM learner l
       JOIN programme p 

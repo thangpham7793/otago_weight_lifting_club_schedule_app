@@ -110,6 +110,7 @@ describe("API Integration Tests - Learner Service", () => {
             programmeName: "Youth and Junior",
           },
         ],
+        learnerName: 'thang pham',
         token:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDQ5NjY2MDYsImRhdGEiOnsibGVhcm5lcklkIjoxfSwiaWF0IjoxNjAyNTQ3NDEzfQ.s-KnNdfS7GartJNERJYQdbRCIVc_1j9AuRgjdmgW3Qk",
       }
@@ -122,8 +123,10 @@ describe("API Integration Tests - Learner Service", () => {
       expect(result.body).toHaveProperty("pbs")
       expect(result.body).toHaveProperty("schedules")
       expect(result.body).toHaveProperty("token")
+      expect(result.body).toHaveProperty("learnerName")
       expect(result.body.pbs).toEqual(expected.pbs)
       expect(result.body.schedules).toEqual(expected.schedules)
+      expect(result.body.learnerName).toEqual(expected.learnerName)
     })
   })
 
