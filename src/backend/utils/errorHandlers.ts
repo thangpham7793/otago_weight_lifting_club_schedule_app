@@ -7,7 +7,7 @@ import { NextFunction, Request, RequestHandler, Response } from "express"
 //https://www.youtube.com/watch?v=5Hpv6fLf93Q
 export const catchAsync = (handler: RequestHandler) => (
   ...args: [Request, Response, NextFunction]
-) => handler(...args)?.catch(args[2])
+) => handler(...args).catch(args[2])
 
 //custom http error class
 export class httpError extends Error {
