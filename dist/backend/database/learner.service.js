@@ -115,7 +115,7 @@ var LearnerService = (function () {
                         _a = req.body, username = _a.username, password = _a.password;
                         console.log(username, password);
                         params = [username.toLowerCase()];
-                        statement = "    \n      SELECT \n      p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n      l.\"learnerId\", l.snatch, l.clean, l.jerk, \n      l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n      FROM learner l\n      JOIN programme p \n      USING (\"programmeId\")\n      WHERE username = $1;";
+                        statement = "    \n      SELECT \n      p.\"hashedPassword\", p.\"programmeId\", p.\"programmeName\", \n      l.\"learnerId\", CONCAT(l.\"firstName\",' ', l.\"lastName\") as \"learnerName\", \n      l.snatch, l.clean, l.jerk, \n      l.\"cleanAndJerk\", l.\"backSquat\", l.\"frontSquat\", l.\"pushPress\"\n      FROM learner l\n      JOIN programme p \n      USING (\"programmeId\")\n      WHERE username = $1;";
                         return [4, register_2.execute(statement, params)];
                     case 1:
                         rows = (_c.sent()).rows;
@@ -320,6 +320,25 @@ var LearnerService = (function () {
                     case 1:
                         _a.sent();
                         res.status(204).send();
+                        return [2];
+                }
+            });
+        });
+    };
+    LearnerService.prototype.getAllPracticeBestsOfOneLearner = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var learnerId, statement, params, rows;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        learnerId = req.params.learnerId;
+                        console.log("Getting all practice bests of learner", learnerId);
+                        statement = "\n    SELECT \"pbId\", \"exerciseName\", \"repMax\", \"weight\", CAST(\"lastEdited\" as TEXT) \n    FROM practice_bests \n    WHERE \"learnerId\" = $1 \n    ORDER BY \"exerciseName\" ASC, SUBSTRING(\"repMax\", 2,2)::NUMERIC ASC, \"lastEdited\" DESC;";
+                        params = [parseInt(learnerId)];
+                        return [4, register_2.execute(statement, params)];
+                    case 1:
+                        rows = (_a.sent()).rows;
+                        res.status(200).json(rows);
                         return [2];
                 }
             });

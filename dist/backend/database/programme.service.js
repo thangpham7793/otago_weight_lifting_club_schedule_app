@@ -85,11 +85,11 @@ var ProgrammeService = (function () {
     };
     ProgrammeService.prototype.getAllSchedules = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, programmeId, programmeName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules;
+            var _a, programmeId, programmeName, learnerName, token, snatch, clean, jerk, cleanAndJerk, backSquat, frontSquat, pushPress, pbs, params, statement, rows, schedules;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = req.body, programmeId = _a.programmeId, programmeName = _a.programmeName, token = _a.token, snatch = _a.snatch, clean = _a.clean, jerk = _a.jerk, cleanAndJerk = _a.cleanAndJerk, backSquat = _a.backSquat, frontSquat = _a.frontSquat, pushPress = _a.pushPress;
+                        _a = req.body, programmeId = _a.programmeId, programmeName = _a.programmeName, learnerName = _a.learnerName, token = _a.token, snatch = _a.snatch, clean = _a.clean, jerk = _a.jerk, cleanAndJerk = _a.cleanAndJerk, backSquat = _a.backSquat, frontSquat = _a.frontSquat, pushPress = _a.pushPress;
                         pbs = {
                             snatch: snatch,
                             clean: clean,
@@ -114,7 +114,7 @@ var ProgrammeService = (function () {
                         schedules = rows.map(function (schedule) {
                             return __assign(__assign({}, schedule), { programmeName: programmeName });
                         });
-                        res.status(200).send({ pbs: pbs, schedules: schedules, token: token });
+                        res.status(200).send({ pbs: pbs, schedules: schedules, learnerName: learnerName, token: token });
                         return [2];
                 }
             });

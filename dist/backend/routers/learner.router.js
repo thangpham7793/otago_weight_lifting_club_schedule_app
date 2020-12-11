@@ -25,6 +25,7 @@ var LearnerRouter = (function () {
         learnerRouter.delete("/:learnerId", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.deleteLearner));
         learnerRouter.put("/practice.bests", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.updatePracticeBest));
         learnerRouter.get("/practice.bests/:exerciseName", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.getPracticeBestsByExerciseName));
+        learnerRouter.get("/:learnerId/practice.bests", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.getAllPracticeBestsOfOneLearner));
         learnerRouter.post("/practice.bests", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.postNewPracticeBest));
         learnerRouter.delete("/practice.bests/:pbId", register_1.catchAsync(this.extractHeaderAuthToken), register_1.catchAsync(this.learnerService.deleteOnePracticeBest));
     };
