@@ -50,16 +50,15 @@ class App {
     this.app.use(
       morgan(":method :url :status :res[content-length] - :response-time ms")
     )
-    //Enable error-handlers
   }
 
+  //Enable error-handlers
   private useErrorHandlers() {
     this.app.use(unknownEndpoint)
     this.app.use(serverError)
   }
 
   private useStatic() {
-    //this.app.use(express.static(path.join(__dirname, "public")))
     this.app.use(express.static(path.join(__dirname, "public/instructor")))
   }
 }

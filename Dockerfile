@@ -6,15 +6,13 @@ COPY package.json .
 
 RUN npm install
 
-COPY src/backend/ src/backend/
-
-ENV DOCKER=true
-
 COPY nodemon.json .
 
 COPY tsconfig.json .
 
-EXPOSE 3000
+COPY src/backend/ src/backend/
+
+EXPOSE 5000
 
 CMD ["npm", "run", "dev"]
 

@@ -9,11 +9,10 @@ services:
     env_file:
       - db.env
     volumes:
-      # bind container's folder onto a host's folder
       - type: bind
         source: ./db_scripts
-        target: /var/lib/postgresql/data/
-      - db-data:/var/lib/postgresql/data/ #persist data inside the container
+        target: /tmp/
+      - db-data:/var/lib/postgresql/data/ 
     ports:
       - "5432:5432"
 

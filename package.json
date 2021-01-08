@@ -7,7 +7,6 @@
     "test": "jest",
     "dev": "nodemon",
     "dev2": "npx nodemon dist/backend/server.js",
-    "build-fe": "browserify src/frontend/scripts/timetable.js > src/frontend/js/timetable.js && cd src/frontend/ && cp -r *.html js/ assets/ style/ ../backend/public && cp -r *.html js/ assets/ style/ ../../dist/backend/public/ && cd ../ && cp -r backend/public/instructor ../dist/backend/public/",
     "start": "node dist/backend/server.js",
     "build": "rm -rf dist && tsc && cp -r src/backend/public dist/backend/public"
   },
