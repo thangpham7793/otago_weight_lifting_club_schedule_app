@@ -4,6 +4,7 @@ version: "3.2"
 services:
   db:
     image: postgres
+    restart: always
     container_name: pgsql_db
     env_file:
       - db.env
@@ -11,7 +12,7 @@ services:
       # bind container's folder onto a host's folder
       - type: bind
         source: ./db_scripts
-        target: /tmp/db_scripts
+        target: /var/lib/postgresql/data/
       - db-data:/var/lib/postgresql/data/ #persist data inside the container
     ports:
       - "5432:5432"
@@ -26,7 +27,7 @@ services:
     depends_on:
       - db
     ports:
-      - "3000:3000"
+      - "5000:5000"
 
 volumes:
   db-data:

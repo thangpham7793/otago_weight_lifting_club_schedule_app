@@ -9,7 +9,7 @@
     "dev2": "npx nodemon dist/backend/server.js",
     "build-fe": "browserify src/frontend/scripts/timetable.js > src/frontend/js/timetable.js && cd src/frontend/ && cp -r *.html js/ assets/ style/ ../backend/public && cp -r *.html js/ assets/ style/ ../../dist/backend/public/ && cd ../ && cp -r backend/public/instructor ../dist/backend/public/",
     "start": "node dist/backend/server.js",
-    "build": "npm run build-fe && tsc"
+    "build": "rm -rf dist && tsc && cp -r src/backend/public dist/backend/public"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
     "nodemon": "^2.0.4",
     "supertest": "^4.0.2",
     "ts-jest": "^26.3.0",
-    "typescript": "4.0.2",
+    "typescript": "^4.0.2",
     "@types/nodemailer": "^6.4.0",
     "@babel/preset-typescript": "^7.10.4",
     "@types/bcrypt": "^3.0.0",
