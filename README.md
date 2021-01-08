@@ -14,7 +14,7 @@ Add execute permission to start script, which will run containers, and dump data
 - chmod +x start.sh
 - ./start.sh
 
-Log in to the learner app (learnerl/password) or instructor app (admin@admin.com/admin) at [localhost:5000](localhost:5000).
+Log in to the learner app (thomash/password) or instructor app (admin@admin.com/admin) at [localhost:5000](localhost:5000).
 
 To connect to postgres, open [localhost:8080](localhost:8080) and fill in the credentials from db.env
 

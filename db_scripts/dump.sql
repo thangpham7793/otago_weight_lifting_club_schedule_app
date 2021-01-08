@@ -349,28 +349,9 @@ COPY public.instructor ("instructorId", email, "hashedPassword") FROM stdin;
 --
 
 COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress", "programmeId", username) FROM stdin;
-50	Luke	Evans	Evansl@taieri.school.nz	65.00	85.00	85.00	85.00	120.00	105.00	70.00	1	evansl
-67	Kiri	Calvert	kiri.calvert@live.com	42.00	55.00	55.00	55.00	105.00	80.00	50.00	1	calvertk
-171	poppy	kirk	pbkirk16@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	kirkp
-45	Kieran	Mcgovern	Kieranmcgovern15@gmail.com	110.00	150.00	150.00	150.00	220.00	190.00	123.00	1	mcgovernk
-66	Patrick	Cloughley	patricksefocloughley11@gmail.com	120.00	150.00	150.00	150.00	190.00	160.00	120.00	1	cloughleyp
-172	cole	jones	jonescoleza@gmail.com	50.00	70.00	60.00	65.00	100.00	80.00	50.00	1	jonesc
-64	Lochlan	Webb	Lochlanroganwebb04@gmail.com	73.00	90.00	90.00	90.00	115.00	101.00	76.00	1	webbl
-135	luka	homersham	lukahomersham@gmail.com	80.00	101.00	101.00	101.00	140.00	110.00	81.00	1	homershaml
-131	owen	webb	knight1234567890123@hotmail.com	100.00	120.00	125.00	115.00	170.00	140.00	100.00	1	webbo
-62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	36.00	55.00	48.00	48.00	65.00	50.00	33.00	1	rohtmetso
-58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	36.00	54.00	50.00	50.00	70.00	57.00	43.00	1	hamiltont
-63	Torin	Webb	torinjaredwebb@gmail.com	80.00	100.00	100.00	100.00	130.00	115.00	80.00	1	webbt
-207	karun	varma	karun77@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	6	varmak
-1	thang	pham	thangnus@gmail.com	120.45	120.00	120.00	120.00	120.00	120.00	110.00	1	phamt
-46	Callan	Helms	callanhelms@gmail.com	120.00	150.00	161.00	150.00	210.00	180.00	136.00	1	helmsc
-57	Kelly	Hoyt	kelly.jt.hoyt@gmail.com	43.00	55.00	53.00	53.00	70.00	61.00	40.00	1	hoytk
-88	Luka	Homersham	Lukahomersham@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	homershaml
-61	Owen	Webb	webboh@outlook.co.nz	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	webbo
-51	Brock	Stewart	Brockstewart2017@gmail.com	55.00	67.00	65.00	65.00	90.00	78.00	55.00	1	stewartb
-52	Flook	Chinsaswat	flookchinsaswat@gmail.com	70.00	100.00	95.00	95.00	140.00	120.00	62.00	1	chinsaswatf
-56	Emily	Perry	emilyjanep2001@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	perrye
-208	learner	learner	learner@learner.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	learnerl
+50	Tom	Doe	test1@test.com	65.00	85.00	85.00	85.00	120.00	105.00	70.00	1	doet
+67	Jane	Doe	test2@test.com	42.00	55.00	55.00	55.00	105.00	80.00	50.00	1	doej
+45	Harry	Thomas	test4@test.com	110.00	150.00	150.00	150.00	220.00	190.00	123.00	1	thomash
 \.
 
 
@@ -379,56 +360,9 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 --
 
 COPY public.practice_bests ("pbId", "learnerId", "exerciseName", "repMax", weight, "lastEdited") FROM stdin;
-3	1	clean	x7	100.00	2020-10-20
-4	1	clean	x8	100.00	2020-10-15
-10	1	snatch	x5	120.00	2020-10-23
-13	1	snatch	x10	120.00	2020-10-23
-11	1	clean and jerk	x3	97.00	2020-10-23
-21	1	clean and jerk	x4	120.00	2020-10-24
-23	1	clean and jerk	x10	100.00	2020-10-24
-24	1	clean and jerk	x7	100.00	2020-10-24
-27	1	snatch	x7	100.00	2020-10-24
-28	1	clean and jerk	x6	100.00	2020-10-24
-29	1	clean and jerk	x3	100.00	2020-10-24
-30	1	clean	x1	120.45	2020-10-25
-8	1	clean and jerk	x8	120.45	2020-10-25
-7	1	clean and jerk	x7	120.45	2020-10-25
-31	1	clean	x1	100.00	2020-10-25
-32	1	split jerk	x1	100.00	2020-10-25
-33	46	snatch	x3	100.00	2020-10-25
-34	46	split jerk	x2	140.00	2020-10-25
-35	46	split jerk	x6	150.00	2020-10-25
-36	46	split jerk	x2	145.00	2020-10-25
-37	66	snatch	x1	120.00	2020-10-26
-38	45	pull-ups	x8	25.00	2020-10-26
-40	58	comp snatch	x1	31.00	2020-10-26
-41	45	snatch	x2	100.00	2020-10-26
-42	58	comp clean and jerk	x1	45.00	2020-10-26
-43	58	power snatch	x2	34.00	2020-10-26
-44	58	back squat	x1	65.00	2020-10-26
-39	45	snatch	x1	110.00	2020-10-26
-46	1	snatch	x9	75.00	2020-10-26
-47	1	snatch	x5	100.00	2020-10-26
-49	58	power clean	x1	44.00	2020-11-01
-50	58	comp total	x1	76.00	2020-11-01
-51	62	power clean	x1	50.00	2020-11-06
-52	58	snatch	x1	35.00	2020-11-06
-53	58	clean and jerk	x1	47.00	2020-11-06
-54	58	power snatch	x1	35.00	2020-11-06
-55	58	back squat	x1	70.00	2020-11-06
-56	58	clean deadlift	x3	80.00	2020-11-06
-57	58	clean deadlift	x1	90.00	2020-11-06
-58	58	muscle snatch	x2	27.00	2020-11-06
-59	58	push press	x1	43.00	2020-11-06
-14	1	snatch	x4	95.75	2020-12-05
-60	58	snatch	x3	34.00	2020-12-14
-61	58	snatch	x1	36.00	2020-12-14
-62	58	block snatch	x3	34.00	2020-12-14
-63	58	block snatch	x1	36.00	2020-12-14
-64	58	pull-ups	x3	62.00	2020-12-14
-65	58	strict press	x8	27.00	2020-12-14
-66	58	block clean	x3	47.00	2020-12-16
-67	58	block clean	x1	54.00	2020-12-16
+68	45	snatch	x1	100.00	2021-01-08
+69	45	snatch	x10	230.00	2021-01-08
+70	45	clean	x1	125.00	2021-01-08
 \.
 
 
@@ -498,7 +432,7 @@ SELECT pg_catalog.setval('public."learner_learnerId_seq"', 209, true);
 -- Name: practice_bests_pbId_seq; Type: SEQUENCE SET; Schema: public; Owner: test_user
 --
 
-SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 67, true);
+SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 70, true);
 
 
 --

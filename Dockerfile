@@ -14,5 +14,5 @@ COPY src/backend/ src/backend/
 
 EXPOSE 5000
 
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "run", "dev"]
 
