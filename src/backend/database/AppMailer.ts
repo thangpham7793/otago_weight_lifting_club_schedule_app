@@ -69,6 +69,12 @@ export default class AppMailer {
     console.log(
       `Sending Account Info to ${this.recipientEmail} for new user ${this.recipientUsername}`
     )
+
+    // comment this out to send mail
+    if (process.env.NODE_ENV === "development") {
+      return
+    }
+
     try {
       const info = await AppMailer.transporter.sendMail(
         AppMailer.formatMailOptions(this.recipientUsername, this.recipientEmail)

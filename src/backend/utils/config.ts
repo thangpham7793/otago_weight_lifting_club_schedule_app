@@ -3,14 +3,14 @@ import { ClientConfig } from "pg"
 import path from "path"
 
 //https://stackoverflow.com/questions/42335016/dotenv-file-is-not-loading-environment-variables
-config({ path: path.resolve(__dirname, "../.env") })
+config({ path: path.resolve(__dirname, "../sample_env") })
 
 const localConfig: ClientConfig = {
   host: process.env.DOCKER ? "pgsql_db" : "0.0.0.0",
-  user: "test_user",
+  user: process.env.POSTGRES_USER,
   port: 5432,
-  database: "lifting",
-  password: "6500826",
+  database: process.env.POSTGRES_DB,
+  password: process.env.POSTGRES_PASSWORD,
 }
 
 //https://stackoverflow.com/questions/47297212/heroku-postgres-add-on-connection-string-for-nodejs-app
