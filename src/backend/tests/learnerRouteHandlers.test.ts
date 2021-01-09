@@ -1,6 +1,5 @@
 import { pool } from "../database/register"
-import { api } from "./testHelper"
-import { appConfig } from "../utils/register"
+import { api, LEARNER_TEST_TOKEN } from "./testHelper"
 
 jest.setTimeout(30000)
 
@@ -33,7 +32,7 @@ describe("API Integration Tests - Learner Service", () => {
       }
     })
   })
-  //Callan can also use this
+
   describe("PUT /learners/pbs", () => {
     it("should update the personal bests of a learner", async () => {
       const newPbs = {
@@ -47,7 +46,7 @@ describe("API Integration Tests - Learner Service", () => {
       }
       const result = await api
         .put("/learners/pbs")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
         .send({ newPbs })
       expect(result.status).toEqual(204)
     })
@@ -69,7 +68,7 @@ describe("API Integration Tests - Learner Service", () => {
       //SECTION: ACT
       const result = await api
         .get("/learners/pbs")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       //SECTION: ASSERT
       expect(result.status).toEqual(200)
@@ -82,7 +81,7 @@ describe("API Integration Tests - Learner Service", () => {
     it("should return all the learner's pbs, schedule_names, schedule_ids, and their week_counts if credentials are correct", async () => {
       //SECTION: ARRANGE
       const loginCredentials = {
-        username: "phamt",
+        username: "thomash",
         password: "password",
       }
 
@@ -110,9 +109,7 @@ describe("API Integration Tests - Learner Service", () => {
             programmeName: "Youth and Junior",
           },
         ],
-        learnerName: 'thang pham',
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDQ5NjY2MDYsImRhdGEiOnsibGVhcm5lcklkIjoxfSwiaWF0IjoxNjAyNTQ3NDEzfQ.s-KnNdfS7GartJNERJYQdbRCIVc_1j9AuRgjdmgW3Qk",
+        learnerName: "Harry Thomas",
       }
 
       //SECTION: ACT
@@ -144,7 +141,7 @@ describe("API Integration Tests - Learner Service", () => {
 
       const result = await api
         .put("/learners/practice.bests")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
         .send(payload)
 
       const { rows } = await pool.query(
@@ -199,7 +196,7 @@ describe("API Integration Tests - Learner Service", () => {
 
       const result = await api
         .get("/learners/practice.bests/clean%20and%20jerk")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       expect(result.status).toEqual(200)
       expect(result.body.length).toEqual(4)
@@ -226,7 +223,7 @@ describe("API Integration Tests - Learner Service", () => {
       //SECTION: ACT
       const result = await api
         .post("/learners/practice.bests")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
         .send(payload)
 
       //SECTION: ASSERT
@@ -406,7 +403,7 @@ describe("API Integration Tests - Learner Service", () => {
 
       const result = await api
         .get("/learners/1/practice.bests")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       expect(result.status).toEqual(200)
       expect(result.body.length).toEqual(22)

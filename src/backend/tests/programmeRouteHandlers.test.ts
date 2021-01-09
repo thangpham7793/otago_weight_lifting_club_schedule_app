@@ -1,6 +1,5 @@
 import { ProgrammeInfo } from "./../types.d"
-import { appConfig } from "../utils/config"
-import { api } from "./testHelper"
+import { api, LEARNER_TEST_TOKEN } from "./testHelper"
 import { pool } from "../database/register"
 
 jest.setTimeout(30000)
@@ -20,7 +19,7 @@ describe("API Integration Tests - Schedule Service", () => {
       //SECTION: ACT
       const response = await api
         .get("/programmes")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       //SECTION: ASSERT
       expect(response.status).toEqual(200)
@@ -44,7 +43,7 @@ describe("API Integration Tests - Schedule Service", () => {
       //SECTION: ACT
       const result = await api
         .get("/programmes/schedules/6/weeks/2")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       //SECTION: ASSERT
       expect(result.status).toEqual(200)
@@ -71,7 +70,7 @@ describe("API Integration Tests - Schedule Service", () => {
       //SECTION: ACT
       const response = await api
         .get("/programmes/1/schedules")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       //SECTION: ASSERT
       expect(response.status).toEqual(200)
@@ -90,7 +89,7 @@ describe("API Integration Tests - Schedule Service", () => {
       const payload = { newPassword: "password", programmeId: 1 }
       api
         .put(`/programmes/${payload.programmeId}/password`)
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
         .set("Content-Type", "application/json")
         .send({ ...payload })
         .expect(204)
@@ -122,7 +121,7 @@ describe("API Integration Tests - Schedule Service", () => {
       //SECTION: ACT
       const response = await api
         .get("/programmes/schedules/76/publish/available.programmes")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       //SECTION: ASSERT
       expect(response.status).toEqual(200)
@@ -147,7 +146,7 @@ describe("API Integration Tests - Schedule Service", () => {
       //SECTION: ACT
       const response = await api
         .get("/programmes/schedules/56/publish/available.programmes")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       //SECTION: ASSERT
       expect(response.status).toEqual(200)
@@ -160,7 +159,7 @@ describe("API Integration Tests - Schedule Service", () => {
       //SECTION: ACT
       const response = await api
         .get("/programmes/schedules/58/publish/available.programmes")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       //SECTION: ASSERT
       expect(response.status).toEqual(200)
@@ -189,7 +188,7 @@ describe("API Integration Tests - Schedule Service", () => {
       //SECTION: ACT
       const response = await api
         .get("/programmes/exercises")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
 
       //SECTION: ASSERT
       expect(response.status).toEqual(200)

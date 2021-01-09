@@ -15,7 +15,6 @@ export class ProgrammeService {
     if (rows.length === 0) {
       res.status(404).json({ message: "no programme found" })
     } else {
-      //return array of object with programmeName and Id
       res.status(200).json({ programmes: rows, token: req.body.token })
     }
   }

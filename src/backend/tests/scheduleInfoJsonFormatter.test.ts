@@ -165,7 +165,7 @@ describe("The scheduleInfoJsonFormatter function should", () => {
     ]
 
     const json = scheduleInfoJsonFormatter(rows)
-    //expect(json).toEqual(expected)
+    expect(json).toEqual(expected)
     console.log(json)
   })
 })

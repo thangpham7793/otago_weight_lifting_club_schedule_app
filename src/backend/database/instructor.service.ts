@@ -4,19 +4,16 @@ import { NextFunction, Request, Response } from "express"
 import { execute } from "./register"
 
 export class InstructorService {
-  async checkCredentials(req: Request, res: Response, next: NextFunction) {
+  async checkCredentials(req: Request, _: Response, next: NextFunction) {
     const { email, password } = req.body
     console.log(email, password)
-
     const params = [email]
-    const statement = `    
+    const statement = `
           SELECT "instructorId", "email", "hashedPassword"
           FROM instructor
           WHERE email = $1`
 
     const { rows } = await execute(statement, params)
-
-    //console.log(result.rows)
     if (rows.length === 0) {
       throw new httpError(401, "unknown email")
     }
@@ -25,10 +22,9 @@ export class InstructorService {
     //TODO: check password here using jwt and bcrypt
     const isValidPassword = await compare(password, hashedPassword)
     if (isValidPassword) {
-      //send programmeId to scheduleService.getAllProgrammes
       const token = await makeToken({ instructorId })
       req.body = { ...req.body, ...rows[0], token }
-      next()
+      return next()
     } else {
       throw new httpError(401, "wrong password")
     }
@@ -37,9 +33,7 @@ export class InstructorService {
   async changeInstructorPassword(req: Request, res: Response) {
     const { newPassword, email } = req.body
     const hashedPassword = await hash(newPassword, 10)
-    console.log("Received", req.body)
     const params = [hashedPassword, email]
-    console.log("Sending", params)
     const statement = `
       UPDATE instructor 
       SET "hashedPassword" = $1 
@@ -47,6 +41,6 @@ export class InstructorService {
 
     await execute(statement, params)
 
-    res.status(204).send()
+    return res.status(204).send()
   }
 }

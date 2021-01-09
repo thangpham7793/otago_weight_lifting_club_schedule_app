@@ -2,7 +2,6 @@ POSTGRES_USER=test_user
 POSTGRES_PASSWORD=test_user
 POSTGRES_DB=lifting
 SECRET=secret
-TEST_TOKEN=jwt test token
 NODE_ENV=development
 DOCKER=true
 

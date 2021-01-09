@@ -1,24 +1,30 @@
-import { api } from "./testHelper"
+import { api, INSTRUCTOR_TEST_TOKEN } from "./testHelper"
 import { pool } from "../database/register"
-import { appConfig } from "../utils/register"
 
-//TODO: may need to change this
 describe("API Integration Tests - Instructor Service", () => {
   describe("POST /instructor/login", () => {
     it("should return all programmeIds, programmeNames, and scheduleIds when credentials are correct", async () => {
       //SECTION: ARRANGE
       const expected = [
         {
-          programmeId: 1,
           programmeName: "Youth and Junior",
-          scheduleIds: [6],
+          programmeId: 1,
+        },
+        {
+          programmeName: "Senior",
+          programmeId: 5,
+        },
+        {
+          programmeName: "testing",
+          programmeId: 6,
         },
       ]
 
       //SECTION: ACT
-      const result = await api
-        .post("/instructor/login")
-        .send({ email: "callanhelms@gmail.com", password: "admin" })
+      const result = await api.post("/instructor/login").send({
+        email: "admin@admin.com",
+        password: "admin",
+      })
 
       //SECTION: ASSERT
       expect(result.body).toHaveProperty("token")
@@ -33,10 +39,10 @@ describe("API Integration Tests - Instructor Service", () => {
         .post("/instructor/password")
         .send({
           newPassword: "admin",
-          email: "callanhelms@gmail.com",
+          email: "admin@admin.com",
         })
         .set("Content-Type", "application/json")
-        .set("Authorization", `Bearer ${appConfig.TEST_TOKEN}`)
+        .set("Authorization", `Bearer ${INSTRUCTOR_TEST_TOKEN}`)
         .expect(204)
         .then(() => {})
         .catch((err) => console.error(err))

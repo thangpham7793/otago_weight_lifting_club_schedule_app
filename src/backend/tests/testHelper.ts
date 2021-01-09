@@ -1,4 +1,9 @@
 import app from "../app"
 import request from "supertest"
 
+export const INSTRUCTOR_TEST_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTI2NTE2MzAsImRhdGEiOnsiaW5zdHJ1Y3RvcklkIjozfSwiaWF0IjoxNjEwMjMyNTY0fQ.Zq2rlpajGsxpKjvGLyT3ZD2Yu7efsRORr3IeXBB0530"
+export const LEARNER_TEST_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTI2NTI3MjcsImRhdGEiOnsibGVhcm5lcklkIjo0NX0sImlhdCI6MTYxMDIzMzUzMn0.slTSLyS99q5ZUEiaERTCZUqolr6pUPddhjdTXdYavq8"
+
 export const api = request(app)
