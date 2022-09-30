@@ -146,11 +146,11 @@ export function LearnerLoginPage({ onLearnerLogIn, isLearnerLoggedIn }) {
     })
   }
 
-  function getProgrammes() {
-    return sessionStorage.getItem("programmes")
-      ? JSON.parse(sessionStorage.getItem("programmes"))
-      : null
-  }
+  // function getProgrammes() {
+  //   return sessionStorage.getItem("programmes")
+  //     ? JSON.parse(sessionStorage.getItem("programmes"))
+  //     : null
+  // }
 
   function saveProgrammes(programmes) {
     sessionStorage.setItem("programmes", JSON.stringify(programmes))

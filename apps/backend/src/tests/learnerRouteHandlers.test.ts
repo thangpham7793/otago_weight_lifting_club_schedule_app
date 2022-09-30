@@ -147,7 +147,6 @@ describe("API Integration Tests - Learner Service", () => {
           exerciseName: "snatch",
           repMax: "x10",
           weight: "230.00",
-          lastEdited: "2021-01-08",
         },
         {
           pbId: 68,
@@ -155,7 +154,6 @@ describe("API Integration Tests - Learner Service", () => {
           exerciseName: "snatch",
           repMax: "x10",
           weight: "200.00",
-          lastEdited: "2022-09-26",
         },
       ]
 
@@ -167,7 +165,9 @@ describe("API Integration Tests - Learner Service", () => {
 
       expect(result.status).toEqual(200)
       expect(result.body.length).toEqual(2)
-      expect(result.body).toEqual(expected)
+      result.body.forEach((pb: any, idx: number) => {
+        expect(pb).toMatchObject(expected[idx])
+      })
     })
   })
 
@@ -183,7 +183,7 @@ describe("API Integration Tests - Learner Service", () => {
         exerciseName: "power jerk",
         repMax: "x3",
         weight: "120.00",
-        lastEdited: new Date().toISOString().substr(0, 10),
+        lastEdited: new Date().toISOString().substring(0, 10),
       }
 
       const result = await api
@@ -210,25 +210,22 @@ describe("API Integration Tests - Learner Service", () => {
       const expected = [
         {
           pbId: 70,
-          exerciseName: 'clean',
-          repMax: 'x1',
-          weight: '125.00',
-          lastEdited: '2021-01-08'
+          exerciseName: "clean",
+          repMax: "x1",
+          weight: "125.00",
         },
         {
           pbId: 68,
-          exerciseName: 'snatch',
-          repMax: 'x10',
-          weight: '200.00',
-          lastEdited: '2022-09-26'
+          exerciseName: "snatch",
+          repMax: "x10",
+          weight: "200.00",
         },
         {
           pbId: 69,
-          exerciseName: 'snatch',
-          repMax: 'x10',
-          weight: '230.00',
-          lastEdited: '2021-01-08'
-        }
+          exerciseName: "snatch",
+          repMax: "x10",
+          weight: "230.00",
+        },
       ]
 
       const result = await api
@@ -238,7 +235,9 @@ describe("API Integration Tests - Learner Service", () => {
       console.log(result.body)
       expect(result.status).toEqual(200)
       expect(result.body.length).toEqual(3)
-      expect(result.body).toEqual(expected)
+      result.body.forEach((pb: any, idx: number) => {
+        expect(pb).toMatchObject(expected[idx])
+      })
     })
   })
 
