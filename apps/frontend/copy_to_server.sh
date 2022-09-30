@@ -10,7 +10,11 @@ clean_up_build_folder() {
 
 clean_up_build_folder
 
-npm run build
+if  ! npm run build;
+then
+    echo "Failed to build" && exit 1
+fi
+
 mv build/ instructor/ 
 
 echo "Finished building bundle"
