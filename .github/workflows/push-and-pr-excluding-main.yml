@@ -1,4 +1,4 @@
-name: Push and PR excluding main
+name: Push and PR excluding main with diff
 
 on:
   pull_request:
