@@ -13,22 +13,9 @@ jobs:
   tests:
     uses: ./.github/workflows/tests.yml
 
-  previous-commit:
-    runs-on: ubuntu-latest
-    outputs:
-      sha: ${{ steps.get-prev-commit-sha.outputs.sha }}
-    steps:
-      - uses: actions/checkout@v3
-      - id: get-prev-commit-sha
-        run: |
-          echo $GITHUB_BASE_REF 
-          echo "sha=foo" >> "$GITHUB_OUTPUT"
-
   deploy-to-fly:
     needs:
       - previous-commit
       - tests
     uses: ./.github/workflows/deploy-to-fly.yml
     secrets: inherit
-    with:
-      base: ${{ needs.previous-commit.outputs.sha }}
