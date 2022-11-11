@@ -1,4 +1,8 @@
 node_modules
 npm-debug.log
-README.md
 *.env
+src/tests/
+dist
+*.yml
+*.md
+*.toml

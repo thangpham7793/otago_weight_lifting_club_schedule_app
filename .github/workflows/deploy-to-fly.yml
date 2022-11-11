@@ -1,9 +1,8 @@
 name: Deploy to Fly
 
 on:
-  push:
-    branches: [testing]
-
+  workflow_call:
+    
 jobs:
   deploy:
     timeout-minutes: 10

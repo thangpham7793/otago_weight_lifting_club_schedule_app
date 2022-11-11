@@ -1,5 +1,5 @@
-import { pool } from "../database/register"
-import { api, LEARNER_TEST_TOKEN } from "./testHelper"
+import { pool } from "../../database/register"
+import { api, LEARNER_TEST_TOKEN } from "../testHelper"
 
 jest.setTimeout(30000)
 

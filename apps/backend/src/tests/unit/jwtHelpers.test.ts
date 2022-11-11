@@ -1,4 +1,4 @@
-import { makeToken } from "../utils/jwtHelpers"
+import { makeToken } from "../../utils/jwtHelpers"
 import jwt from "jsonwebtoken"
 
 describe("UNIT TEST: function makeToken", () => {

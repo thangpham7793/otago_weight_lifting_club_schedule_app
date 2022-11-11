@@ -1,0 +1,17 @@
+name: Push and PR excluding main
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  deploy-to-fly:
+    uses: ./.github/workflows/deploy-to-fly.yml

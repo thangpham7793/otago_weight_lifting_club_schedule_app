@@ -8,14 +8,16 @@
   },
   "scripts": {
     "test": "jest",
+    "test-unit": "jest src/tests/unit",
+    "test-integration": "jest src/tests/integration",
     "dev": "nodemon",
     "dev2": "npx nodemon dist/server.js",
     "start": "node dist/server.js",
     "build": "rm -rf dist && tsc && cp -r src/public dist/public",
     "deploy": "flyctl deploy",
     "test-docker-clean-up": "docker-compose down && docker volume prune -f",
-    "test-docker-local": "docker-compose -f docker-compose.test.yml up -d --renew-anon-volumes && npm run test && npm run test-docker-clean-up",
-    "test-docker-ci": "docker-compose -f docker-compose.test.yml up -d && npm run test"
+    "test-docker-local": "docker-compose -f docker-compose.test.yml up --build -d --renew-anon-volumes && npm run test-integration && npm run test-docker-clean-up",
+    "test-docker-ci": "docker-compose -f docker-compose.test.yml up -d && npm run test-integration"
   },
   "repository": {
     "type": "git",
