@@ -20,7 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: get-prev-commit-sha
-        run: echo $(git rev-parse @~1) && echo "sha=$(git rev-parse @~1)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo $GITHUB_BASE_REF 
+          echo "sha=foo" >> "$GITHUB_OUTPUT"
 
   deploy-to-fly:
     needs:
@@ -29,4 +31,4 @@ jobs:
     uses: ./.github/workflows/deploy-to-fly.yml
     secrets: inherit
     with:
-      base: ${{needs.previous-commit.outputs.sha}}
+      base: ${{ needs.previous-commit.outputs.sha }}
