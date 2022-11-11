@@ -1,0 +1,17 @@
+POSTGRES_USER=test_user
+POSTGRES_PASSWORD=test_user
+POSTGRES_DB=lifting
+SECRET=secret
+NODE_ENV=development
+DOCKER=true
+
+STORED_DATABASE_URL=your postgres heroku url
+
+# Fill the above for the mailing to work. You may need to grant access to your gmail as well.
+
+GMAIL_USER=sender email
+GMAIL_PW=sender email pw
+OAUTH_CLIENTID=
+OAUTH_CLIENTSECRET=
+OAUTH_REFRESHTOKEN=
+OAUTH_ACCESSTOKEN=

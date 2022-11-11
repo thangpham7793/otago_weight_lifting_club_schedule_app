@@ -1,0 +1,14 @@
+version: "3.2"
+services:
+  db:
+    container_name: pgsql_test_db
+    build:
+      context: .
+      dockerfile: Dockerfile.db_test
+    restart: always
+    environment:
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASSWORD=test_user
+      - POSTGRES_DB=lifting
+    ports:
+      - "5432:5432"

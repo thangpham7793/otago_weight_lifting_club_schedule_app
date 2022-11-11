@@ -1,4 +1,4 @@
 node_modules/
 *.env
 .secretpreso_outline.md
-dist/*
+dist/
