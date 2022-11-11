@@ -24,14 +24,17 @@ jobs:
         cache-dependency-path: apps/backend/package-lock.json
 
     - name: Install deps
+      if: steps.filter.outputs.backend == 'true'
       working-directory: ./apps/backend
       run: npm ci
 
     - name: Unit tests
+      if: steps.filter.outputs.backend == 'true'
       working-directory: ./apps/backend
       run: npm run test-unit
 
     - name: Integration tests
+      if: steps.filter.outputs.backend == 'true'
       working-directory: ./apps/backend
       run: npm run test-docker-ci
       env: 

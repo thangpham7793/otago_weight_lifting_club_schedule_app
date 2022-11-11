@@ -1,5 +1,11 @@
 on:
   workflow_call:
+    inputs:
+      base:
+        type: string
+        description: the branch, tag, or commit SHA to diff against when detecting changes
+        required: false
+        default: main
     
 jobs:
   deploy-to-fly:
@@ -11,6 +17,7 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: filter
         with:
+          base: ${{ inputs.base }}
           filters: |
             src:
               - 'apps/backend/src'
