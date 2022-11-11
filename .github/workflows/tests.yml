@@ -24,6 +24,7 @@ jobs:
       run: npm ci
 
     - name: Unit tests
+      working-directory: ./apps/backend
       run: npm run test-unit
 
     - name: Integration tests
