@@ -1,5 +1,5 @@
-import { ScheduleInfo, ScheduleInfoRow } from "./../types.d"
-import { scheduleInfoJsonFormatter } from "../utils/programmeServiceHelpers"
+import { ScheduleInfo, ScheduleInfoRow } from "../../types.d"
+import { scheduleInfoJsonFormatter } from "../../utils/programmeServiceHelpers"
 
 describe("The scheduleInfoJsonFormatter function should", () => {
   it("should return null when there is no schedule", () => {

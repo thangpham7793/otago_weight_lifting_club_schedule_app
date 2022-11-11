@@ -1,14 +1,11 @@
-name: Test
+name: tests
 
 on:
-  push:
-  pull_request:
-    branches:
-    - main
-
+  workflow_call:
+    
 jobs:
   docker:
-    timeout-minutes: 10
+    timeout-minutes: 5
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +23,10 @@ jobs:
       working-directory: ./apps/backend
       run: npm ci
 
-    - name: Run docker test
+    - name: Unit tests
+      run: npm run test-unit
+
+    - name: Integration tests
       working-directory: ./apps/backend
       run: npm run test-docker-ci
       env: 
@@ -35,4 +35,3 @@ jobs:
         POSTGRES_DB: lifting
         SECRET: secret
         NODE_ENV: test
-
