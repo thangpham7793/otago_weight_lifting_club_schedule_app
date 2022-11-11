@@ -3,8 +3,8 @@ import request from "supertest"
 import { makeToken } from "../utils/jwtHelpers"
 
 export const INSTRUCTOR_TEST_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjY1NzcxMDIsImRhdGEiOnsiaW5zdHJ1Y3RvcklkIjozfSwiaWF0IjoxNjY0MTU3OTAzfQ.Ncs-DtGCj2JD_bPbMNcCTxCZtBZpTxzNEfUhQ9kbUBw"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Imluc3RydWN0b3JJZCI6M30sImlhdCI6MTY2ODIwMjgxMywiZXhwIjo4ODA2ODIwMjgxM30.jl0Oq5z-JtHoi0nHfZrh1yyKK8y8Hh-XAoEAk4fT6nE"
 
-export const LEARNER_TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjY1NzY2ODQsImRhdGEiOnsibGVhcm5lcklkIjo0NX0sImlhdCI6MTY2NDE1NzQ4NX0.D1_mZkRv8Ew71_5-FRSlZuxSUR_7-D1wPij3Vp-PgOo"
+export const LEARNER_TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImxlYXJuZXJJZCI6NDV9LCJpYXQiOjE2NjgyMDI4MTMsImV4cCI6ODgwNjgyMDI4MTN9.wqffHt3cyahF1SZZNK-MxMsemfXb4vqNKhuh3CNL-4I"
 
 export const api = request(app)
