@@ -8,8 +8,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            src:
+              - 'apps/backend/src'
+              - 'apps/backend/fly.toml'
+
+      - name: Set up fly
+        if: steps.filter.outputs.src == 'true'
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy
+        if: steps.filter.outputs.src == 'true'
+        run: flyctl deploy --remote-only
         working-directory: ./apps/backend
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
