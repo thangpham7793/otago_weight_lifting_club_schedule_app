@@ -2,20 +2,22 @@ import { makeToken } from "../utils/jwtHelpers"
 import jwt from "jsonwebtoken"
 
 describe("UNIT TEST: function makeToken", () => {
+  const NOW = Math.floor(Date.now() / 1000)
+  const DAYS_IN_SECONDS = 86400
+  const DEFAULT_TOKEN_DURATION_IN_DAYS = 28
+
   it("should create a valid token from a payload and return that payload when decoded", async () => {
     const payload = { learnerId: 1 }
+
     const expected = {
       data: { learnerId: 1 },
-      exp: 1603870601,
-      iat: 1601451401,
+      exp: NOW + DEFAULT_TOKEN_DURATION_IN_DAYS * DAYS_IN_SECONDS,
+      iat: NOW,
     }
 
     const token = await makeToken(payload)
     const decoded = await jwt.verify(token, "secret")
 
-    expect(decoded).toHaveProperty("data")
-    expect(decoded).toHaveProperty("exp")
-    expect(decoded).toHaveProperty("iat")
-    expect(Object.values(decoded)).toContainEqual({ learnerId: 1 })
+    expect(decoded).toStrictEqual(expected)
   })
 })
