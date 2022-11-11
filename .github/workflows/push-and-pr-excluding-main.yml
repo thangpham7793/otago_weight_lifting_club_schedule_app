@@ -17,3 +17,4 @@ jobs:
     needs:
       - tests
     uses: ./.github/workflows/deploy-to-fly.yml
+    secrets: inherit
