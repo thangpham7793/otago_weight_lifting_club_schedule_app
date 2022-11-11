@@ -1,0 +1,38 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  docker:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14.x
+        cache: npm
+        cache-dependency-path: apps/backend/package-lock.json
+
+    - name: Install deps
+      working-directory: ./apps/backend
+      run: npm ci
+
+    - name: Run docker test
+      working-directory: ./apps/backend
+      run: npm run test-docker-ci
+      env: 
+        POSTGRES_USER: test_user
+        POSTGRES_PASSWORD: test_user
+        POSTGRES_DB: lifting
+        SECRET: secret
+        NODE_ENV: test
+
