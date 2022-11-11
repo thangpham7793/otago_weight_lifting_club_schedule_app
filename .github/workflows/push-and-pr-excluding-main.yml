@@ -14,4 +14,6 @@ jobs:
     uses: ./.github/workflows/tests.yml
 
   deploy-to-fly:
+    needs:
+      - tests
     uses: ./.github/workflows/deploy-to-fly.yml
