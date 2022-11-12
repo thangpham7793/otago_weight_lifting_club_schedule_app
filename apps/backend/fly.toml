@@ -1,6 +1,6 @@
-# fly.toml file generated for otago-lifting-backend on 2022-09-24T16:57:04+12:00
+# fly.toml file generated for otago-weightlifting on 2022-11-12T12:50:16+13:00
 
-app = "otago-lifting-backend"
+app = "otago-weightlifting"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
