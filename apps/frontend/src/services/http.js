@@ -11,7 +11,7 @@ export class HttpServiceSingleton {
   }
 
   static BASE_URL = (function () {
-    const PROD = "https://otago-lifting-backend.fly.dev"
+    const PROD = "https://otago-weightlifting.fly.dev"
     const DEV = "http://localhost:5000"
 
     const isDev = window.location.href.split(".").includes("localhost")
