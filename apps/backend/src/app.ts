@@ -6,7 +6,6 @@ import express, { Application, Request, Response } from "express"
 import bodyParser from "body-parser"
 import cors from "cors"
 import path from "path"
-import cookieParser from "cookie-parser"
 import morgan from "morgan"
 
 class App {
@@ -22,7 +21,6 @@ class App {
   }
 
   private setConfig() {
-    this.app.use(cookieParser())
 
     this.app.use(bodyParser.json({ limit: "50mb" }))
 

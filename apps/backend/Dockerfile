@@ -16,6 +16,10 @@ COPY src/ src/
 RUN npm ci
 RUN npm run build
 
+RUN rm -rf node_modules
+ENV NODE_ENV=production
+RUN npm ci && npm prune
+
 FROM node:14-alpine AS release
 
 WORKDIR /app
