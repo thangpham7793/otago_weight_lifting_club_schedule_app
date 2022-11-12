@@ -2,7 +2,7 @@ import {
   InstructorRouter,
   ProgrammeRouter,
   LearnerRouter,
-} from "./../routers/register"
+} from "./../routers"
 import { Application } from "express"
 
 export class Controller {

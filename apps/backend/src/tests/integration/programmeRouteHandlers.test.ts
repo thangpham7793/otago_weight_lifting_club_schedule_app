@@ -1,6 +1,6 @@
 import { ProgrammeInfo } from "../../types.d"
 import { api, LEARNER_TEST_TOKEN } from "../testHelper"
-import { pool } from "../../database/register"
+import { pool } from "../../database"
 
 jest.setTimeout(30000)
 

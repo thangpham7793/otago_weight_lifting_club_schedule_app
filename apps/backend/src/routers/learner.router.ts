@@ -2,8 +2,8 @@ import {
   catchAsync,
   checkEmail,
   extractHeaderAuthToken,
-} from "../utils/register"
-import { LearnerService, ProgrammeService } from "../database/register"
+} from "../utils"
+import { LearnerService, ProgrammeService } from "../database"
 import { Router, Application } from "express"
 
 export class LearnerRouter {

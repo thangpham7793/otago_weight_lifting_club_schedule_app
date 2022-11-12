@@ -1,5 +1,5 @@
 import { api, INSTRUCTOR_TEST_TOKEN } from "../testHelper"
-import { pool } from "../../database/register"
+import { pool } from "../../database"
 
 describe("API Integration Tests - Instructor Service", () => {
   describe("POST /instructor/login", () => {
