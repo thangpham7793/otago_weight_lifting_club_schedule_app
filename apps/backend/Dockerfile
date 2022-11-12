@@ -1,5 +1,5 @@
 # TODO: refactor based on this https://github.com/Saluki/nestjs-template/blob/master/Dockerfile
-FROM node:14-alpine AS build
+FROM node:18-alpine AS build
 
 WORKDIR /app
 RUN apk add --no-cache --virtual .gyp \
@@ -20,7 +20,7 @@ RUN rm -rf node_modules
 ENV NODE_ENV=production
 RUN npm ci && npm prune
 
-FROM node:14-alpine AS release
+FROM node:18-alpine AS release
 
 WORKDIR /app
 
