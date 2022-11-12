@@ -1,7 +1,7 @@
-import { makeToken, httpError } from "./../utils/register"
+import { makeToken, httpError } from "./../utils"
 import { compare, hash } from "bcrypt"
 import { NextFunction, Request, Response } from "express"
-import { execute } from "./register"
+import { execute } from "."
 
 export class InstructorService {
   async checkCredentials(req: Request, _: Response, next: NextFunction) {

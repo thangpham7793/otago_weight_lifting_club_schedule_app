@@ -1,7 +1,7 @@
 import { compare } from "bcrypt"
-import { httpError, makeToken } from "./../utils/register"
+import { httpError, makeToken } from "./../utils"
 import { Request, Response, NextFunction } from "express"
-import { execute } from "./register"
+import { execute } from "."
 import AppMailer from "./AppMailer"
 
 export class LearnerService {

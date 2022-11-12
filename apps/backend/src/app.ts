@@ -1,5 +1,5 @@
-import { serverError, unknownEndpoint } from "./utils/register"
-import { Controller } from "./controllers/register"
+import { serverError, unknownEndpoint } from "./utils"
+import { Controller } from "./controllers"
 
 //native or 3rd party modules
 import express, { Application, Request, Response } from "express"

@@ -1,5 +1,5 @@
-import { catchAsync, extractHeaderAuthToken } from "../utils/register"
-import { ProgrammeService } from "../database/register"
+import { catchAsync, extractHeaderAuthToken } from "../utils"
+import { ProgrammeService } from "../database"
 import { Router, Application } from "express"
 
 export class ProgrammeRouter {

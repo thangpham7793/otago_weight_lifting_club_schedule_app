@@ -1,4 +1,4 @@
-import { appConfig, httpError } from "./register"
+import { appConfig, httpError } from "."
 import { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
 import path from "path"
