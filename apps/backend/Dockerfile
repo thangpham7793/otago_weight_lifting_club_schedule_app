@@ -1,5 +1,5 @@
 # TODO: refactor based on this https://github.com/Saluki/nestjs-template/blob/master/Dockerfile
-FROM node:14-alpine
+FROM node:14-alpine AS build
 
 WORKDIR /app
 RUN apk add --no-cache --virtual .gyp \
@@ -15,10 +15,18 @@ COPY src/ src/
 
 RUN npm ci
 RUN npm run build
-RUN apk del .gyp
+
+FROM node:14-alpine AS release
+
+WORKDIR /app
+
+RUN chown nobody:nobody /app
+USER nobody:nobody
+
+COPY --from=build --chown=nobody:nobdy /app/node_modules /app/node_modules
+COPY --from=build --chown=nobody:nobody /app/dist ./
 
 ENV NODE_ENV production
 EXPOSE 8080
 
-CMD ["npm", "run", "start"]
-
+CMD ["node", "server.js"]
