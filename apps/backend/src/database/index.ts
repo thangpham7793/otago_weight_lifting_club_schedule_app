@@ -1,5 +1,5 @@
-export * from "./learner.service"
-export * from "./programme.service"
+export * as LearnerService from "./learner.service"
+export * as ProgrammeService from "./programme.service"
 export * from "./pool"
-export * from "./instructor.service"
+export * as InstructorService from "./instructor.service"
 export * from "./execute"

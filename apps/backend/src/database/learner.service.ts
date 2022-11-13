@@ -4,53 +4,64 @@ import { Request, Response, NextFunction } from "express"
 import { execute } from "."
 import AppMailer from "./AppMailer"
 
-export class LearnerService {
-  redirectToSignupPage(req: Request, res: Response) {
-    res.redirect("../signup.html")
-  }
+export function redirectToSignupPage(req: Request, res: Response) {
+  res.redirect("../signup.html")
+}
 
-  async getAllLearners(req: Request, res: Response, next: NextFunction) {
-    const result = await execute(
-      `SELECT "learnerId", username, email, "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner ORDER BY "firstName"`
-    )
+export async function getAllLearners(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const result = await execute(
+    `SELECT "learnerId", username, email, "firstName", "lastName", "snatch", clean, jerk, "cleanAndJerk", "backSquat", "frontSquat", "pushPress" FROM learner ORDER BY "firstName"`
+  )
 
-    res.status(200).json(result.rows)
-  }
+  res.status(200).json(result.rows)
+}
 
-  async createLearner(req: Request, res: Response, next: NextFunction) {
-    const newLearnerInfo = req.body
-    console.log(req.body)
+export async function createLearner(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const newLearnerInfo = req.body
+  console.log(req.body)
 
-    //added username based on lastName + 1st letter of firstName
-    newLearnerInfo.username = `${
-      newLearnerInfo.lastName
-    }${newLearnerInfo.firstName.substring(0, 1)}`
+  //added username based on lastName + 1st letter of firstName
+  newLearnerInfo.username = `${
+    newLearnerInfo.lastName
+  }${newLearnerInfo.firstName.substring(0, 1)}`
 
-    //use select currval since nextval is called on insert and before the concat takes place so currval would get the id of the new learner
-    const statement = `
+  //use select currval since nextval is called on insert and before the concat takes place so currval would get the id of the new learner
+  const statement = `
     INSERT INTO learner ("firstName", "lastName", "email", "programmeId", "username")
     VALUES ($1, $2, $3, $4, $5) RETURNING username, "learnerId", "email";`
 
-    //make sure only lowercase is inserted as well
-    const params = Object.values(newLearnerInfo).map((val) =>
-      typeof val === "string" ? val.toLowerCase() : val
-    )
+  //make sure only lowercase is inserted as well
+  const params = Object.values(newLearnerInfo).map((val) =>
+    typeof val === "string" ? val.toLowerCase() : val
+  )
 
-    const { rows } = await execute(statement, params)
+  const { rows } = await execute(statement, params)
 
-    const { username, learnerId, email } = rows[0]
+  const { username, learnerId, email } = rows[0]
 
-    res.status(201).send({ username, learnerId })
+  res.status(201).send({ username, learnerId })
 
-    return await new AppMailer(username, email).sendAccountInfo()
-  }
+  return await new AppMailer(username, email).sendAccountInfo()
+}
 
-  async checkCredentials(req: Request, res: Response, next: NextFunction) {
-    const { username, password } = req.body
-    console.log(username, password)
+export async function checkCredentials(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { username, password } = req.body
+  console.log(username, password)
 
-    const params = [username.toLowerCase()]
-    const statement = `    
+  const params = [username.toLowerCase()]
+  const statement = `    
       SELECT 
       p."hashedPassword", p."programmeId", p."programmeName", 
       l."learnerId", CONCAT(l."firstName",' ', l."lastName") as "learnerName", 
@@ -61,33 +72,30 @@ export class LearnerService {
       USING ("programmeId")
       WHERE username = $1;`
 
-    const { rows } = await execute(statement, params)
+  const { rows } = await execute(statement, params)
 
-    //console.log(result.rows)
-    if (rows.length === 0) {
-      throw new httpError(401, "unknown username")
-    }
-
-    const { hashedPassword, learnerId } = rows[0]
-    //TODO: check password here using jwt and bcrypt
-    const isValidPassword = await compare(
-      password.toLowerCase(),
-      hashedPassword
-    )
-    if (isValidPassword) {
-      //send programmeId to scheduleService.getAllProgrammes
-      const token = await makeToken({ learnerId })
-      req.body = { ...req.body, ...rows[0], token }
-      next()
-    } else {
-      throw new httpError(401, "wrong password")
-    }
+  //console.log(result.rows)
+  if (rows.length === 0) {
+    throw new httpError(401, "unknown username")
   }
 
-  async getPbs(req: Request, res: Response, next: NextFunction) {
-    const { learnerId } = req.body.token.data
-    const params = [learnerId]
-    const statement = `
+  const { hashedPassword, learnerId } = rows[0]
+  //TODO: check password here using jwt and bcrypt
+  const isValidPassword = await compare(password.toLowerCase(), hashedPassword)
+  if (isValidPassword) {
+    //send programmeId to scheduleService.getAllProgrammes
+    const token = await makeToken({ learnerId })
+    req.body = { ...req.body, ...rows[0], token }
+    next()
+  } else {
+    throw new httpError(401, "wrong password")
+  }
+}
+
+export async function getPbs(req: Request, res: Response, next: NextFunction) {
+  const { learnerId } = req.body.token.data
+  const params = [learnerId]
+  const statement = `
     SELECT
     snatch,
     clean,
@@ -99,30 +107,33 @@ export class LearnerService {
     FROM learner
     WHERE "learnerId" = $1;
     `
-    const { rows } = await execute(statement, params)
-    const pbs = { ...rows[0] }
-    Object.keys(rows[0]).forEach((k) => {
-      pbs[k] = parseFloat(rows[0][k])
-    })
-    res.status(200).json(pbs)
+  const { rows } = await execute(statement, params)
+  const pbs = { ...rows[0] }
+  Object.keys(rows[0]).forEach((k) => {
+    pbs[k] = parseFloat(rows[0][k])
+  })
+  res.status(200).json(pbs)
+}
+
+//FIXME: this will need to reflect update on other fields as well. May need a diff function to only update selected field
+export async function updatePbs(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { token, newPbs } = req.body
+
+  console.log("Received", token, newPbs)
+
+  if (!newPbs) {
+    throw new httpError(400, "Missing new personal bests to update!")
   }
 
-  //FIXME: this will need to reflect update on other fields as well. May need a diff function to only update selected field
-  async updatePbs(req: Request, res: Response, next: NextFunction) {
-    const { token, newPbs } = req.body
+  const params = [...Object.values(newPbs), token.data.learnerId].map(
+    (ele: string) => parseFloat(ele)
+  )
 
-    console.log("Received", token, newPbs)
-
-    if (!newPbs) {
-      throw new httpError(400, "Missing new personal bests to update!")
-    }
-
-    const params = [
-      ...Object.values(newPbs),
-      token.data.learnerId,
-    ].map((ele: string) => parseFloat(ele))
-
-    const statement = `
+  const statement = `
     UPDATE learner SET
     snatch = $1,
     clean = $2,
@@ -134,28 +145,32 @@ export class LearnerService {
     WHERE "learnerId" = $8;
     `
 
-    await execute(statement, params)
-    res.status(204).send()
+  await execute(statement, params)
+  res.status(204).send()
+}
+
+export async function updateLearnerDetail(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { token, learner } = req.body
+
+  console.log("Received", token, learner)
+
+  if (!learner) {
+    throw new httpError(400, "Missing Learner Detail!")
   }
 
-  async updateLearnerDetail(req: Request, res: Response, next: NextFunction) {
-    const { token, learner } = req.body
-
-    console.log("Received", token, learner)
-
-    if (!learner) {
-      throw new httpError(400, "Missing Learner Detail!")
+  const params = [...Object.keys(learner)].map((k: string) => {
+    if (!["firstName", "lastName", "email", "username"].includes(k)) {
+      return parseFloat(learner[k])
+    } else {
+      return learner[k]
     }
+  })
 
-    const params = [...Object.keys(learner)].map((k: string) => {
-      if (!["firstName", "lastName", "email", "username"].includes(k)) {
-        return parseFloat(learner[k])
-      } else {
-        return learner[k]
-      }
-    })
-
-    const statement = `
+  const statement = `
     UPDATE learner SET
     username = $2,
     email = $3,
@@ -171,111 +186,121 @@ export class LearnerService {
     WHERE "learnerId" = $1;
     `
 
-    await execute(statement, params)
-    res.status(204).send()
+  await execute(statement, params)
+  res.status(204).send()
+}
+
+export async function deleteLearner(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { learnerId } = req.params
+
+  if (!learnerId) {
+    throw new httpError(400, "Missing LearnerId!")
   }
 
-  async deleteLearner(req: Request, res: Response, next: NextFunction) {
-    const { learnerId } = req.params
+  const params = [parseInt(learnerId)]
 
-    if (!learnerId) {
-      throw new httpError(400, "Missing LearnerId!")
-    }
-
-    const params = [parseInt(learnerId)]
-
-    const statement = `
+  const statement = `
     DELETE FROM learner
     WHERE "learnerId" = $1;
     `
-    await execute(statement, params)
-    res.status(204).send()
-  }
+  await execute(statement, params)
+  res.status(204).send()
+}
 
-  async updatePracticeBest(req: Request, res: Response) {
-    const { pbId, weight, repMax } = req.body
-    console.log("received", pbId, weight, repMax)
-    const statement = `
+export async function updatePracticeBest(req: Request, res: Response) {
+  const { pbId, weight, repMax } = req.body
+  console.log("received", pbId, weight, repMax)
+  const statement = `
       UPDATE practice_bests 
       SET weight = $2, 
       "repMax" = $3,
       "lastEdited" = CURRENT_DATE 
       WHERE "pbId" = $1;`
 
-    const params = [pbId, weight, repMax]
-    const queryRes = await execute(statement, params)
-    console.log(queryRes)
-    res.status(204).send()
-  }
+  const params = [pbId, weight, repMax]
+  const queryRes = await execute(statement, params)
+  console.log(queryRes)
+  res.status(204).send()
+}
 
-  async getPracticeBestsByExerciseName(req: Request, res: Response) {
-    const { exerciseName } = req.params
-    const { learnerId } = req.body.token.data
-    console.log("Received", learnerId, exerciseName)
-    const statement = `
+export async function getPracticeBestsByExerciseName(
+  req: Request,
+  res: Response
+) {
+  const { exerciseName } = req.params
+  const { learnerId } = req.body.token.data
+  console.log("Received", learnerId, exerciseName)
+  const statement = `
       SELECT "pbId", "learnerId", "exerciseName", 
       "repMax", "weight", "lastEdited"::TEXT 
       FROM practice_bests 
       WHERE "learnerId" = $1 
       AND "exerciseName" = $2 
       ORDER BY "repMax";`
-    const params = [parseInt(learnerId), exerciseName]
-    const { rows } = await execute(statement, params)
-    res.status(200).json(rows)
-  }
+  const params = [parseInt(learnerId), exerciseName]
+  const { rows } = await execute(statement, params)
+  res.status(200).json(rows)
+}
 
-  async postNewPracticeBest(req: Request, res: Response) {
-    const { exerciseName, repMax, weight } = req.body
-    const { learnerId } = req.body.token.data
-    console.log("Received", learnerId, exerciseName, repMax, parseFloat(weight))
-    const statement = `
+export async function postNewPracticeBest(req: Request, res: Response) {
+  const { exerciseName, repMax, weight } = req.body
+  const { learnerId } = req.body.token.data
+  console.log("Received", learnerId, exerciseName, repMax, parseFloat(weight))
+  const statement = `
     INSERT INTO practice_bests ("learnerId", "exerciseName", "repMax", "weight", "lastEdited") VALUES ($1, $2, $3, $4, $5) RETURNING "pbId", "exerciseName", "repMax", "weight", "lastEdited"::TEXT;
     `
-    const params = [
-      learnerId,
-      exerciseName,
-      repMax,
-      weight,
-      new Date().toISOString().substring(0, 10),
-    ]
-    const { rows } = await execute(statement, params)
-    res.status(201).json(rows[0])
+  const params = [
+    learnerId,
+    exerciseName,
+    repMax,
+    weight,
+    new Date().toISOString().substring(0, 10),
+  ]
+  const { rows } = await execute(statement, params)
+  res.status(201).json(rows[0])
+}
+
+export async function deleteOnePracticeBest(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { pbId } = req.params
+
+  if (!pbId) {
+    throw new httpError(400, "Missing Personal Best Id!")
   }
 
-  async deleteOnePracticeBest(req: Request, res: Response, next: NextFunction) {
-    const { pbId } = req.params
+  console.log(`Received ${pbId}`)
 
-    if (!pbId) {
-      throw new httpError(400, "Missing Personal Best Id!")
-    }
+  const params = [parseInt(pbId)]
 
-    console.log(`Received ${pbId}`)
-
-    const params = [parseInt(pbId)]
-
-    const statement = `
+  const statement = `
     DELETE FROM practice_bests
     WHERE "pbId" = $1;
     `
 
-    await execute(statement, params)
-    res.status(204).send()
-  }
+  await execute(statement, params)
+  res.status(204).send()
+}
 
-  async getAllPracticeBestsOfOneLearner(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    const { learnerId } = req.params
-    console.log("Getting all practice bests of learner", learnerId)
-    const statement = `
+export async function getAllPracticeBestsOfOneLearner(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { learnerId } = req.params
+  console.log("Getting all practice bests of learner", learnerId)
+  const statement = `
     SELECT "pbId", "exerciseName", "repMax", "weight", CAST("lastEdited" as TEXT) 
     FROM practice_bests 
     WHERE "learnerId" = $1 
     ORDER BY "exerciseName" ASC, SUBSTRING("repMax", 2,2)::NUMERIC ASC, "lastEdited" DESC;`
-    const params = [parseInt(learnerId)]
-    const { rows } = await execute(statement, params)
-    res.status(200).json(rows)
-  }
+  const params = [parseInt(learnerId)]
+  const { rows } = await execute(statement, params)
+  res.status(200).json(rows)
 }
