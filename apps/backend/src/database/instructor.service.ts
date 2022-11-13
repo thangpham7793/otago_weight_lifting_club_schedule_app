@@ -1,5 +1,5 @@
 import { makeToken, httpError } from "./../utils"
-import { compare, hash } from "bcrypt"
+import { compare, hash } from "../utils/crytoService"
 import { NextFunction, Request, Response } from "express"
 import { execute } from "."
 
