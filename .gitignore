@@ -3,3 +3,4 @@ node_modules/
 .secretpreso_outline.md
 dist/
 apps/backend/dist
+.nvmrc
