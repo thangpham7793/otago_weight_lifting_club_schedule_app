@@ -1,8 +1,12 @@
 import { serverError, unknownEndpoint } from "./utils"
-import { Controller } from "./controllers"
 
-//native or 3rd party modules
-import express, { Application, Request, Response } from "express"
+import {
+  InstructorRouter,
+  ProgrammeRouter,
+  LearnerRouter,
+} from "./routers"
+
+import express, { Application } from "express"
 import bodyParser from "body-parser"
 import cors from "cors"
 import path from "path"
@@ -10,13 +14,18 @@ import morgan from "morgan"
 
 class App {
   app: Application
-  controller: Controller
+  instructorRouter: InstructorRouter
+  learnerRouter: LearnerRouter
+  scheduleRouter: ProgrammeRouter
 
   constructor() {
     this.app = express()
     this.setConfig()
     this.useStatic()
-    this.controller = new Controller(this.app)
+
+    this.instructorRouter = new InstructorRouter(this.app)
+    this.learnerRouter = new LearnerRouter(this.app)
+    this.scheduleRouter = new ProgrammeRouter(this.app)
     this.useErrorHandlers()
   }
 
