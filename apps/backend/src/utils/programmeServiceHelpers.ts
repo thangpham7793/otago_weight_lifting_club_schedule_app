@@ -17,7 +17,6 @@ export function scheduleInfoJsonFormatter(
           { scheduleId, scheduleName, weekCount, programmeId, programmeName },
           index
         ) => {
-          console.log(scheduleId)
           if (index === 0) {
             if (programmeId && programmeName) {
               return {
@@ -50,13 +49,10 @@ export function scheduleInfoJsonFormatter(
 
   rows.forEach((r) => {
     if (!processed.includes(r.scheduleId)) {
-      console.log(r.scheduleId)
       processed.push(r.scheduleId)
       res.push(extractProgrammeInfo(r, rows))
     }
   })
-
-  console.log(processed)
 
   return res
 }

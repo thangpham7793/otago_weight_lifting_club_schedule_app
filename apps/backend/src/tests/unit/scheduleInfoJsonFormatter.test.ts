@@ -1,4 +1,4 @@
-import { ScheduleInfo, ScheduleInfoRow } from "../../types.d"
+import { ScheduleInfo, ScheduleInfoRow } from "../../types"
 import { scheduleInfoJsonFormatter } from "../../utils/programmeServiceHelpers"
 
 describe("The scheduleInfoJsonFormatter function should", () => {
@@ -166,6 +166,5 @@ describe("The scheduleInfoJsonFormatter function should", () => {
 
     const json = scheduleInfoJsonFormatter(rows)
     expect(json).toEqual(expected)
-    console.log(json)
   })
 })

@@ -2,11 +2,6 @@
 FROM node:18-alpine AS build
 
 WORKDIR /app
-RUN apk add --no-cache --virtual .gyp \
-        python3 \
-        py3-pip \
-        make \
-        g++ 
 
 COPY package.json .
 COPY package-lock.json .

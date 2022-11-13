@@ -1,7 +1,13 @@
 import app from "./app"
 import { appConfig } from "./utils"
-import { pool } from "./database/pool"
+import { migrate } from "./migrations"
 
-app.listen(appConfig.PORT, "0.0.0.0", () =>
-  console.log(`Listening on port ${appConfig.PORT}`)
-)
+migrate()
+  .then(() => {
+    app.listen(appConfig.PORT, "0.0.0.0", () =>
+      console.log(`Listening on port ${appConfig.PORT}`)
+    )
+  })
+  .catch((error) =>
+    console.error("Migrations failed", JSON.stringify(error, null, 2))
+  )

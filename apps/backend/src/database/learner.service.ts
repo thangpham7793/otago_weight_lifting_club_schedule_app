@@ -1,4 +1,4 @@
-import { compare } from "../utils/crytoService"
+import { compare } from "../utils/cryptoService"
 import { httpError, makeToken } from "./../utils"
 import { Request, Response, NextFunction } from "express"
 import { execute } from "."
@@ -74,13 +74,11 @@ export async function checkCredentials(
 
   const { rows } = await execute(statement, params)
 
-  //console.log(result.rows)
   if (rows.length === 0) {
     throw new httpError(401, "unknown username")
   }
 
   const { hashedPassword, learnerId } = rows[0]
-  //TODO: check password here using jwt and bcrypt
   const isValidPassword = await compare(password.toLowerCase(), hashedPassword)
   if (isValidPassword) {
     //send programmeId to scheduleService.getAllProgrammes

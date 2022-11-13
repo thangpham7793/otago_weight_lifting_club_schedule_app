@@ -1,5 +1,5 @@
 import { makeToken, httpError } from "./../utils"
-import { compare, hash } from "../utils/crytoService"
+import { compare, hash } from "../utils/cryptoService"
 import { NextFunction, Request, Response } from "express"
 import { execute } from "."
 
@@ -29,7 +29,7 @@ async function checkCredentials(req: Request, _: Response, next: NextFunction) {
 
 async function changeInstructorPassword(req: Request, res: Response) {
   const { newPassword, email } = req.body
-  const hashedPassword = await hash(newPassword, 10)
+  const hashedPassword = await hash(newPassword)
   const params = [hashedPassword, email]
   const statement = `
       UPDATE instructor 
