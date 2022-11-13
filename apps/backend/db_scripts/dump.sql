@@ -577,7 +577,12 @@ ALTER TABLE ONLY public.programme_schedule
     ADD CONSTRAINT "programme_schedule_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES public.schedule("scheduleId") ON DELETE CASCADE;
 
 
+--  Migrate to hashes based on native encryption. There's no filter as the data in here is based on an old dump
+
+UPDATE public.instructor SET "hashedPassword" = 'e558a79365dc168fa75699046d31abbf9b9031a94a531067b092cfeb052b3b372ff2a11239aee301e2cc348b0f5d3f74';
+
+UPDATE public.programme SET "hashedPassword" = '03ee63e0c5cefbd07ad2d3d93f89849dc0079a350153c9bc515e83005676cc219de4f3e56dc1466ee6ab9283c4614509';
+
 --
 -- PostgreSQL database dump complete
 --
-

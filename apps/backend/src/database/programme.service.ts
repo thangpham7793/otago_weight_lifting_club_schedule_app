@@ -1,4 +1,4 @@
-import { hash } from "../utils/crytoService"
+import { hash } from "../utils/cryptoService"
 import { Request, Response } from "express"
 import { PoolClient } from "pg"
 import { pool } from "./pool"
@@ -153,7 +153,7 @@ export async function getAllSchedulesInfo(req: Request, res: Response) {
 export async function changeProgrammePassword(req: Request, res: Response) {
   const { newPassword } = req.body
   const { programmeId } = req.params
-  const hashedPassword = await hash(newPassword, 10)
+  const hashedPassword = await hash(newPassword)
 
   const params = [hashedPassword, programmeId]
   const statement = `
