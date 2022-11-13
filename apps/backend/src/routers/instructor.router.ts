@@ -2,32 +2,21 @@ import { catchAsync, extractHeaderAuthToken } from "./../utils"
 import { InstructorService, ProgrammeService } from "./../database"
 import { Router, Application } from "express"
 
-export class InstructorRouter {
-  private instructorRouter: Router
-  private instructorService: InstructorService
-  private scheduleService: ProgrammeService
-  private extractHeaderAuthToken: typeof extractHeaderAuthToken
+const router = Router()
+addRoutes(router)
 
-  constructor(private app: Application) {
-    this.instructorService = new InstructorService()
-    this.scheduleService = new ProgrammeService()
-    this.instructorRouter = Router()
-    this.extractHeaderAuthToken = extractHeaderAuthToken
-    this.addRoutes(this.instructorRouter)
-    this.app.use("/instructor", this.instructorRouter)
-  }
+export default { path: "/instructor", router }
 
-  addRoutes(instructorRouter: Router) {
-    instructorRouter.post(
-      "/login",
-      catchAsync(this.instructorService.checkCredentials),
-      catchAsync(this.scheduleService.getAllProgrammes)
-    )
+function addRoutes(router: Router) {
+  router.post(
+    "/login",
+    catchAsync(InstructorService.checkCredentials),
+    catchAsync(ProgrammeService.getAllProgrammes)
+  )
 
-    instructorRouter.post(
-      "/password",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.instructorService.changeInstructorPassword)
-    )
-  }
+  router.post(
+    "/password",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(InstructorService.changeInstructorPassword)
+  )
 }

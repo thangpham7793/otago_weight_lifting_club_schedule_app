@@ -1,6 +1,6 @@
 import { serverError, unknownEndpoint } from "./utils"
 
-import { InstructorRouter, ProgrammeRouter, LearnerRouter } from "./routers"
+import routerConfigs, { RouterConfig } from "./routers"
 
 import express, { Application } from "express"
 import bodyParser from "body-parser"
@@ -12,8 +12,10 @@ const app = express()
 
 useConfig(app)
 useStatic(app)
-useRouters(app)
+useRouters(app, routerConfigs)
 useErrorHandlers(app)
+
+export default app
 
 function useConfig(app: Application) {
   app.use(bodyParser.json({ limit: "50mb" }))
@@ -42,10 +44,6 @@ function useErrorHandlers(app: Application) {
   app.use(serverError)
 }
 
-function useRouters(app: Application) {
-  new InstructorRouter(app)
-  new LearnerRouter(app)
-  new ProgrammeRouter(app)
+function useRouters(app: Application, configs: RouterConfig[]) {
+  configs.forEach(({ path, router }) => app.use(path, router))
 }
-
-export default app

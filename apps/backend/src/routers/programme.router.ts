@@ -2,89 +2,80 @@ import { catchAsync, extractHeaderAuthToken } from "../utils"
 import { ProgrammeService } from "../database"
 import { Router, Application } from "express"
 
-export class ProgrammeRouter {
-  private programmeRouter: Router
-  private programmeService: ProgrammeService
-  private extractHeaderAuthToken: typeof extractHeaderAuthToken
+const router = Router()
+addRoutes(router)
 
-  constructor(private app: Application) {
-    this.programmeService = new ProgrammeService()
-    this.programmeRouter = Router()
-    this.extractHeaderAuthToken = extractHeaderAuthToken
-    this.addRoutes(this.programmeRouter)
-    this.app.use("/programmes", this.programmeRouter)
-  }
+export default { path: "/programmes", router }
 
-  addRoutes(programmeRouter: Router) {
-    programmeRouter.get("/", catchAsync(this.programmeService.getAllProgrammes))
+function addRoutes(router: Router) {
+  router.get("/", catchAsync(ProgrammeService.getAllProgrammes))
 
-    programmeRouter.get(
-      "/:programmeId/schedules",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.getAllSchedules)
-    )
+  router.get(
+    "/:programmeId/schedules",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.getAllSchedules)
+  )
 
-    programmeRouter.get(
-      "/schedules/:scheduleId/weeks/:week",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.getWeeklySchedule)
-    )
+  router.get(
+    "/schedules/:scheduleId/weeks/:week",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.getWeeklySchedule)
+  )
 
-    programmeRouter.put(
-      "/:programmeId/password",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.changeProgrammePassword)
-    )
+  router.put(
+    "/:programmeId/password",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.changeProgrammePassword)
+  )
 
-    programmeRouter.get(
-      "/schedules/info",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.getAllSchedulesInfo)
-    )
+  router.get(
+    "/schedules/info",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.getAllSchedulesInfo)
+  )
 
-    // get programmes that a shedule has been published to
-    programmeRouter.get(
-      "/schedules/:scheduleId/publish/available.programmes",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.getAvailableProgrammesToPublish)
-    )
+  // get programmes that a shedule has been published to
+  router.get(
+    "/schedules/:scheduleId/publish/available.programmes",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.getAvailableProgrammesToPublish)
+  )
 
-    programmeRouter.post(
-      "/schedules",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.createWeeklySchedules)
-    )
+  router.post(
+    "/schedules",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.createWeeklySchedules)
+  )
 
-    programmeRouter.put(
-      "/schedules",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.updateWeeklySchedules)
-    )
+  router.put(
+    "/schedules",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.updateWeeklySchedules)
+  )
 
-    programmeRouter.delete(
-      "/schedules/:scheduleId",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.deleteSchedule)
-    )
+  router.delete(
+    "/schedules/:scheduleId",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.deleteSchedule)
+  )
 
-    programmeRouter.post(
-      //recieves an array of programmeIds in req.body
-      "/schedules/:scheduleId/publish/",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.publishSchedule)
-    )
+  router.post(
+    //recieves an array of programmeIds in req.body
+    "/schedules/:scheduleId/publish/",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.publishSchedule)
+  )
 
-    programmeRouter.delete(
-      //DELETE req should not have a body
-      "/schedules/:scheduleId/unpublish/:programmeId",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.unpublishSchedule)
-    )
+  router.delete(
+    //DELETE req should not have a body
+    "/schedules/:scheduleId/unpublish/:programmeId",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.unpublishSchedule)
+  )
 
-    programmeRouter.get(
-      "/exercises",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.programmeService.getAllExercises)
-    )
-  }
+  router.get(
+    "/exercises",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(ProgrammeService.getAllExercises)
+  )
 }

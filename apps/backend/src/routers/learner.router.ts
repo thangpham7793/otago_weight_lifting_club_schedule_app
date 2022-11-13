@@ -1,101 +1,80 @@
-import {
-  catchAsync,
-  checkEmail,
-  extractHeaderAuthToken,
-} from "../utils"
+import { catchAsync, checkEmail, extractHeaderAuthToken } from "../utils"
 import { LearnerService, ProgrammeService } from "../database"
 import { Router, Application } from "express"
 
-export class LearnerRouter {
-  private learnerRouter: Router
-  private learnerService: LearnerService
-  private scheduleService: ProgrammeService
-  private extractHeaderAuthToken: typeof extractHeaderAuthToken
+const router = Router()
+addRoutes(router)
 
-  constructor(private app: Application) {
-    this.learnerService = new LearnerService()
-    this.scheduleService = new ProgrammeService()
-    this.learnerRouter = Router()
+export default { path: "/learners", router }
 
-    this.extractHeaderAuthToken = extractHeaderAuthToken
+function addRoutes(router: Router) {
+  router.get(
+    "/",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.getAllLearners)
+  )
 
-    this.app.use("/learners", this.learnerRouter)
-    this.addRoutes(this.learnerRouter)
-  }
+  router.get("/signup", LearnerService.redirectToSignupPage)
 
-  addRoutes(learnerRouter: Router) {
-    learnerRouter.get(
-      "/",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.getAllLearners)
-    )
+  router.post("/signup", checkEmail, catchAsync(LearnerService.createLearner))
 
-    learnerRouter.get("/signup", this.learnerService.redirectToSignupPage)
+  router.post(
+    "/login",
+    catchAsync(LearnerService.checkCredentials),
+    catchAsync(ProgrammeService.getAllSchedules)
+  )
 
-    learnerRouter.post(
-      "/signup",
-      checkEmail,
-      catchAsync(this.learnerService.createLearner)
-    )
+  router.get(
+    "/pbs",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.getPbs)
+  )
 
-    learnerRouter.post(
-      "/login",
-      catchAsync(this.learnerService.checkCredentials),
-      catchAsync(this.scheduleService.getAllSchedules)
-    )
+  router.put(
+    "/pbs",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.updatePbs)
+  )
 
-    learnerRouter.get(
-      "/pbs",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.getPbs)
-    )
+  router.put(
+    "/details",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.updateLearnerDetail)
+  )
 
-    learnerRouter.put(
-      "/pbs",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.updatePbs)
-    )
+  router.delete(
+    "/:learnerId",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.deleteLearner)
+  )
 
-    learnerRouter.put(
-      "/details",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.updateLearnerDetail)
-    )
+  router.put(
+    "/practice.bests",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.updatePracticeBest)
+  )
 
-    learnerRouter.delete(
-      "/:learnerId",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.deleteLearner)
-    )
+  router.get(
+    "/practice.bests/:exerciseName",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.getPracticeBestsByExerciseName)
+  )
 
-    learnerRouter.put(
-      "/practice.bests",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.updatePracticeBest)
-    )
+  router.get(
+    "/:learnerId/practice.bests",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.getAllPracticeBestsOfOneLearner)
+  )
 
-    learnerRouter.get(
-      "/practice.bests/:exerciseName",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.getPracticeBestsByExerciseName)
-    )
+  router.post(
+    "/practice.bests",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.postNewPracticeBest)
+  )
 
-    learnerRouter.get(
-      "/:learnerId/practice.bests",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.getAllPracticeBestsOfOneLearner)
-    )
-
-    learnerRouter.post(
-      "/practice.bests",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.postNewPracticeBest)
-    )
-
-    learnerRouter.delete(
-      "/practice.bests/:pbId",
-      catchAsync(this.extractHeaderAuthToken),
-      catchAsync(this.learnerService.deleteOnePracticeBest)
-    )
-  }
+  router.delete(
+    "/practice.bests/:pbId",
+    catchAsync(extractHeaderAuthToken),
+    catchAsync(LearnerService.deleteOnePracticeBest)
+  )
 }
