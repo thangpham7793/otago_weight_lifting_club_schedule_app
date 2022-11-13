@@ -4,7 +4,6 @@ import routerConfigs, { RouterConfig } from "./routers"
 
 import express, { Application } from "express"
 import bodyParser from "body-parser"
-import cors from "cors"
 import path from "path"
 import morgan from "morgan"
 
@@ -20,7 +19,6 @@ export default app
 function useConfig(app: Application) {
   app.use(bodyParser.json({ limit: "50mb" }))
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }))
-  app.use(cors({ credentials: true, origin: "*" }))
   app.use(function (_req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Methods", "DELETE, PUT, GET, POST")
