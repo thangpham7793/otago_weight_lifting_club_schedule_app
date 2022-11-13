@@ -1,11 +1,10 @@
-import { hash } from "bcrypt"
+import { hash } from "../utils/crytoService"
 import { Request, Response } from "express"
 import { PoolClient } from "pg"
 import { pool } from "./pool"
 import { TimeTable } from "../types"
 import { scheduleInfoJsonFormatter } from "../utils/programmeServiceHelpers"
 import { execute } from "."
-import { delay } from "../utils"
 
 export class ProgrammeService {
   async getAllProgrammes(req: Request, res: Response) {
