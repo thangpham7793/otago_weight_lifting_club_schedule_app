@@ -11,9 +11,9 @@ RUN apk add --no-cache --virtual .gyp \
 COPY package.json .
 COPY package-lock.json .
 COPY tsconfig.json .
-COPY src/ src/
 
 RUN npm ci
+COPY src/ src/
 RUN npm run build
 
 RUN rm -rf node_modules
