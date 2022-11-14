@@ -206,7 +206,7 @@ export async function createWeeklySchedules(req: Request, res: Response) {
         INSERT INTO programme_schedule ("scheduleId", "programmeId")
         VALUES ($1, $2);
         `
-      return await client.query(statement, params)
+      return client.query(statement, params)
     })
     await Promise.all(tasks)
     res.status(200).json(rows[0])
@@ -283,7 +283,7 @@ export async function publishSchedule(req: Request, res: Response) {
       INSERT INTO programme_schedule ("scheduleId", "programmeId")
       VALUES ($1, $2);
       `
-    return await client.query(statement, params)
+    return client.query(statement, params)
   })
 
   await Promise.all(tasks)

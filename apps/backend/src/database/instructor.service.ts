@@ -1,4 +1,4 @@
-import { makeToken, httpError } from "./../utils"
+import { makeToken, HttpError } from "./../utils"
 import { compare, hash } from "../utils/cryptoService"
 import { NextFunction, Request, Response } from "express"
 import { execute } from "."
@@ -13,7 +13,7 @@ async function checkCredentials(req: Request, _: Response, next: NextFunction) {
 
   const { rows } = await execute(statement, params)
   if (rows.length === 0) {
-    throw new httpError(401, "unknown email")
+    throw new HttpError(401, "unknown email")
   }
 
   const { hashedPassword, instructorId } = rows[0]
@@ -23,7 +23,7 @@ async function checkCredentials(req: Request, _: Response, next: NextFunction) {
     req.body = { ...req.body, ...rows[0], token }
     return next()
   } else {
-    throw new httpError(401, "wrong password")
+    throw new HttpError(401, "wrong password")
   }
 }
 

@@ -1,8 +1,7 @@
 import { compare } from "../utils/cryptoService"
-import { httpError, makeToken } from "./../utils"
+import { HttpError, makeToken } from "./../utils"
 import { Request, Response, NextFunction } from "express"
 import { execute } from "."
-import AppMailer from "./AppMailer"
 
 export function redirectToSignupPage(req: Request, res: Response) {
   res.redirect("../signup.html")
@@ -48,8 +47,6 @@ export async function createLearner(
   const { username, learnerId, email } = rows[0]
 
   res.status(201).send({ username, learnerId })
-
-  return await new AppMailer(username, email).sendAccountInfo()
 }
 
 export async function checkCredentials(
@@ -75,7 +72,7 @@ export async function checkCredentials(
   const { rows } = await execute(statement, params)
 
   if (rows.length === 0) {
-    throw new httpError(401, "unknown username")
+    throw new HttpError(401, "unknown username")
   }
 
   const { hashedPassword, learnerId } = rows[0]
@@ -86,7 +83,7 @@ export async function checkCredentials(
     req.body = { ...req.body, ...rows[0], token }
     next()
   } else {
-    throw new httpError(401, "wrong password")
+    throw new HttpError(401, "wrong password")
   }
 }
 
@@ -113,7 +110,6 @@ export async function getPbs(req: Request, res: Response, next: NextFunction) {
   res.status(200).json(pbs)
 }
 
-//FIXME: this will need to reflect update on other fields as well. May need a diff function to only update selected field
 export async function updatePbs(
   req: Request,
   res: Response,
@@ -124,7 +120,7 @@ export async function updatePbs(
   console.log("Received", token, newPbs)
 
   if (!newPbs) {
-    throw new httpError(400, "Missing new personal bests to update!")
+    throw new HttpError(400, "Missing new personal bests to update!")
   }
 
   const params = [...Object.values(newPbs), token.data.learnerId].map(
@@ -157,7 +153,7 @@ export async function updateLearnerDetail(
   console.log("Received", token, learner)
 
   if (!learner) {
-    throw new httpError(400, "Missing Learner Detail!")
+    throw new HttpError(400, "Missing Learner Detail!")
   }
 
   const params = [...Object.keys(learner)].map((k: string) => {
@@ -196,7 +192,7 @@ export async function deleteLearner(
   const { learnerId } = req.params
 
   if (!learnerId) {
-    throw new httpError(400, "Missing LearnerId!")
+    throw new HttpError(400, "Missing LearnerId!")
   }
 
   const params = [parseInt(learnerId)]
@@ -270,7 +266,7 @@ export async function deleteOnePracticeBest(
   const { pbId } = req.params
 
   if (!pbId) {
-    throw new httpError(400, "Missing Personal Best Id!")
+    throw new HttpError(400, "Missing Personal Best Id!")
   }
 
   console.log(`Received ${pbId}`)

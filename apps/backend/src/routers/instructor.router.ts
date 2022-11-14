@@ -1,6 +1,6 @@
 import { catchAsync, extractHeaderAuthToken } from "./../utils"
 import { InstructorService, ProgrammeService } from "./../database"
-import { Router, Application } from "express"
+import { Router } from "express"
 
 const router = Router()
 addRoutes(router)
