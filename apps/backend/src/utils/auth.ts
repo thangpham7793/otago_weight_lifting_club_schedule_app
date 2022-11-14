@@ -1,9 +1,9 @@
-import { httpError } from "."
+import { HttpError } from "."
 import jwt from "jsonwebtoken"
 import { Response, Request, NextFunction } from "express"
 
 export const isEmail = (email: string): boolean => {
-  const pattern = /^([\w_-]+|[\w_-]+(.[\w_-]+)+?)@([\w_-]+|[\w_-]+(.[\w_-]+)+?)$/
+  const pattern = /^([\w-]+|[\w-]+(.[\w-]+)+?)@([\w-]+|[\w-]+(.[\w-]+)+?)$/
   return pattern.test(email)
 }
 
@@ -26,17 +26,14 @@ export const extractHeaderAuthToken = async (
 
   if (bearerToken && bearerToken.toLowerCase().startsWith("bearer ")) {
     try {
-      const token = jwt.verify(
-        bearerToken.substring(7),
-        process.env.SECRET
-      )
+      const token = jwt.verify(bearerToken.substring(7), process.env.SECRET)
 
       console.log(`The decoded token is ${JSON.stringify(token)}`)
       req.body = { ...req.body, token }
       next()
     } catch (error) {
       console.error(error)
-      throw new httpError(500, `Error decoding verifying jwt token ${error}`)
+      throw new HttpError(500, `Error decoding verifying jwt token ${error}`)
     }
   } else {
     return res.status(401).json({ message: "Invalid or missing credentials!" })

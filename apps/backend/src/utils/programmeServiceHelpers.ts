@@ -5,45 +5,6 @@ export function scheduleInfoJsonFormatter(
 ): ScheduleInfo[] | null {
   if (rows.length === 0) return null
 
-  function extractProgrammeInfo(
-    targetRow: ScheduleInfoRow,
-    rows: ScheduleInfoRow[]
-  ) {
-    return rows
-      .filter((r) => r.scheduleId === targetRow.scheduleId)
-      .reduce(
-        (
-          acc: ScheduleInfo,
-          { scheduleId, scheduleName, weekCount, programmeId, programmeName },
-          index
-        ) => {
-          if (index === 0) {
-            if (programmeId && programmeName) {
-              return {
-                scheduleId,
-                scheduleName,
-                weekCount,
-                programmes: [{ programmeId, programmeName }],
-              }
-            } else {
-              return {
-                scheduleId,
-                scheduleName,
-                weekCount,
-                programmes: [],
-              }
-            }
-          } else {
-            if (programmeId && programmeName) {
-              acc.programmes.push({ programmeId, programmeName })
-            }
-            return acc
-          }
-        },
-        { scheduleId: 0, scheduleName: "", weekCount: 0, programmes: [] }
-      )
-  }
-
   let processed: number[] = []
   let res: ScheduleInfo[] = []
 
@@ -55,4 +16,43 @@ export function scheduleInfoJsonFormatter(
   })
 
   return res
+}
+
+function extractProgrammeInfo(
+  targetRow: ScheduleInfoRow,
+  rows: ScheduleInfoRow[]
+) {
+  return rows
+    .filter((r) => r.scheduleId === targetRow.scheduleId)
+    .reduce(
+      (
+        acc: ScheduleInfo,
+        { scheduleId, scheduleName, weekCount, programmeId, programmeName },
+        index
+      ) => {
+        if (index === 0) {
+          if (programmeId && programmeName) {
+            return {
+              scheduleId,
+              scheduleName,
+              weekCount,
+              programmes: [{ programmeId, programmeName }],
+            }
+          } else {
+            return {
+              scheduleId,
+              scheduleName,
+              weekCount,
+              programmes: [],
+            }
+          }
+        } else {
+          if (programmeId && programmeName) {
+            acc.programmes.push({ programmeId, programmeName })
+          }
+          return acc
+        }
+      },
+      { scheduleId: 0, scheduleName: "", weekCount: 0, programmes: [] }
+    )
 }

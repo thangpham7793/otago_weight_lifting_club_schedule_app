@@ -1,10 +1,11 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
 
-export const catchAsync = (handler: RequestHandler) => (
-  ...args: [Request, Response, NextFunction]
-) => (handler(...args) as any).catch(args[2])
+export const catchAsync =
+  (handler: RequestHandler) =>
+  (...args: [Request, Response, NextFunction]) =>
+    (handler(...args) as any).catch(args[2])
 
-export class httpError extends Error {
+export class HttpError extends Error {
   status: number
   code?: string
   detail?: string
@@ -18,7 +19,7 @@ export class httpError extends Error {
 }
 
 export const serverError = (
-  err: httpError,
+  err: HttpError,
   req: Request,
   res: Response,
   next: NextFunction
@@ -44,11 +45,9 @@ export const serverError = (
       default:
         return res.status(400).json({ message: err.detail })
     }
-  }
-  else {
+  } else {
     res.status(500).json({ message: `Something wrong happen ${err}` })
   }
-  return
 }
 
 export const unknownEndpoint = (
