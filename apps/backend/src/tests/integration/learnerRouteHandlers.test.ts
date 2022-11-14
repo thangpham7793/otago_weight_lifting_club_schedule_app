@@ -1,4 +1,4 @@
-import { pool } from "../../database"
+import { execute, pool } from "../../database"
 import { api, LEARNER_TEST_TOKEN } from "../testHelper"
 
 jest.setTimeout(30000)
@@ -23,9 +23,7 @@ describe("API Integration Tests - Learner Service", () => {
 
   afterAll(async () => {
     try {
-      await pool.query(`DELETE FROM learner WHERE email = $1`, [
-        "test@domain.com",
-      ])
+      await execute(`DELETE FROM learner WHERE email = $1`, ["test@domain.com"])
     } catch (error) {
       console.error(error)
     }
@@ -125,7 +123,7 @@ describe("API Integration Tests - Learner Service", () => {
         .set("Authorization", `Bearer ${LEARNER_TEST_TOKEN}`)
         .send(payload)
 
-      const { rows } = await pool.query(
+      const { rows } = await execute(
         `SELECT weight, "repMax", CAST("lastEdited" AS TEXT) FROM practice_bests WHERE "pbId" = ${payload.pbId}`
       )
 
@@ -198,7 +196,7 @@ describe("API Integration Tests - Learner Service", () => {
       expect(result.body).toEqual(expected)
 
       try {
-        await pool.query(`DELETE FROM practice_bests WHERE "pbId" = $1`, [pbId])
+        await execute(`DELETE FROM practice_bests WHERE "pbId" = $1`, [pbId])
       } catch (error) {
         console.error(error)
       }
