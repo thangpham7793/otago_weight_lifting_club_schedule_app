@@ -1,5 +1,4 @@
-import { makeToken } from "../../utils/jwtHelpers"
-import jwt from "jsonwebtoken"
+import { makeToken, verifyToken } from "../../utils/jwtHelpers"
 
 describe("UNIT TEST: function makeToken", () => {
   const NOW = Math.floor(Date.now() / 1000)
@@ -7,7 +6,6 @@ describe("UNIT TEST: function makeToken", () => {
 
   it("should create a valid token from a payload and return that payload when decoded", async () => {
     const payload = { learnerId: 1 }
-    const secret = "foo"
 
     const expected = {
       data: { learnerId: 1 },
@@ -16,10 +14,9 @@ describe("UNIT TEST: function makeToken", () => {
     }
 
     const token = await makeToken(payload, {
-      secret,
       expiresIn: "1 day",
     })
-    const decoded = jwt.verify(token, secret)
+    const decoded = verifyToken(token)
 
     expect(decoded).toStrictEqual(expected)
   })
