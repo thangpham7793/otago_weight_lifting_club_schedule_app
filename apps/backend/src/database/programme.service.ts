@@ -1,7 +1,5 @@
 import { hash } from "../utils/cryptoService"
 import { Request, Response } from "express"
-import { PoolClient } from "pg"
-import { pool } from "./pool"
 import { TimeTable } from "../types"
 import { scheduleInfoJsonFormatter } from "../utils/programmeServiceHelpers"
 import { execute } from "."
@@ -187,15 +185,14 @@ export async function createWeeklySchedules(req: Request, res: Response) {
 
   console.log({ scheduleName, weekCount, programmeIds })
 
+  // FIXME: this should be done inside a transaction
   let params = [scheduleName, weekCount]
   let statement = `
     INSERT INTO schedule ("scheduleName", "weekCount", timetable)
     VALUES ($1, $2, ARRAY[${weeklySchedules}]) 
     RETURNING "scheduleId", "scheduleName", "weekCount"
     `
-  //don't use execute here to maintain connection
-  const client: PoolClient = await pool.connect()
-  const { rows } = await client.query(statement, params)
+  const { rows } = await execute(statement, params)
 
   const newScheduleId = rows[0].scheduleId
 
@@ -206,14 +203,12 @@ export async function createWeeklySchedules(req: Request, res: Response) {
         INSERT INTO programme_schedule ("scheduleId", "programmeId")
         VALUES ($1, $2);
         `
-      return client.query(statement, params)
+      return execute(statement, params)
     })
     await Promise.all(tasks)
-    res.status(200).json(rows[0])
   }
 
   res.status(200).json(rows[0])
-  return client.release()
 }
 
 export async function updateWeeklySchedules(req: Request, res: Response) {
@@ -274,7 +269,6 @@ export async function publishSchedule(req: Request, res: Response) {
     )}`
   )
 
-  const client: PoolClient = await pool.connect()
   let params, statement
 
   const tasks = programmeIds.map(async (programmeId: number) => {
@@ -283,12 +277,11 @@ export async function publishSchedule(req: Request, res: Response) {
       INSERT INTO programme_schedule ("scheduleId", "programmeId")
       VALUES ($1, $2);
       `
-    return client.query(statement, params)
+    return execute(statement, params)
   })
 
   await Promise.all(tasks)
   res.status(204).send()
-  client.release()
 }
 
 export async function getAllExercises(req: Request, res: Response) {

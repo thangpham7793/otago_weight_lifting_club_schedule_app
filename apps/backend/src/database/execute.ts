@@ -1,17 +1,26 @@
-import { PoolClient } from "pg"
-import { pool } from "./pool"
+import { Pool, PoolConfig } from "pg"
+import { appConfig } from "../utils"
 
-export async function execute<Result = any>(
-  statement: string,
-  params: any[] = null,
-  test = false
-) {
-  const client: PoolClient = await pool.connect()
+const localDbConfig: PoolConfig = {
+  host: appConfig.DOCKERIZED === "true" ? "db" : "0.0.0.0",
+  user: "test_user",
+  port: 5432,
+  database: "lifting",
+  password: "test_user",
+}
 
-  const res = params
-    ? await client.query<Result>(statement, params)
-    : await client.query<Result>(statement)
+const prodDbConfig: PoolConfig = {
+  connectionString: appConfig.DATABASE_URL,
+}
 
-  client.release()
-  return res
+const DB_CONFIG =
+  appConfig.ENVIRONMENT !== "production" ? localDbConfig : prodDbConfig
+
+export const pool = new Pool(DB_CONFIG)
+
+export function execute<Result = any>(statement: string, params: any[] = null) {
+  // pool.query automatically releases the used client back to the pool
+  return params
+    ? pool.query<Result>(statement, params)
+    : pool.query<Result>(statement)
 }
