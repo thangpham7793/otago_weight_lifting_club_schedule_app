@@ -1,9 +1,5 @@
 import { appConfig, HttpError } from "."
 import jwt from "jsonwebtoken"
-import path from "path"
-import { config } from "dotenv"
-
-config({ path: path.resolve(__dirname, "../.env") })
 
 export const makeToken = async (
   payload: { learnerId: number } | { instructorId: number },

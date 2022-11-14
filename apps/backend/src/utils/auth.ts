@@ -1,4 +1,4 @@
-import { HttpError } from "."
+import { appConfig, HttpError } from "."
 import jwt from "jsonwebtoken"
 import { Response, Request, NextFunction } from "express"
 
@@ -26,7 +26,7 @@ export const extractHeaderAuthToken = async (
 
   if (bearerToken && bearerToken.toLowerCase().startsWith("bearer ")) {
     try {
-      const token = jwt.verify(bearerToken.substring(7), process.env.SECRET)
+      const token = jwt.verify(bearerToken.substring(7), appConfig.TOKEN_SECRET)
 
       console.log(`The decoded token is ${JSON.stringify(token)}`)
       req.body = { ...req.body, token }
