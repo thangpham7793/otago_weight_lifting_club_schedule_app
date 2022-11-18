@@ -1,14 +1,16 @@
 import { ScheduleInfo, ScheduleInfoRow } from "../../types"
 import { scheduleInfoJsonFormatter } from "../../utils/programmeServiceHelpers"
+import { describe, it } from "node:test"
+import assert from "node:assert/strict"
 
-describe("The scheduleInfoJsonFormatter function should", () => {
-  it("should return null when there is no schedule", () => {
+describe("scheduleInfoJsonFormatter", () => {
+  it("return null when there is no schedule", () => {
     const rows: ScheduleInfoRow[] = []
     const json = scheduleInfoJsonFormatter(rows)
-    expect(json).toEqual(null)
+    assert.equal(json, null)
   })
 
-  it("should return an empty array if a schedule is not published", () => {
+  it("return an empty array if a schedule is not published", () => {
     const rows = [
       {
         scheduleId: 6,
@@ -27,7 +29,7 @@ describe("The scheduleInfoJsonFormatter function should", () => {
     ]
 
     const json = scheduleInfoJsonFormatter(rows)
-    expect(json).toEqual(expected)
+    assert.deepEqual(json, expected)
   })
 
   it("reformat programmeIds and Names of a schedule into an array of scheduleInfo objects", () => {
@@ -56,7 +58,7 @@ describe("The scheduleInfoJsonFormatter function should", () => {
     ]
 
     const json = scheduleInfoJsonFormatter(rows)
-    expect(json).toEqual(expected)
+    assert.deepEqual(json, expected)
   })
 
   it("return a schedule info object with an array of programme info objects when a schedule belongs to many programmes", () => {
@@ -96,7 +98,7 @@ describe("The scheduleInfoJsonFormatter function should", () => {
     ]
 
     const json = scheduleInfoJsonFormatter(rows)
-    expect(json).toEqual(expected)
+    assert.deepEqual(json, expected)
   })
 
   it("group all programmes of different schedules correctly", () => {
@@ -165,6 +167,6 @@ describe("The scheduleInfoJsonFormatter function should", () => {
     ]
 
     const json = scheduleInfoJsonFormatter(rows)
-    expect(json).toEqual(expected)
+    assert.deepEqual(json, expected)
   })
 })

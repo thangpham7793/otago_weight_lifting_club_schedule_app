@@ -1,6 +1,8 @@
 import { makeToken, verifyToken } from "../../utils/jwtHelpers"
+import { describe, it } from "node:test"
+import assert from "node:assert/strict"
 
-describe("UNIT TEST: function makeToken", () => {
+describe("makeToken", () => {
   const NOW = Math.floor(Date.now() / 1000)
   const DAYS_IN_SECONDS = 86400
 
@@ -18,6 +20,6 @@ describe("UNIT TEST: function makeToken", () => {
     })
     const decoded = verifyToken(token)
 
-    expect(decoded).toStrictEqual(expected)
+    assert.deepEqual(decoded, expected)
   })
 })

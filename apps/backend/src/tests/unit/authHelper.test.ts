@@ -1,41 +1,35 @@
 import { isEmail } from "./../../utils"
+import { describe, it } from "node:test"
+import assert from "node:assert/strict"
 
-describe("Client Input Validators Test", () => {
-  describe("Email Validator", () => {
-    it("should return TRUE for valid emails", () => {
-      const validEmails = [
-        //normal
-        "email@domain.com",
-        //with number
-        "email123@domain.com",
-        //with dashes
-        "email_123@domain.com",
-        //with plus sign
-        "email+123@domain.com",
-        //with multiple words
-        "email123.somthing@domain.nz.co",
-        //with different cases
-        "abcXYZ1239@gmail.com",
-      ]
+describe("isEmail", () => {
+  it("validates valid emails", () => {
+    const validEmails = [
+      "email@domain.com",
+      "email123@domain.com",
+      "email_123@domain.com",
+      "email+123@domain.com",
+      "email123.somthing@domain.nz.co",
+      "abcXYZ1239@gmail.com",
+    ]
 
-      validEmails.forEach((e) => {
-        expect(isEmail(e)).toBe(true)
-      })
+    validEmails.forEach((e) => {
+      assert.equal(true, isEmail(e))
     })
+  })
 
-    it("should return FALSE for invalid emails", () => {
-      const invalidEmails = [
-        //missing @
-        "emaildomain.com",
-        //no word following @
-        "email123@",
-        //using special char
-        "$%@yahoo.com",
-      ]
+  it("invalidates invalid emails", () => {
+    const invalidEmails = [
+      //missing @
+      "emaildomain.com",
+      //no word following @
+      "email123@",
+      //using special char
+      "$%@yahoo.com",
+    ]
 
-      invalidEmails.forEach((e) => {
-        expect(isEmail(e)).toBe(false)
-      })
+    invalidEmails.forEach((e) => {
+      assert.equal(false, isEmail(e))
     })
   })
 })
