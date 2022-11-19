@@ -20,33 +20,36 @@ export class HttpError extends Error {
 
 export const serverError = (
   err: HttpError,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
-  if (err.status) {
-    return res.status(err.status).json({ message: err.message })
+  console.error(err)
+  switch (true) {
+    case Boolean(err.status):
+      return res.status(err.status).json({ message: err.message })
+    case Boolean(err.code):
+      return res.status(400).json({ message: transformPgError(err) })
+    default:
+      return res.status(500).json({ message: `Something wrong happen ${err}` })
   }
-  //for postgres database specific error
-  else if (err.code) {
-    console.log(err)
-    switch (err.code) {
-      case "23505":
-        if (
-          err.detail.includes("Key (email)") &&
-          err.detail.includes("already exists")
-        ) {
-          return res.status(400).json({ message: `Email Already Used!` })
-        }
-        return res.status(400).json({ message: `${err.detail}` })
-      //no schedule has been added to a programme yet
-      case "22004":
-        return res.status(404).json({ message: "no schedule found" })
-      default:
-        return res.status(400).json({ message: err.detail })
-    }
-  } else {
-    res.status(500).json({ message: `Something wrong happen ${err}` })
+}
+
+function transformPgError(err: HttpError) {
+  switch (err.code) {
+    case "23505":
+      if (
+        err.detail.includes("Key (email)") &&
+        err.detail.includes("already exists")
+      ) {
+        return `Email Already Used!`
+      }
+      return err.detail
+    //no schedule has been added to a programme yet
+    case "22004":
+      return "no schedule found"
+    default:
+      return err.detail
   }
 }
 
