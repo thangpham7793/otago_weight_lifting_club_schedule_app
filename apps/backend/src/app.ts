@@ -1,42 +1,40 @@
-import { serverError, unknownEndpoint } from "./utils"
+import { serverError, unknownEndpoint } from "./utils/index.ts";
 
-import routerConfigs, { RouterConfig } from "./routers"
+import routerConfigs, { RouterConfig } from "./routers/index.ts";
 
-import express, { Application } from "express"
-import bodyParser from "body-parser"
-import path from "path"
-import morgan from "morgan"
+import express from "npm:express@^4.18";
+import { Application } from "./types.d.ts";
+import bodyParser from "npm:body-parser@^1.19.0";
+import * as path from "https://deno.land/std@0.110.0/path/mod.ts";
 
-const app = express()
+const app = express();
 
-useBodyParser(app)
-useLogger(app)
-useStatic(app)
-useRouters(app, routerConfigs)
-useErrorHandlers(app)
+useBodyParser(app);
+useLogger(app);
+useStatic(app);
+useRouters(app, routerConfigs);
+useErrorHandlers(app);
 
-export default app
+export default app;
 
 function useBodyParser(app: Application) {
-  app.use(bodyParser.json({ limit: "50mb" }))
-  app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }))
+  app.use(bodyParser.json({ limit: "50mb" }));
+  app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 }
 
-function useLogger(app: Application) {
-  app.use(
-    morgan(":method :url :status :res[content-length] - :response-time ms")
-  )
+function useLogger(_app: Application) {
 }
 
 function useStatic(app: Application) {
-  app.use(express.static(path.join(__dirname, "public/instructor")))
+  const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
+  app.use(express.static(path.join(__dirname, "public/instructor")));
 }
 
 function useErrorHandlers(app: Application) {
-  app.use(unknownEndpoint)
-  app.use(serverError)
+  app.use(unknownEndpoint);
+  app.use(serverError);
 }
 
 function useRouters(app: Application, configs: RouterConfig[]) {
-  configs.forEach(({ path, router }) => app.use(path, router))
+  configs.forEach(({ path, router }) => app.use(path, router));
 }

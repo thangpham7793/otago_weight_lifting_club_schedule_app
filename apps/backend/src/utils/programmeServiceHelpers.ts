@@ -1,26 +1,26 @@
-import { ScheduleInfo, ScheduleInfoRow } from "../types"
+import { ScheduleInfo, ScheduleInfoRow } from "../types.d.ts";
 
 export function scheduleInfoJsonFormatter(
-  rows: ScheduleInfoRow[]
+  rows: ScheduleInfoRow[],
 ): ScheduleInfo[] | null {
-  if (rows.length === 0) return null
+  if (rows.length === 0) return null;
 
-  let processed: number[] = []
-  let res: ScheduleInfo[] = []
+  const processed: number[] = [];
+  const res: ScheduleInfo[] = [];
 
   rows.forEach((r) => {
     if (!processed.includes(r.scheduleId)) {
-      processed.push(r.scheduleId)
-      res.push(extractProgrammeInfo(r, rows))
+      processed.push(r.scheduleId);
+      res.push(extractProgrammeInfo(r, rows));
     }
-  })
+  });
 
-  return res
+  return res;
 }
 
 function extractProgrammeInfo(
   targetRow: ScheduleInfoRow,
-  rows: ScheduleInfoRow[]
+  rows: ScheduleInfoRow[],
 ) {
   return rows
     .filter((r) => r.scheduleId === targetRow.scheduleId)
@@ -28,7 +28,7 @@ function extractProgrammeInfo(
       (
         acc: ScheduleInfo,
         { scheduleId, scheduleName, weekCount, programmeId, programmeName },
-        index
+        index,
       ) => {
         if (index === 0) {
           if (programmeId && programmeName) {
@@ -37,22 +37,22 @@ function extractProgrammeInfo(
               scheduleName,
               weekCount,
               programmes: [{ programmeId, programmeName }],
-            }
+            };
           } else {
             return {
               scheduleId,
               scheduleName,
               weekCount,
               programmes: [],
-            }
+            };
           }
         } else {
           if (programmeId && programmeName) {
-            acc.programmes.push({ programmeId, programmeName })
+            acc.programmes.push({ programmeId, programmeName });
           }
-          return acc
+          return acc;
         }
       },
-      { scheduleId: 0, scheduleName: "", weekCount: 0, programmes: [] }
-    )
+      { scheduleId: 0, scheduleName: "", weekCount: 0, programmes: [] },
+    );
 }

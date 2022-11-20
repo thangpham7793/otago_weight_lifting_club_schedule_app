@@ -1,17 +1,17 @@
-import { Router } from "express"
-import instructorRouter from "./instructor.router"
-import learnerRouter from "./learner.router"
-import programmeRouter from "./programme.router"
+import { Router } from "../types.d.ts";
+import instructorRouter from "./instructor.router.ts";
+import learnerRouter from "./learner.router.ts";
+import programmeRouter from "./programme.router.ts";
 
 export type RouterConfig = {
-  path: string
-  router: Router
-}
+  path: string;
+  router: Router;
+};
 
 const configs: RouterConfig[] = [
   instructorRouter,
   learnerRouter,
   programmeRouter,
-]
+];
 
-export default configs
+export default configs;

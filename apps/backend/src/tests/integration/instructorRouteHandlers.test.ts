@@ -1,5 +1,12 @@
-import { api, INSTRUCTOR_TEST_TOKEN } from "../testHelper"
-import { pool } from "../../database"
+import { api, INSTRUCTOR_TEST_TOKEN } from "../testHelper.ts";
+import { pool } from "../../database/index.ts";
+import { assertEquals } from "https://deno.land/std@0.165.0/testing/asserts.ts";
+import {
+  afterAll,
+  describe,
+  it,
+} from "https://deno.land/std@0.160.0/testing/bdd.ts";
+import { assertArrayIncludes } from "https://deno.land/std@0.110.0/testing/asserts.ts";
 
 describe("API Integration Tests - Instructor Service", () => {
   describe("POST /instructor/login", () => {
@@ -7,7 +14,7 @@ describe("API Integration Tests - Instructor Service", () => {
       const instructorCredentials = {
         email: "admin@admin.com",
         password: "admin",
-      }
+      };
 
       const expected = [
         {
@@ -22,33 +29,29 @@ describe("API Integration Tests - Instructor Service", () => {
           programmeName: "testing",
           programmeId: 6,
         },
-      ]
+      ];
 
       const result = await api
         .post("/instructor/login")
-        .send(instructorCredentials)
+        .send(instructorCredentials);
 
-      expect(result.body).toHaveProperty("token")
-      expect(result.body).toHaveProperty("programmes")
-      expect(result.body.programmes).toEqual(expected)
-    })
-  })
+      assertArrayIncludes(Object.keys(result.body), ["token", "programmes"]);
+      assertEquals(result.body.programmes, expected);
+    });
+  });
 
   describe("POST instructor/password", () => {
     it("should update the instructor password after hashing", async () => {
-      const updatePassword = async () =>
-        api
-          .post("/instructor/password")
-          .send({ email: "admin@admin.com", newPassword: "admin" })
-          .set("Content-Type", "application/json")
-          .set("Authorization", `Bearer ${INSTRUCTOR_TEST_TOKEN}`)
-          .expect(204)
-
-      await expect(updatePassword()).resolves.toBeDefined()
-    })
-  })
+      await api
+        .post("/instructor/password")
+        .send({ email: "admin@admin.com", newPassword: "admin" })
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${INSTRUCTOR_TEST_TOKEN}`)
+        .expect(204);
+    });
+  });
 
   afterAll(async () => {
-    await pool.end()
-  })
-})
+    await pool.end();
+  });
+});

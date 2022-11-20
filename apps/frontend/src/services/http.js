@@ -12,9 +12,9 @@ export class HttpServiceSingleton {
 
   static BASE_URL = (function () {
     const PROD = "https://otago-weightlifting.fly.dev"
-    const DEV = "http://localhost:5000"
+    const DEV = "http://localhost:8080"
 
-    const isDev = window.location.href.split(".").includes("localhost")
+    const isDev = window.location.href.split(".")[0]?.includes("localhost")
 
     return isDev ? DEV : PROD
   })()

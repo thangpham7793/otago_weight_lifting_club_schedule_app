@@ -1,22 +1,23 @@
-import { catchAsync, extractHeaderAuthToken } from "./../utils"
-import { InstructorService, ProgrammeService } from "./../database"
-import { Router } from "express"
+import { catchAsync, extractHeaderAuthToken } from "./../utils/index.ts";
+import { InstructorService, ProgrammeService } from "../database/index.ts";
+import { type Router } from "../types.d.ts";
+import { Router as AppRouter } from "npm:express@^4.18";
 
-const router = Router()
-addRoutes(router)
+const router = AppRouter();
+addRoutes(router);
 
-export default { path: "/instructor", router }
+export default { path: "/instructor", router };
 
 function addRoutes(router: Router) {
   router.post(
     "/login",
     catchAsync(InstructorService.checkCredentials),
-    catchAsync(ProgrammeService.getAllProgrammes)
-  )
+    catchAsync(ProgrammeService.getAllProgrammes),
+  );
 
   router.post(
     "/password",
-    catchAsync(extractHeaderAuthToken),
-    catchAsync(InstructorService.changeInstructorPassword)
-  )
+    extractHeaderAuthToken,
+    catchAsync(InstructorService.changeInstructorPassword),
+  );
 }

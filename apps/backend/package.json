@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest",
     "test-unit": "node --loader tsx --test src/tests/unit/**.test.ts",
-    "test-integration": "jest src/tests/integration",
+    "test-integration": "deno test --allow-env src/tests/integration",
     "dev": "nodemon",
     "dev2": "npx nodemon dist/server.js",
     "start": "node dist/server.js",

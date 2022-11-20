@@ -1,0 +1,15 @@
+{
+  "fmt": {
+    "files": {
+      "exclude": ["src/public"]
+    }
+  },
+  "lint": {
+    "files": {
+      "exclude": ["src/public"]
+    },
+    "rules": {
+      "exclude": ["no-explicit-any", "no-unused-vars", "ban-types"]
+    }
+  }
+}

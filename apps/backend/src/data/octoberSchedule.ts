@@ -225,4 +225,4 @@ export const schedules = {
       { exerciseName: "OPTIONAL: Clean Deadlift", instruction: "95% 3r3s" },
     ],
   },
-}
+};

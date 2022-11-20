@@ -1,6 +1,6 @@
-import { isEmail } from "./../../utils"
-import { describe, it } from "node:test"
-import assert from "node:assert/strict"
+import { assertEquals } from "https://deno.land/std@0.165.0/testing/asserts.ts";
+import { describe, it } from "https://deno.land/std@0.160.0/testing/bdd.ts";
+import { isEmail } from "../../utils/auth.ts";
 
 describe("isEmail", () => {
   it("validates valid emails", () => {
@@ -11,12 +11,12 @@ describe("isEmail", () => {
       "email+123@domain.com",
       "email123.somthing@domain.nz.co",
       "abcXYZ1239@gmail.com",
-    ]
+    ];
 
     validEmails.forEach((e) => {
-      assert.equal(true, isEmail(e))
-    })
-  })
+      assertEquals(true, isEmail(e));
+    });
+  });
 
   it("invalidates invalid emails", () => {
     const invalidEmails = [
@@ -26,10 +26,10 @@ describe("isEmail", () => {
       "email123@",
       //using special char
       "$%@yahoo.com",
-    ]
+    ];
 
     invalidEmails.forEach((e) => {
-      assert.equal(false, isEmail(e))
-    })
-  })
-})
+      assertEquals(false, isEmail(e));
+    });
+  });
+});

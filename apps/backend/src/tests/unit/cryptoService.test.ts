@@ -1,11 +1,11 @@
-import { compare, hash } from "../../utils/cryptoService"
-import test from "node:test"
-import assert from "node:assert/strict"
+import { compare, hash } from "../../utils/cryptoService.ts";
 
-test("hashed pw can be used to verify user input", async () => {
-  const pw = "foo"
+import { assertEquals } from "https://deno.land/std@0.165.0/testing/asserts.ts";
 
-  const saved = await hash(pw)
-  const actual = await compare(pw, saved)
-  assert.equal(true, actual)
-})
+Deno.test("hashed pw can be used to verify user input", async () => {
+  const pw = "foo";
+
+  const saved = await hash(pw);
+  const actual = await compare(pw, saved);
+  assertEquals(true, actual);
+});
