@@ -28,4 +28,5 @@ jobs:
         with:
           commit_message: daily-backup-${{ env.CURRENT_DATE }}
           branch: main
+          push_options: --force
           
