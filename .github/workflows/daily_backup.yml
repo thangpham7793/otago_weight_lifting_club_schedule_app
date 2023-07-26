@@ -1,0 +1,31 @@
+name: daily-db-backup
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # midnight every day
+
+jobs:
+  create-and-store-back-up:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "CURRENT_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+      - name: Set up fly
+        uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: create-proxy-in-background
+        run: flyctl proxy 15432:5432 -a otago-lifting-db &
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - uses: tj-actions/pg-dump@v2.3
+        with:
+          database_url: "postgres://postgres:${{ secrets.DATABASE_PW }}@localhost:15432/otago_weightlifting"
+          path: ./apps/backend/db_scripts/daily_backup.sql
+          options: "-O"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: daily-backup-${{ env.CURRENT_DATE }}
+          branch: main
+          
