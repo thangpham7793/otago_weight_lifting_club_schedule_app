@@ -1,9 +1,9 @@
 name: daily-db-backup
 
 on:
-  push:
-    branches:
-      - daily-backup-job
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # midnight every day
 
 jobs:
   create-and-store-back-up:
@@ -22,10 +22,10 @@ jobs:
       - uses: tj-actions/pg-dump@v2.3
         with:
           database_url: "postgres://postgres:${{ secrets.DATABASE_PW }}@localhost:15432/otago_weightlifting"
-          path: ./apps/backend/db_scripts/backup.sql
+          path: ./apps/backend/db_scripts/daily_backup.sql
           options: "-O"
-      - run: head -100 ./apps/backend/db_scripts/backup.sql
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: daily-backup-${{ env.CURRENT_DATE }}
+          branch: main
           
