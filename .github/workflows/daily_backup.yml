@@ -12,9 +12,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - run: echo "CURRENT_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
       - name: Set up fly
         uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: create-proxy
+      - name: create-proxy-in-background
         run: flyctl proxy 15432:5432 -a otago-lifting-db &
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -23,5 +24,8 @@ jobs:
           database_url: "postgres://postgres:${{ secrets.DATABASE_PW }}@localhost:15432/otago_weightlifting"
           path: ./apps/backend/db_scripts/backup.sql
           options: "-O"
-      - run: ls ./apps/backend/db_scripts/backup.sql
+      - run: head -100 ./apps/backend/db_scripts/backup.sql
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: daily-backup-${{ env.CURRENT_DATE }}
           
