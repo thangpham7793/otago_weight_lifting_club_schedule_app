@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Set up fly
+        uses: superfly/flyctl-actions/setup-flyctl@master
       - name: create-proxy
         run: flyctl proxy 15432:5432 -a otago-lifting-db &
         env:
