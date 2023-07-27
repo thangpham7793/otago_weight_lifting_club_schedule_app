@@ -33,6 +33,4 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: daily-backup-${{ env.CURRENT_DATE }}
-          branch: main
           push_options: --force
-          
