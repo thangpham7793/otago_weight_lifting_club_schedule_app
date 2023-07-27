@@ -9,7 +9,7 @@ const MAX_NUM_OF_BACKUP_FILES = 5
 const extract_timestamp = (filename) => {
   const res = filename.match(new RegExp(/(?<timestamp>^\d+)_daily_backup.sql/))
 
-  return res?.groups?.timestamp ? parseInt(timestamp) : -1
+  return parseInt(res?.groups?.timestamp ?? -1)
 }
 
 const byDescendingDate = (a, b) =>
