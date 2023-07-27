@@ -13,8 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          echo "CURRENT_UNIX_TIME=%(date +%s000)" >> $GITHUB_ENV 
+          echo "CURRENT_UNIX_TIME=$(date +%s000)" >> $GITHUB_ENV 
           echo "CURRENT_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+      - run: echo "Creating back up for ${{ env.CURRENT_DATE }} at timestamp ${{ env.CURRENT_UNIX_TIME }}"
       - name: Set up fly
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: create-proxy-in-background
