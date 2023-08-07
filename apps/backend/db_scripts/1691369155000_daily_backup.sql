@@ -369,8 +369,8 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 135	luka	homersham	lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	125.00	92.50	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	110.00	150.00	150.00	150.00	185.00	160.00	120.00	1	cloughleyp
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
-215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	70.00	92.00	85.00	85.00	120.00	100.00	80.00	1	cunningham-beentjesf
 171	poppy	kirk	pbkirk16@gmail.com	57.00	70.00	74.00	70.00	100.00	80.00	57.00	1	kirkp
+215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	70.00	94.00	85.00	85.00	120.00	100.00	80.00	1	cunningham-beentjesf
 \.
 
 
@@ -590,6 +590,8 @@ COPY public.practice_bests ("pbId", "learnerId", "exerciseName", "repMax", weigh
 220	215	strict press	x1	69.00	2023-06-08
 221	215	back squat	x8	100.00	2023-07-31
 222	215	back squat	x1	105.00	2023-07-31
+223	215	push press	x6	65.00	2023-08-02
+224	215	push press	x4	68.00	2023-08-02
 \.
 
 
@@ -662,7 +664,7 @@ SELECT pg_catalog.setval('public."learner_learnerId_seq"', 237, true);
 -- Name: practice_bests_pbId_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 222, true);
+SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 224, true);
 
 
 --
