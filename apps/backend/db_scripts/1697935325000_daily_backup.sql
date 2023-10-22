@@ -368,7 +368,7 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	94.00	90.00	90.00	120.00	105.00	80.00	1	cunningham-beentjesf
 225	jumari	oosthuizen	jumari.oosthuizen@gmail.com	72.00	93.00	93.00	93.00	120.00	103.00	68.00	1	oosthuizenj
 224	jeremy	manteiga	jeremymanteiga@gmail.com	67.00	87.00	87.00	87.00	125.00	110.00	75.00	1	manteigaj
-135	luka	homersham	lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	125.00	92.50	1	homershaml
+135	luka	homersham	lukahomersham@gmail.com	85.00	115.00	115.00	115.00	160.00	125.00	92.50	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	110.00	150.00	150.00	150.00	185.00	160.00	120.00	1	cloughleyp
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
 \.
