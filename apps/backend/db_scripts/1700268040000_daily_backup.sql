@@ -365,11 +365,11 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 235	ella	rowe	ellagymnastrowe@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	rowee
 236	patrick nevareta	sefo-cloughley	patricksefocloughley@gmail.com	107.00	147.00	145.00	139.00	190.00	150.00	110.00	1	sefo-cloughleyp
 62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	66.00	83.00	80.00	80.00	105.00	95.00	70.00	1	rohtmetso
-215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	94.00	90.00	90.00	120.00	105.00	80.00	1	cunningham-beentjesf
 225	jumari	oosthuizen	jumari.oosthuizen@gmail.com	72.00	93.00	93.00	93.00	120.00	103.00	68.00	1	oosthuizenj
 224	jeremy	manteiga	jeremymanteiga@gmail.com	67.00	87.00	87.00	87.00	125.00	110.00	75.00	1	manteigaj
 135	luka	homersham	lukahomersham@gmail.com	85.00	115.00	115.00	115.00	160.00	125.00	92.50	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	115.00	150.00	150.00	150.00	200.00	165.00	120.00	1	cloughleyp
+215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	90.00	90.00	120.00	105.00	80.00	1	cunningham-beentjesf
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
 \.
 
@@ -593,6 +593,12 @@ COPY public.practice_bests ("pbId", "learnerId", "exerciseName", "repMax", weigh
 224	215	push press	x4	68.00	2023-08-02
 225	215	back squat	x5	110.00	2023-09-04
 222	215	back squat	x1	120.00	2023-09-04
+226	215	snatch	x3	61.00	2023-11-13
+228	215	clean	x3	90.00	2023-11-15
+229	215	power snatch	x1	70.00	2023-11-17
+230	215	power snatch	x2	67.00	2023-11-17
+231	215	power snatch	x3	64.00	2023-11-17
+232	215	front squat	x4	100.00	2023-11-17
 \.
 
 
@@ -665,7 +671,7 @@ SELECT pg_catalog.setval('public."learner_learnerId_seq"', 237, true);
 -- Name: practice_bests_pbId_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 225, true);
+SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 232, true);
 
 
 --
