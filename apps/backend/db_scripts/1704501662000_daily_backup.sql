@@ -363,7 +363,6 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 219	john	zhao	johnzhao2612@gmail.com	90.00	120.00	110.00	120.00	150.00	140.00	85.00	1	zhaoj
 235	ella	rowe	ellagymnastrowe@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	rowee
 236	patrick nevareta	sefo-cloughley	patricksefocloughley@gmail.com	107.00	147.00	145.00	139.00	190.00	150.00	110.00	1	sefo-cloughleyp
-62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	66.00	83.00	80.00	80.00	105.00	95.00	70.00	1	rohtmetso
 225	jumari	oosthuizen	jumari.oosthuizen@gmail.com	72.00	93.00	93.00	93.00	120.00	103.00	68.00	1	oosthuizenj
 135	luka	homersham	lukahomersham@gmail.com	85.00	115.00	115.00	115.00	160.00	125.00	92.50	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	115.00	150.00	150.00	150.00	200.00	165.00	120.00	1	cloughleyp
@@ -371,6 +370,7 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
 224	jeremy	manteiga	jeremymanteiga@gmail.com	70.00	90.00	87.00	87.00	125.00	110.00	75.00	1	manteigaj
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
+62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	66.00	90.00	83.00	83.00	105.00	95.00	70.00	1	rohtmetso
 \.
 
 
