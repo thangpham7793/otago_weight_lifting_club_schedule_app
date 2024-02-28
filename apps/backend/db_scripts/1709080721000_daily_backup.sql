@@ -354,6 +354,7 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 232	lochlan rogan	webb	lochlanroganwebb04@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	webbl
 1	thang	pham	thangnus@gmail.com	120.45	120.00	234.00	120.00	120.00	120.00	110.00	1	phamt
 233	test	guy	zeldascott55@gmail.com	20.00	50.00	60.00	70.00	90.00	100.00	60.00	1	guyt
+224	jeremy	manteiga	jeremymanteiga@gmail.com	71.00	91.00	91.00	91.00	130.00	110.00	80.00	1	manteigaj
 172	cole	jones	jonescoleza@gmail.com	84.00	105.00	113.00	101.00	120.00	110.00	95.00	1	jonesc
 227	miandi	oosthuizen	miandi0508@gmail.com	75.00	92.50	92.60	92.50	120.00	96.00	70.00	1	oosthuizenm
 171	poppy	kirk	pbkirk16@gmail.com	60.00	72.00	76.00	71.00	100.00	80.00	57.00	1	kirkp
@@ -368,7 +369,6 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	115.00	150.00	150.00	150.00	200.00	165.00	120.00	1	cloughleyp
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	90.00	90.00	120.00	105.00	80.00	1	cunningham-beentjesf
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
-224	jeremy	manteiga	jeremymanteiga@gmail.com	70.00	90.00	87.00	87.00	125.00	110.00	75.00	1	manteigaj
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
 62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	72.00	95.00	85.00	83.00	110.00	95.00	78.00	1	rohtmetso
 \.
