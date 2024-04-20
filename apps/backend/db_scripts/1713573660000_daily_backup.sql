@@ -359,13 +359,13 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 171	poppy	kirk	pbkirk16@gmail.com	60.00	72.00	76.00	71.00	100.00	80.00	57.00	1	kirkp
 213	julian	harker	athyriel0@gmail.com	100.00	122.00	120.00	118.00	155.00	135.00	106.00	1	harkerj
 224	jeremy	manteiga	jeremymanteiga@gmail.com	74.00	91.00	91.00	91.00	130.00	110.00	80.00	1	manteigaj
-62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	74.00	100.00	88.00	88.00	118.00	100.00	80.00	1	rohtmetso
 218	connell	webb	connelleaganwebb@gmail.com	78.00	105.00	105.00	105.00	120.00	110.00	70.00	1	webbc
 235	ella	rowe	ellagymnastrowe@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	rowee
 236	patrick nevareta	sefo-cloughley	patricksefocloughley@gmail.com	107.00	147.00	145.00	139.00	190.00	150.00	110.00	1	sefo-cloughleyp
 225	jumari	oosthuizen	jumari.oosthuizen@gmail.com	72.00	93.00	93.00	93.00	120.00	103.00	68.00	1	oosthuizenj
 219	john	zhao	johnzhao2612@gmail.com	90.00	120.00	110.00	120.00	200.00	180.00	85.00	1	zhaoj
 221	johm	zhao	johnzhao2003@icloud.com	90.00	138.00	120.00	120.00	200.00	170.00	95.00	1	zhaoj
+62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	78.00	100.00	88.00	88.00	118.00	100.00	80.00	1	rohtmetso
 135	luka	homersham	lukahomersham@gmail.com	85.00	115.00	115.00	115.00	160.00	125.00	92.50	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	115.00	150.00	150.00	150.00	200.00	165.00	120.00	1	cloughleyp
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	90.00	90.00	120.00	105.00	80.00	1	cunningham-beentjesf
