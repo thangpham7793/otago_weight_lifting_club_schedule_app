@@ -368,9 +368,9 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	115.00	150.00	150.00	150.00	200.00	165.00	120.00	1	cloughleyp
 224	jeremy	manteiga	jeremymanteiga@gmail.com	74.00	100.00	91.00	91.00	130.00	110.00	80.00	1	manteigaj
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
-62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	80.00	107.00	88.00	88.00	118.00	100.00	80.00	1	rohtmetso
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
-215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	120.00	110.00	90.00	1	cunningham-beentjesf
+215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	125.00	110.00	90.00	1	cunningham-beentjesf
+62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	80.00	107.00	90.00	90.00	118.00	100.00	80.00	1	rohtmetso
 \.
 
 
@@ -600,6 +600,9 @@ COPY public.practice_bests ("pbId", "learnerId", "exerciseName", "repMax", weigh
 231	215	power snatch	x3	64.00	2023-11-17
 232	215	front squat	x4	100.00	2023-11-17
 233	215	front squat	x3	105.00	2024-05-01
+234	215	clean deadlift	x1	150.00	2024-05-03
+235	215	back squat	x3	120.00	2024-05-03
+237	215	dips	x3	40.00	2024-05-03
 \.
 
 
@@ -674,7 +677,7 @@ SELECT pg_catalog.setval('public."learner_learnerId_seq"', 237, true);
 -- Name: practice_bests_pbId_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 233, true);
+SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 237, true);
 
 
 --
