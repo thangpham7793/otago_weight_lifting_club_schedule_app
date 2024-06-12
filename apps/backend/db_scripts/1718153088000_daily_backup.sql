@@ -358,9 +358,9 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 224	jeremy	manteiga	jeremymanteiga@gmail.com	80.00	100.00	100.00	100.00	140.00	110.00	80.00	1	manteigaj
 227	miandi	oosthuizen	miandi0508@gmail.com	75.00	92.50	92.60	92.50	120.00	96.00	70.00	1	oosthuizenm
 171	poppy	kirk	pbkirk16@gmail.com	60.00	72.00	76.00	71.00	100.00	80.00	57.00	1	kirkp
-62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	80.00	107.00	101.00	101.00	125.00	113.00	90.00	1	rohtmetso
 213	julian	harker	athyriel0@gmail.com	100.00	122.00	120.00	118.00	155.00	135.00	106.00	1	harkerj
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	125.00	110.00	85.00	1	cunningham-beentjesf
+62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	80.00	107.00	101.00	101.00	130.00	113.00	90.00	1	rohtmetso
 218	connell	webb	connelleaganwebb@gmail.com	78.00	105.00	105.00	105.00	120.00	110.00	70.00	1	webbc
 235	ella	rowe	ellagymnastrowe@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	rowee
 236	patrick nevareta	sefo-cloughley	patricksefocloughley@gmail.com	107.00	147.00	145.00	139.00	190.00	150.00	110.00	1	sefo-cloughleyp
