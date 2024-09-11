@@ -604,6 +604,7 @@ COPY public.practice_bests ("pbId", "learnerId", "exerciseName", "repMax", weigh
 235	215	back squat	x3	120.00	2024-05-03
 237	215	dips	x3	40.00	2024-05-03
 238	215	back squat	x10	105.00	2024-06-03
+239	215	power snatch	x1	70.00	2024-09-09
 \.
 
 
@@ -674,7 +675,7 @@ SELECT pg_catalog.setval('public."learner_learnerId_seq"', 237, true);
 -- Name: practice_bests_pbId_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 238, true);
+SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 239, true);
 
 
 --
