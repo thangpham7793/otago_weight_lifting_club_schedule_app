@@ -369,7 +369,7 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 218	connell	webb	connelleaganwebb@gmail.com	78.00	105.00	105.00	105.00	120.00	110.00	70.00	1	webbc
 235	ella	rowe	ellagymnastrowe@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	rowee
 236	patrick nevareta	sefo-cloughley	patricksefocloughley@gmail.com	107.00	147.00	145.00	139.00	190.00	150.00	110.00	1	sefo-cloughleyp
-52	Flook	Chinsaswat	flookchinsaswat@gmail.com	65.00	90.00	85.00	85.00	130.00	115.00	55.00	1	chinsaswatf
+52	Flook	Chinsaswat	flookchinsaswat@gmail.com	65.00	95.00	85.00	85.00	130.00	115.00	55.00	1	chinsaswatf
 225	jumari	oosthuizen	jumari.oosthuizen@gmail.com	72.00	93.00	93.00	93.00	120.00	103.00	68.00	1	oosthuizenj
 219	john	zhao	johnzhao2612@gmail.com	90.00	120.00	110.00	120.00	200.00	180.00	85.00	1	zhaoj
 221	johm	zhao	johnzhao2003@icloud.com	90.00	138.00	120.00	120.00	200.00	170.00	95.00	1	zhaoj
