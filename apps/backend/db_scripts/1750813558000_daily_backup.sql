@@ -356,7 +356,6 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 51	Brock	Stewart	Brockstewart2017@gmail.com	55.00	67.00	65.00	65.00	90.00	78.00	55.00	1	stewartb
 64	Lochlan	Webb	Lochlanroganwebb04@gmail.com	82.00	108.00	100.00	100.00	125.00	115.00	83.00	1	webbl
 226	carmi	oosthuizen	carmi.oosthuizen@gmail.com	58.00	75.00	71.50	74.00	95.00	75.00	50.00	1	oosthuizenc
-58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	49.00	58.00	62.00	57.00	78.00	66.00	53.00	1	hamiltont
 232	lochlan rogan	webb	lochlanroganwebb04@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	webbl
 1	thang	pham	thangnus@gmail.com	120.45	120.00	234.00	120.00	120.00	120.00	110.00	1	phamt
 233	test	guy	zeldascott55@gmail.com	20.00	50.00	60.00	70.00	90.00	100.00	60.00	1	guyt
@@ -375,6 +374,7 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 224	jeremy	manteiga	jeremymanteiga@gmail.com	96.00	120.00	118.00	118.00	160.00	140.00	90.00	1	manteigaj
 135	luka	homersham	lukahomersham@gmail.com	85.00	115.00	115.00	115.00	160.00	125.00	92.50	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	115.00	150.00	150.00	150.00	200.00	165.00	120.00	1	cloughleyp
+58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	30.00	45.00	62.00	57.00	78.00	66.00	53.00	1	hamiltont
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	137.00	110.00	85.00	1	cunningham-beentjesf
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
