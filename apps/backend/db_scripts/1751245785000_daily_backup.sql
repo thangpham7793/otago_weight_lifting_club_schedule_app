@@ -374,10 +374,10 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 224	jeremy	manteiga	jeremymanteiga@gmail.com	96.00	120.00	118.00	118.00	160.00	140.00	90.00	1	manteigaj
 135	luka	homersham	lukahomersham@gmail.com	85.00	115.00	115.00	115.00	160.00	125.00	92.50	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	115.00	150.00	150.00	150.00	200.00	165.00	120.00	1	cloughleyp
-58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	30.00	45.00	62.00	57.00	78.00	66.00	53.00	1	hamiltont
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	137.00	110.00	85.00	1	cunningham-beentjesf
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
+58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	35.00	45.00	45.00	45.00	65.00	55.00	45.00	1	hamiltont
 \.
 
 
