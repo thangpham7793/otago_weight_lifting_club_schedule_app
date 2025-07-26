@@ -369,7 +369,6 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 225	jumari	oosthuizen	jumari.oosthuizen@gmail.com	72.00	93.00	93.00	93.00	120.00	103.00	68.00	1	oosthuizenj
 219	john	zhao	johnzhao2612@gmail.com	90.00	120.00	110.00	120.00	200.00	180.00	85.00	1	zhaoj
 221	johm	zhao	johnzhao2003@icloud.com	90.00	138.00	120.00	120.00	200.00	170.00	95.00	1	zhaoj
-224	jeremy	manteiga	jeremymanteiga@gmail.com	96.00	120.00	118.00	118.00	160.00	140.00	90.00	1	manteigaj
 135	luka	homersham	lukahomersham@gmail.com	85.00	115.00	115.00	115.00	160.00	125.00	92.50	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	115.00	150.00	150.00	150.00	200.00	165.00	120.00	1	cloughleyp
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	137.00	110.00	85.00	1	cunningham-beentjesf
@@ -378,6 +377,7 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	35.00	45.00	45.00	45.00	65.00	55.00	45.00	1	hamiltont
 62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	83.00	113.00	102.00	102.00	140.00	120.00	90.00	1	rohtmetso
 52	Flook	Chinsaswat	flookchinsaswat@gmail.com	70.00	100.00	88.00	88.00	133.00	118.00	55.00	1	chinsaswatf
+224	jeremy	manteiga	jeremymanteiga@gmail.com	96.00	120.00	118.00	118.00	160.00	140.00	95.00	1	manteigaj
 \.
 
 
