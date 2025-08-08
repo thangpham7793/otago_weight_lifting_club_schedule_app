@@ -374,10 +374,10 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	137.00	110.00	85.00	1	cunningham-beentjesf
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
-58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	35.00	45.00	45.00	45.00	65.00	55.00	45.00	1	hamiltont
 62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	83.00	113.00	102.00	102.00	140.00	120.00	90.00	1	rohtmetso
 52	Flook	Chinsaswat	flookchinsaswat@gmail.com	70.00	100.00	88.00	88.00	133.00	118.00	55.00	1	chinsaswatf
 224	jeremy	manteiga	jeremymanteiga@gmail.com	96.00	120.00	118.00	118.00	160.00	140.00	95.00	1	manteigaj
+58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	40.00	50.00	50.00	50.00	65.00	55.00	45.00	1	hamiltont
 \.
 
 
