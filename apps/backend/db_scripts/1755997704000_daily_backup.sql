@@ -2,8 +2,10 @@
 -- PostgreSQL database dump
 --
 
+\restrict X93EZLf6mb2v4RfPzbBAISsiM8wdxg73T2MFYKOyYndQSU0nBqIvjP5atqhNimQ
+
 -- Dumped from database version 14.6 (Debian 14.6-1.pgdg110+1)
--- Dumped by pg_dump version 16.9 (Ubuntu 16.9-1.pgdg24.04+1)
+-- Dumped by pg_dump version 16.10 (Ubuntu 16.10-1.pgdg24.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -850,4 +852,6 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
+
+\unrestrict X93EZLf6mb2v4RfPzbBAISsiM8wdxg73T2MFYKOyYndQSU0nBqIvjP5atqhNimQ
 
