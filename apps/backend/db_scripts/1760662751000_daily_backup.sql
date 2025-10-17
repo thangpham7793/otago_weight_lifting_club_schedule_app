@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict FAWngplbaQK8n4bHm8Ry4RYETm5UleflUael8h9evMCu6U7WBqmsAHbefp1yBTc
+\restrict RbbIO20KXzRCf4DgrORYOpVfRsNhtXzGjsGeSZNlo9MKvpkiuFaLtPjpjILu323
 
 -- Dumped from database version 14.6 (Debian 14.6-1.pgdg110+1)
 -- Dumped by pg_dump version 16.10 (Ubuntu 16.10-1.pgdg24.04+1)
@@ -614,6 +614,8 @@ COPY public.practice_bests ("pbId", "learnerId", "exerciseName", "repMax", weigh
 237	215	dips	x3	40.00	2024-05-03
 238	215	back squat	x10	105.00	2024-06-03
 239	215	power snatch	x1	70.00	2024-09-09
+240	52	hang snatch	x1	72.00	2025-10-12
+241	52	hang clean	x1	90.00	2025-10-12
 \.
 
 
@@ -688,7 +690,7 @@ SELECT pg_catalog.setval('public."learner_learnerId_seq"', 238, true);
 -- Name: practice_bests_pbId_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 239, true);
+SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 241, true);
 
 
 --
@@ -853,5 +855,5 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict FAWngplbaQK8n4bHm8Ry4RYETm5UleflUael8h9evMCu6U7WBqmsAHbefp1yBTc
+\unrestrict RbbIO20KXzRCf4DgrORYOpVfRsNhtXzGjsGeSZNlo9MKvpkiuFaLtPjpjILu323
 
