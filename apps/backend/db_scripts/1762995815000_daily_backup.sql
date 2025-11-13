@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict kWqbTBZfUFKIXVwQhdLPegHygGcKvOgkViSaF9KW90JjbHLQnnnk5T2VUf6wDB6
+\restrict CsweraE2q643bDauC1zQAk49YYHS67hGKPU8zgwdZqg76WjwXsd9ubx0hiGC4tq
 
 -- Dumped from database version 14.6 (Debian 14.6-1.pgdg110+1)
 -- Dumped by pg_dump version 16.10 (Ubuntu 16.10-1.pgdg24.04+1)
@@ -368,6 +368,7 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 171	poppy	kirk	pbkirk16@gmail.com	60.00	72.00	76.00	71.00	100.00	80.00	57.00	1	kirkp
 213	julian	harker	athyriel0@gmail.com	100.00	122.00	120.00	118.00	155.00	135.00	106.00	1	harkerj
 52	Flook	Chinsaswat	flookchinsaswat@gmail.com	75.00	96.00	90.00	90.00	130.00	125.00	55.00	1	chinsaswatf
+58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	45.00	53.00	60.00	50.00	65.00	55.00	45.00	1	hamiltont
 218	connell	webb	connelleaganwebb@gmail.com	78.00	105.00	105.00	105.00	120.00	110.00	70.00	1	webbc
 235	ella	rowe	ellagymnastrowe@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	rowee
 236	patrick nevareta	sefo-cloughley	patricksefocloughley@gmail.com	107.00	147.00	145.00	139.00	190.00	150.00	110.00	1	sefo-cloughleyp
@@ -379,7 +380,6 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	137.00	110.00	85.00	1	cunningham-beentjesf
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
-58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	40.00	50.00	50.00	50.00	65.00	55.00	45.00	1	hamiltont
 \.
 
 
@@ -616,6 +616,7 @@ COPY public.practice_bests ("pbId", "learnerId", "exerciseName", "repMax", weigh
 239	215	power snatch	x1	70.00	2024-09-09
 240	52	hang snatch	x1	72.00	2025-10-12
 241	52	hang clean	x1	90.00	2025-10-12
+242	58	hang clean	x3	47.00	2025-11-12
 \.
 
 
@@ -690,7 +691,7 @@ SELECT pg_catalog.setval('public."learner_learnerId_seq"', 238, true);
 -- Name: practice_bests_pbId_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 241, true);
+SELECT pg_catalog.setval('public."practice_bests_pbId_seq"', 242, true);
 
 
 --
@@ -855,5 +856,5 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict kWqbTBZfUFKIXVwQhdLPegHygGcKvOgkViSaF9KW90JjbHLQnnnk5T2VUf6wDB6
+\unrestrict CsweraE2q643bDauC1zQAk49YYHS67hGKPU8zgwdZqg76WjwXsd9ubx0hiGC4tq
 
