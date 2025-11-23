@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict MKpXsgtAYoTNNogNy5rE30UX1BmxeU7v1zEBjvJ0xMndAU7rjwNWfhOc720EuYo
+\restrict 2jlq74fmJosBWZWkWk93Q5G9JbF0fHI8ePBeRLfYboW8DNN1MQ9VlYhjH0gS9fp
 
 -- Dumped from database version 14.6 (Debian 14.6-1.pgdg110+1)
 -- Dumped by pg_dump version 16.10 (Ubuntu 16.10-1.pgdg24.04+1)
@@ -367,11 +367,11 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 213	julian	harker	athyriel0@gmail.com	100.00	122.00	120.00	118.00	155.00	135.00	106.00	1	harkerj
 52	Flook	Chinsaswat	flookchinsaswat@gmail.com	75.00	96.00	90.00	90.00	130.00	125.00	55.00	1	chinsaswatf
 58	Taylor	Hamilton	Taylor.4.hamilton@gmail.com	45.00	53.00	60.00	50.00	65.00	55.00	45.00	1	hamiltont
-224	jeremy	manteiga	jeremymanteiga@gmail.com	98.00	120.00	120.00	120.00	165.00	150.00	100.00	1	manteigaj
-62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	90.00	116.00	102.00	102.00	140.00	120.00	90.00	1	rohtmetso
 218	connell	webb	connelleaganwebb@gmail.com	78.00	105.00	105.00	105.00	120.00	110.00	70.00	1	webbc
+62	Oliver	Rohtmets	Dicksono@kavanagh.school.nz	90.00	116.00	107.00	107.00	140.00	120.00	90.00	1	rohtmetso
 235	ella	rowe	ellagymnastrowe@gmail.com	0.00	0.00	0.00	0.00	0.00	0.00	0.00	1	rowee
 236	patrick nevareta	sefo-cloughley	patricksefocloughley@gmail.com	107.00	147.00	145.00	139.00	190.00	150.00	110.00	1	sefo-cloughleyp
+224	jeremy	manteiga	jeremymanteiga@gmail.com	98.00	125.00	125.00	125.00	165.00	150.00	100.00	1	manteigaj
 225	jumari	oosthuizen	jumari.oosthuizen@gmail.com	72.00	93.00	93.00	93.00	120.00	103.00	68.00	1	oosthuizenj
 219	john	zhao	johnzhao2612@gmail.com	90.00	120.00	110.00	120.00	200.00	180.00	85.00	1	zhaoj
 221	johm	zhao	johnzhao2003@icloud.com	90.00	138.00	120.00	120.00	200.00	170.00	95.00	1	zhaoj
@@ -856,5 +856,5 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict MKpXsgtAYoTNNogNy5rE30UX1BmxeU7v1zEBjvJ0xMndAU7rjwNWfhOc720EuYo
+\unrestrict 2jlq74fmJosBWZWkWk93Q5G9JbF0fHI8ePBeRLfYboW8DNN1MQ9VlYhjH0gS9fp
 
