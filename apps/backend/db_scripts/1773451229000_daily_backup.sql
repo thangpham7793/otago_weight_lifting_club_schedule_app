@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict UNmATVYa3lunhnNHbovLFBTEslOv1rdHbjW3shchd4358Q3P5kn2fPir9GfmrQ9
+\restrict S1RF8xYepZckQv7G9xEob28cW1Lhbpznktv8HPT95Jlecf6zzjl3GZe1AZB1mP9
 
 -- Dumped from database version 14.6 (Debian 14.6-1.pgdg110+1)
 -- Dumped by pg_dump version 16.13 (Ubuntu 16.13-1.pgdg24.04+1)
@@ -374,9 +374,9 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 225	jumari	oosthuizen	jumari.oosthuizen@gmail.com	72.00	93.00	93.00	93.00	120.00	103.00	68.00	1	oosthuizenj
 219	john	zhao	johnzhao2612@gmail.com	90.00	120.00	110.00	120.00	200.00	180.00	85.00	1	zhaoj
 221	johm	zhao	johnzhao2003@icloud.com	90.00	138.00	120.00	120.00	200.00	170.00	95.00	1	zhaoj
-224	jeremy	manteiga	jeremymanteiga@gmail.com	100.00	128.00	125.00	125.00	165.00	150.00	103.00	1	manteigaj
 135	luka	homersham	lukahomersham@gmail.com	85.00	115.00	115.00	115.00	160.00	125.00	92.50	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	115.00	150.00	150.00	150.00	200.00	165.00	120.00	1	cloughleyp
+224	jeremy	manteiga	jeremymanteiga@gmail.com	105.00	133.00	128.00	128.00	180.00	155.00	106.00	1	manteigaj
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	137.00	110.00	85.00	1	cunningham-beentjesf
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
@@ -856,5 +856,5 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict UNmATVYa3lunhnNHbovLFBTEslOv1rdHbjW3shchd4358Q3P5kn2fPir9GfmrQ9
+\unrestrict S1RF8xYepZckQv7G9xEob28cW1Lhbpznktv8HPT95Jlecf6zzjl3GZe1AZB1mP9
 
