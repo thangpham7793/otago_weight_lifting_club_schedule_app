@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict W4v88mu4RcSF0TThA8nQuCnd1awFwdXsAfwujZWE6dpeU8BlCFx7h6rjyOg6gFg
+\restrict jFDrBVKBmdhuJ3zgIxvmmM1NbjukbtaVdIlL0TTOaxajdqjmhn69xP5xa0SCuz5
 
 -- Dumped from database version 14.6 (Debian 14.6-1.pgdg110+1)
 -- Dumped by pg_dump version 16.15 (Ubuntu 16.15-1.pgdg24.04+2)
@@ -348,7 +348,6 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 223	amorangi	rayner	arayner621@gmail.com	55.00	60.00	60.00	60.00	70.00	65.00	50.00	1	raynera
 57	Kelly	Hoyt	kelly.jt.hoyt@gmail.com	45.00	55.00	53.00	53.00	70.00	61.00	40.00	1	hoytk
 212	toby	evans	evanstoby23@gmail.com	80.00	115.00	115.00	110.00	140.00	125.00	90.00	1	evanst
-67	Kiri	Calvert	kiri.calvert@live.com	60.00	75.00	80.00	75.00	140.00	105.00	65.00	1	calvertk
 231	ryan	evans	leannee@xtra.co.nz	90.00	110.00	105.00	105.00	140.00	115.00	0.00	1	evansr
 63	Torin	Webb	torinjaredwebb@gmail.com	83.00	100.00	102.00	101.00	130.00	120.00	80.00	1	webbt
 214	ryan	evans	ryangraemeevans@gmail.com	75.00	90.00	90.00	85.00	100.00	0.00	0.00	1	evansr
@@ -380,6 +379,7 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
 66	Patrick	Cloughley	patricksefocloughley11@gmail.com	90.00	120.00	120.00	120.00	180.00	165.00	100.00	1	cloughleyp
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
+67	Kiri	Calvert	kiri.calvert@live.com	45.00	60.00	60.00	60.00	90.00	80.00	55.00	1	calvertk
 \.
 
 
@@ -860,5 +860,5 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict W4v88mu4RcSF0TThA8nQuCnd1awFwdXsAfwujZWE6dpeU8BlCFx7h6rjyOg6gFg
+\unrestrict jFDrBVKBmdhuJ3zgIxvmmM1NbjukbtaVdIlL0TTOaxajdqjmhn69xP5xa0SCuz5
 
