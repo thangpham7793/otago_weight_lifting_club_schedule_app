@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict pjZqk6lEMXJnjaYuoAiWg4mBuP5jU9RkZuieMqex8j8jDJNuyeOBwyItClLYb4h
+\restrict reJStXKgjdqkWDY8Ba1dr4e1uLbqN0AB9ZqChQmxxFcwGjIhId5TjQFtVSN3h78
 
 -- Dumped from database version 14.6 (Debian 14.6-1.pgdg110+1)
 -- Dumped by pg_dump version 18.6 (Ubuntu 18.6-1.pgdg26.04+2)
@@ -378,9 +378,9 @@ COPY public.learner ("learnerId", "firstName", "lastName", email, snatch, clean,
 224	jeremy	manteiga	jeremymanteiga@gmail.com	105.00	133.00	128.00	128.00	180.00	155.00	106.00	1	manteigaj
 215	flynn	cunningham-beentjes	flynn.c.b@icloud.com	71.00	100.00	95.00	90.00	137.00	110.00	85.00	1	cunningham-beentjesf
 88	Luka	Homersham	Lukahomersham@gmail.com	85.00	110.00	110.00	110.00	160.00	0.00	0.00	1	homershaml
-66	Patrick	Cloughley	patricksefocloughley11@gmail.com	90.00	120.00	120.00	120.00	180.00	165.00	100.00	1	cloughleyp
 46	Callan	Helms	callanhelms@gmail.com	120.00	153.00	170.00	153.00	250.00	200.00	145.00	1	helmsc
 67	Kiri	Calvert	kiri.calvert@live.com	45.00	60.00	60.00	60.00	90.00	80.00	55.00	1	calvertk
+66	Patrick	Cloughley	patricksefocloughley11@gmail.com	40.00	52.00	52.00	52.00	60.00	50.00	50.00	1	cloughleyp
 \.
 
 
@@ -863,5 +863,5 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict pjZqk6lEMXJnjaYuoAiWg4mBuP5jU9RkZuieMqex8j8jDJNuyeOBwyItClLYb4h
+\unrestrict reJStXKgjdqkWDY8Ba1dr4e1uLbqN0AB9ZqChQmxxFcwGjIhId5TjQFtVSN3h78
 
